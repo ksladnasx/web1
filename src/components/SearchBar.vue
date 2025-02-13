@@ -69,6 +69,7 @@ const handleSearch = () => {
   background-color: transparent;
   border: none;
   cursor: pointer;
+  outline: none; /* 移除点击时产生的边框 */
   padding: 0 12px;
 }
 
@@ -83,9 +84,9 @@ const handleSearch = () => {
 .search-input:focus + .search-button .search-icon {
   color: #4a90e2; /* 鼠标悬停或输入框聚焦时图标颜色 */
 }
-
 .search-input:focus + .search-button {
-  background-color: #f0f0f0; /* 输入框聚焦时按钮背景颜色 */
+  background-color: #f9f9f9; /* 输入框聚焦时按钮背景颜色 */
+  border: none;
 }
 
 .search-wrapper:hover {

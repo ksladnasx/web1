@@ -31,7 +31,6 @@ import { RouterView } from 'vue-router'
 *{
   font-family: 'Courier New', Courier, monospace;
   color: aliceblue;
-  margin-top: 0;
 }
 .min-h-screen {
   min-height: 100vh;

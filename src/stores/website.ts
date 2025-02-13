@@ -509,20 +509,6 @@ export const useWebsiteStore = defineStore('website', () => {
       accessSpeed: '快速'
     },
     {
-      id: 'patreon',
-      name: 'Patreon',
-      url: 'https://www.patreon.com',
-      logo: 'https://www.patreon.com/favicon.ico',
-      description: 'Patreon 是一个支持创作者和艺术家的平台，它提供了订阅和打赏功能，帮助创作者获得收入。Patreon 的界面简洁直观，用户可以快速上手，无需复杂的培训。此外，Patreon 支持多种语言，适合全球用户使用。Patreon 还提供了移动应用，用户可以随时随地访问和支持创作者。',
-      category: 'career',
-      tags: ['支持创作者', '打赏', '订阅'],
-      rating: 4.7,
-      views: 13000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
       id: 'freelancer',
       name: 'Freelancer',
       url: 'https://www.freelancer.com',
@@ -554,7 +540,7 @@ export const useWebsiteStore = defineStore('website', () => {
       id: 'toptalent',
       name: 'Toptalent',
       url: 'https://www.toptalent.com',
-      logo: 'https://www.toptalent.com/favicon.ico',
+      logo: 'https://assets.toptal.io/images?url=https%3A%2F%2Fwww.toptal.com%2Ftoptal-logo.png&width=360',
       description: 'Toptalent 是一个在线招聘平台，专注于技术、设计和产品管理等领域的高端职位。它为求职者提供了一个展示自己才华和经验的机会，同时也为雇主提供了一个寻找顶尖人才的场所。',
       category: 'career',
       tags: ['高端职位', '技术招聘', '设计招聘'],

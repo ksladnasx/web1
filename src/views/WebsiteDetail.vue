@@ -73,7 +73,7 @@ const categoryName = computed(() => {
           <h2>标签</h2>
           <div class="tags-container">
             <span v-for="tag in website.tags" :key="tag" class="tag">
-              {{ tag }}
+              {{ tag }},
             </span>
           </div>
         </section>
