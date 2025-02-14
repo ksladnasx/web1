@@ -1,23 +1,40 @@
 <script setup lang="ts">
-import {  computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
+import { useFavoritesStore } from '../stores/favorites'
 
 const route = useRoute()
 const router = useRouter()
 const store = useWebsiteStore()
+const favoritesStore = useFavoritesStore()
 
 const website = computed(() => {
   return store.websites.find(site => site.id === route.params.id)
 })
 
+const isFavorite = computed(() => {
+  if (!website.value) return false
+  return favoritesStore.isFavorite(website.value.id)
+})
+
+const toggleFavorite = () => {
+  if (!website.value) return
+  
+  if (isFavorite.value) {
+    favoritesStore.removeFavorite(website.value.id)
+  } else {
+    favoritesStore.addFavorite(website.value)
+  }
+}
+
 const relatedWebsites = computed(() => {
   if (!website.value) return []
   return store.websites
-    .filter(site =>
-      site.id !== website.value?.id &&
-      (site.category === website.value?.category ||
-        site.tags.some(tag => website.value?.tags.includes(tag)))
+    .filter(site => 
+      site.id !== website.value?.id && 
+      (site.category === website.value?.category || 
+       site.tags.some(tag => website.value?.tags.includes(tag)))
     )
     .slice(0, 3)
 })
@@ -28,7 +45,7 @@ const goToWebsite = (url: string) => {
 
 const categoryName = computed(() => {
   if (!website.value) return ''
-  return store.categories.find(cat => cat.name === website.value?.category)?.name || ''
+  return store.categories.find(cat => cat.id === website.value?.category)?.name || ''
 })
 </script>
 
@@ -49,6 +66,13 @@ const categoryName = computed(() => {
           <div class="logo-wrapper">
             <img :src="website.logo" :alt="website.name" class="logo-exp" />
           </div>
+          <button
+            @click="toggleFavorite"
+            class="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            :class="{ 'text-red-500': isFavorite }"
+          >
+            <span class="text-2xl">{{ isFavorite ? '❤️' : '🤍' }}</span>
+          </button>
           <div class="title-section">
             <div class="title-row">
               <h1>{{ website.name }}</h1>

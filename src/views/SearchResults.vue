@@ -33,6 +33,9 @@ const searchResults = computed(() => {
         <p class="text-gray-600">
           关键词 "{{ query }}" 的搜索结果 ({{ searchResults.length }} 个)
         </p>
+        <div>
+      -----------------------------------------------------------------------------------------------------------------------
+    </div>
       </div>
 
       <div v-if="searchResults.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
