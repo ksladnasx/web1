@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import {  computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
 
@@ -28,7 +28,7 @@ const goToWebsite = (url: string) => {
 
 const categoryName = computed(() => {
   if (!website.value) return ''
-  return store.categories.find(cat => cat.category === website.value?.category)?.name || ''
+  return store.categories.find(cat => cat.name === website.value?.category)?.name || ''
 })
 </script>
 

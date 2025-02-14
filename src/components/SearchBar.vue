@@ -1,17 +1,30 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 
-defineProps<{
+const props = defineProps<{
   modelValue: string
 }>()
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
-  (e: 'search'): void
-}>()
+// const emit = defineEmits<{
+//   (e: 'update:modelValue', value: string): void
+// }>()
+
+const router = useRouter()
 
 const handleSearch = () => {
-  emit('search')
+  if (props.modelValue.trim()) {
+    router.push({
+      path: '/search',
+      query: { q: props.modelValue.trim() }
+    })
+  }
+}
+
+const handleKeyPress = (event: KeyboardEvent) => {
+  if (event.key === 'Enter') {
+    handleSearch()
+  }
 }
 </script>
 
@@ -22,7 +35,7 @@ const handleSearch = () => {
         type="text"
         :value="modelValue"
         @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-        @keyup.enter="handleSearch"
+        @keypress="handleKeyPress"
         placeholder="搜索网站、工具、资源..."
         class="search-input"
       />

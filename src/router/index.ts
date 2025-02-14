@@ -5,6 +5,7 @@ import WebsiteDetail from '../views/WebsiteDetail.vue'
 import Submit from '../views/Submit.vue'
 import Profile from '../views/Profile.vue'
 import About from '../views/About.vue'
+import SearchResults from '../views/SearchResults.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: About
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: SearchResults
     }
   ]
 })

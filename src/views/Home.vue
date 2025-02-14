@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useWebsiteStore, Website } from '../stores/website';
+import { useWebsiteStore } from '../stores/website';
 import SearchBar from '../components/SearchBar.vue'
 import CategoryGrid from '../components/CategoryGrid.vue'
 import WebsiteCard from '../components/WebsiteCard.vue'

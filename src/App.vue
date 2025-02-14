@@ -38,7 +38,7 @@ import { RouterView } from 'vue-router'
 
 .max-w-7xl {
   max-width: 80rem;
-}
+}  
 
 /* .mx-auto {
   margin-left: auto;
