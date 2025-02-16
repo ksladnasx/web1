@@ -1,592 +1,66 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { defineStore } from 'pinia';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
 export interface Website {
-  id: string
-  name: string
-  url: string
-  logo: string
-  description: string
-  category: string
-  tags: string[]
-  rating: number
-  views: number
-  isPaid: boolean
-  language: string[]
-  accessSpeed: string
+  id: string;
+  name: string;
+  url: string;
+  logo: string;
+  description: string;
+  category: string;
+  tags: string[];
+  rating: number;
+  views: number;
+  isPaid: boolean;
+  language: string[];
+  accessSpeed: string;
 }
 
 export const useWebsiteStore = defineStore('website', () => {
-  const websites = ref<Website[]>([
-    {
-      id: 'sci-hub',
-      name: 'Sci-Hub',
-      url: 'https://sci-hub.se',
-      logo: 'https://sci-hub.se/favicon.ico',
-      description: '提供免费的学术论文获取服务。',
-      category: 'research',
-      tags: ['学术', '论文', '免费'],
-      rating: 4.9,
-      views: 12000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '需要科学上网'
-    },
-    {
-      id: 'google-scholar',
-      name: 'Google Scholar',
-      url: 'https://scholar.google.com',
-      logo: 'https://tse4-mm.cn.bing.net/th/id/OIP-C.6eJ9QJxJu2XxfjqeCVPYjgHaHa?w=179&h=184&c=7&r=0&o=5&dpr=1.5&pid=1.7',
-      description: 'Google Scholar 是一个广受欢迎的免费学术搜索引擎，它索引了数百万篇学术文章，包括期刊论文、学位论文、书籍、预印本和报告等。这个平台特别适合研究人员、学生和教育工作者，他们可以利用这个工具来获取最新的研究成果和历史文献。此外，Google Scholar 还提供了引文功能，用户可以查看某篇文章被引用了多少次，以及被哪些文章引用，这对于文献综述和研究的深度分析非常有帮助。',
-      category: 'research',
-      tags: ['学术', '文献', '搜索'],
-      rating: 4.8,
-      views: 15000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'kaggle',
-      name: 'Kaggle',
-      url: 'https://kaggle.com',
-      logo: 'https://kaggle.com/favicon.ico',
-      description: 'Kaggle 是一个数据科学竞赛平台，它提供了一个丰富的数据库，包含多个学科的数据集，供研究人员和数据科学家使用。这个平台特别适合那些需要进行数据分析、机器学习和人工智能项目的人。Kaggle 的数据集覆盖了从经济学到天文学的各个领域，用户可以自由下载和使用这些数据集，进行研究和开发。此外，Kaggle 还提供了一个活跃的社区，用户可以在社区中讨论问题、分享经验和协作项目。',
-      category: 'research',
-      tags: ['数据科学', '竞赛', '分析'],
-      rating: 4.7,
-      views: 13000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'leetcode',
-      name: 'LeetCode',
-      url: 'https://leetcode.com',
-      logo: 'https://leetcode.com/favicon.ico',
-      description: 'LeetCode 是一个在线编程学习平台，它提供了大量的算法题和数据结构题，供程序员练习和提高编程技能。这个平台特别适合准备技术面试和希望提高算法能力的人。LeetCode 的题目覆盖了各种难度级别，从简单到困难，用户可以根据自己的水平选择合适的题目进行练习。此外，LeetCode 还提供了一个讨论区，用户可以在其中讨论解题策略、分享知识，以及与其他程序员建立联系。',
-      category: 'learning',
-      tags: ['算法', '编程', '练习'],
-      rating: 4.9,
-      views: 17000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'bilibilibili',
-      name: 'Bilibili（哔哩哔哩）',
-      url: 'https://www.bili.com',
-      logo: 'https://p1.ssl.qhimg.com/t011cc0073d3c813d6b.png',
-      description: 'Bilibili不仅是一个年轻人喜欢的二次元视频平台，也是一个充满技术分享内容的学习平台。在Bilibili上，你可以找到许多编程学习视频，这些视频多由技术达人和编程专家分享，内容通俗易懂，适合新手入门。此外，Bilibili还提供了许多编程相关的直播和互动课程，可以与讲师进行实时互动，解答学习中的疑问。',
-      category: 'learning',
-      tags: ['编程学习', '视频教程', '互动'],
-      rating: 4.5,
-      views: 10000,
-      isPaid: false,
-      language: ['中文', 'English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'imooc',
-      name: '慕课网',
-      url: 'https://www.imooc.com',
-      logo: 'https://www.imooc.com/favicon.ico',
-      description: '慕课网是中国非常著名的在线学习平台之一，提供丰富的编程课程，涵盖了从基础到高级的各类技术。对于编程新手来说，慕课网的“零基础”系列课程非常适合入门学习。课程内容通常以视频为主，配有详细的文字说明和代码示例。此外，慕课网还提供了在线编程练习平台，可以帮助新手通过实践加深对编程知识的理解。',
-      category: 'learning',
-      tags: ['编程课程', '在线学习', '互动'],
-      rating: 4.6,
-      views: 12000,
-      isPaid: true,
-      language: ['中文', 'English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'github',
-      name: 'GitHub',
-      url: 'https://github.com',
-      logo: 'https://github.com/favicon.ico',
-      description: 'GitHub 是全球最大的代码托管平台，也是开源项目的集中地。它提供了一个强大的版本控制系统，让开发者可以轻松地管理代码和协作开发。GitHub 还支持问题跟踪、功能请求和项目维基，帮助团队更好地管理项目。此外，GitHub 拥有庞大的开源项目库，用户可以找到各种开源软件和工具，也可以贡献自己的项目，促进了全球开发者社区的发展。',
-      category: 'productivity',
-      tags: ['代码托管', '开源项目', '版本控制'],
-      rating: 4.9,
-      views: 20000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '较快'
-    },
-    {
-      id: 'overleaf',
-      name: 'Overleaf',
-      url: 'https://www.overleaf.com',
-      logo: 'https://www.overleaf.com/favicon.ico',
-      description: 'Overleaf 是一个在线 LaTeX 编辑器，适合撰写学术论文和数学文档。它提供了一个实时协作的环境，用户可以与他人共享和编辑文档，非常适合团队协作和学术写作。Overleaf 支持多种 LaTeX 模板，用户可以轻松创建高质量的文档，并且可以直接在平台上预览和编译 LaTeX 代码。此外，Overleaf 还提供了丰富的数学公式编辑器，使得数学文档的编写更加方便。',
-      category: 'productivity',
-      tags: ['论文写作', 'LaTeX', '协作编辑'],
-      rating: 4.6,
-      views: 8000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'linkedin',
-      name: 'LinkedIn',
-      url: 'https://www.linkedin.com',
-      logo: 'https://www.linkedin.com/favicon.ico',
-      description: 'LinkedIn 是一个专业社交网络平台，适合职业发展和求职。它允许用户创建个人资料，展示自己的工作经历、教育背景和技能。用户可以通过 LinkedIn 建立职业网络，找到潜在的工作机会，以及与行业内的专业人士建立联系。此外，LinkedIn 提供了丰富的职业发展资源，包括行业新闻、文章和研讨会，帮助用户提升职业技能。',
-      category: 'career',
-      tags: ['求职', '社交网络', '职业发展'],
-      rating: 4.5,
-      views: 18000,
-      isPaid: false,
-      language: ['中文', 'English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'udemy',
-      name: 'Udemy',
-      url: 'https://www.udemy.com',
-      logo: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.cwyr50XKIlcr81LZxAiXvAHaIO?w=149&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7',
-      description: 'Udemy 是一个在线学习平台，提供各种专业课程和证书。它涵盖了广泛的学科领域，包括编程、设计、商业和健康等。Udemy 的课程由行业专家和大学教授设计，结合了视频讲座、阅读材料和实践项目。此外，Udemy 提供了灵活的学习计划，用户可以根据自己的时间安排学习进度。Udemy 还提供了社区支持，用户可以在社区中与其他学习者互动，讨论课程内容和职业发展。',
-      category: 'learning',
-      tags: ['在线课程', '证书', '付费'],
-      rating: 4.6,
-      views: 21000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'Codecademy',
-      name: 'Codecademy',
-      url: 'https://www.codecademy.com',
-      logo: 'https://www.codecademy.com/favicon.ico',
-      description: 'Codecademy 是一个提供 Web 开发、设计和编程课程的在线学习平台。它提供了全面的课程，涵盖了前端开发、后端开发、移动应用开发等多个领域。Codecademy 的课程由经验丰富的讲师设计，结合了理论讲解和实践操作，帮助学生掌握实用技能。此外，Codecademy 还提供了项目实战和职业发展指导，帮助学生将所学知识应用于实际工作中。',
-      category: 'learning',
-      tags: ['编程', '设计', 'Web开发'],
-      rating: 4.7,
-      views: 13000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'teamtree',
-      name: 'Teamtree',
-      url: 'https://www.teamtree.com',
-      logo: 'https://www.teamtree.com/favicon.ico',
-      description: 'Teamtree 是一个项目管理和团队协作工具。它提供了任务管理、时间跟踪和文件共享等功能，帮助团队更有效地管理项目。Teamtree 的界面直观易用，用户可以快速上手，无需复杂的培训。此外，Teamtree 支持多种语言，适合全球团队使用。Teamtree 还提供了移动应用，用户可以随时随地访问项目信息。',
-      category: 'productivity',
-      tags: ['项目管理', '团队协作', '任务跟踪'],
-      rating: 4.8,
-      views: 9000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'trello',
-      name: 'Trello',
-      url: 'https://trello.com',
-      logo: 'https://trello.com/favicon.ico',
-      description: 'Trello 是一个灵活且直观的项目管理和组织工具。它使用看板和卡片系统，帮助用户可视化任务和项目进度。Trello 支持多种视图，包括列表、看板和日历，用户可以根据自己的需求选择合适的视图。此外，Trello 提供了丰富的协作功能，包括任务分配、评论和文件附件，方便团队成员之间的沟通和协作。Trello 还支持与多种第三方应用集成，如Google 日历、Slack 和 GitHub，扩展了其功能。',
-      category: 'productivity',
-      tags: ['项目管理', '任务跟踪', '团队协作'],
-      rating: 4.6,
-      views: 11000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'asana',
-      name: 'Asana',
-      url: 'https://asana.com',
-      logo: 'https://asana.com/favicon.ico',
-      description: 'Asana 是一个团队协作和项目管理工具。它提供了任务管理、时间跟踪和文件共享等功能，帮助团队更有效地管理项目。Asana 的界面直观易用，用户可以快速上手，无需复杂的培训。此外，Asana 支持多种语言，适合全球团队使用。Asana 还提供了移动应用，用户可以随时随地访问项目信息。',
-      category: 'productivity',
-      tags: ['项目管理', '任务跟踪', '团队协作'],
-      rating: 4.7,
-      views: 12000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'basecamp',
-      name: 'Basecamp',
-      url: 'https://basecamp.com',
-      logo: 'https://basecamp.com/favicon.ico',
-      description: 'Basecamp 是一个项目管理和团队协作工具。它提供了任务管理、时间跟踪和文件共享等功能，帮助团队更有效地管理项目。Basecamp 的界面直观易用，用户可以快速上手，无需复杂的培训。此外，Basecamp 支持多种语言，适合全球团队使用。Basecamp 还提供了移动应用，用户可以随时随地访问项目信息。',
-      category: 'productivity',
-      tags: ['项目管理', '团队协作', '任务跟踪'],
-      rating: 4.5,
-      views: 8000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'slack',
-      name: 'Slack',
-      url: 'https://slack.com',
-      logo: 'https://slack.com/favicon.ico',
-      description: 'Slack 是一个团队沟通和协作平台。它提供了即时消息、文件共享和集成应用等功能，帮助团队更有效地沟通和协作。Slack 的界面简洁直观，用户可以快速上手，无需复杂的培训。此外，Slack 支持多种语言，适合全球团队使用。Slack 还提供了移动应用，用户可以随时随地访问项目信息。',
-      category: 'productivity',
-      tags: ['团队沟通', '即时消息', '文件共享'],
-      rating: 4.8,
-      views: 14000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'zoom',
-      name: 'Zoom',
-      url: 'https://zoom.us',
-      logo: 'https://zoom.us/favicon.ico',
-      description: 'Zoom 是一个视频会议和在线会议工具。它提供了高清视频、屏幕共享和聊天等功能，帮助团队进行远程会议和协作。Zoom 的界面简洁易用，用户可以快速上手，无需复杂的培训。此外，Zoom 支持多种语言，适合全球团队使用。Zoom 还提供了移动应用，用户可以随时随地进行视频会议。',
-      category: 'productivity',
-      tags: ['视频会议', '在线会议', '远程工作'],
-      rating: 4.6,
-      views: 16000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'dropbox',
-      name: 'Dropbox',
-      url: 'https://dropbox.com',
-      logo: 'https://dropbox.com/favicon.ico',
-      description: 'Dropbox 是一个云存储和文件共享服务。它提供了文件存储、文件共享和协作等功能，帮助用户管理和共享文件。Dropbox 的界面简洁直观，用户可以快速上手，无需复杂的培训。此外，Dropbox 支持多种语言，适合全球用户使用。Dropbox 还提供了移动应用，用户可以随时随地访问文件。',
-      category: 'productivity',
-      tags: ['文件共享', '云存储', '协作'],
-      rating: 4.7,
-      views: 13000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'onedrive',
-      name: 'OneDrive',
-      url: 'https://onedrive.live.com',
-      logo: 'https://onedrive.live.com/favicon.ico',
-      description: 'OneDrive 是微软提供的云存储服务。它提供了文件存储、文件共享和协作等功能，帮助用户管理和共享文件。OneDrive 的界面简洁直观，用户可以快速上手，无需复杂的培训。此外，OneDrive 支持多种语言，适合全球用户使用。OneDrive 还提供了移动应用，用户可以随时随地访问文件。',
-      category: 'productivity',
-      tags: ['文件存储', '云存储', '文件共享'],
-      rating: 4.5,
-      views: 9000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'evernote',
-      name: 'Evernote',
-      url: 'https://evernote.com',
-      logo: 'https://evernote.com/favicon.ico',
-      description: 'Evernote 是一个笔记和组织工具。它提供了笔记记录、任务管理和文件共享等功能，帮助用户高效地管理信息。Evernote 的界面简洁直观，用户可以快速上手，无需复杂的培训。此外，Evernote 支持多种语言，适合全球用户使用。Evernote 还提供了移动应用，用户可以随时随地访问笔记。',
-      category: 'productivity',
-      tags: ['笔记', '组织', '任务管理'],
-      rating: 4.6,
-      views: 11000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'figma',
-      name: 'Figma',
-      url: 'https://www.figma.com',
-      logo: 'https://www.figma.com/favicon.ico',
-      description: 'Figma 是一个在线界面设计和原型制作工具。它提供了一个直观的拖放界面，用户可以轻松创建和编辑设计。Figma 支持多人协作，团队成员可以实时查看和编辑设计。此外，Figma 提供了丰富的设计资源和模板，帮助用户快速开始项目。Figma 还提供了插件系统，扩展了其功能。',
-      category: 'productivity',
-      tags: ['界面设计', '原型', '协作'],
-      rating: 4.8,
-      views: 10000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'canva',
-      name: 'Canva',
-      url: 'https://www.canva.com',
-      logo: 'https://www.canva.com/favicon.ico',
-      description: 'Canva 是一个在线图形设计平台，它提供了丰富的设计模板和资源，帮助用户创建专业的图形设计。Canva 支持多种设计类型，包括社交媒体图像、演示文稿和海报等。此外，Canva 提供了协作功能，团队成员可以一起编辑设计。Canva 还提供了丰富的设计元素和字体，满足用户的多样化需求。',
-      category: 'productivity',
-      tags: ['图形设计', '设计模板', '协作'],
-      rating: 4.7,
-      views: 12000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'dribbble',
-      name: 'Dribbble',
-      url: 'https://dribbble.com',
-      logo: 'https://dribbble.com/favicon.ico',
-      description: 'Dribbble 是一个设计师作品展示和发现平台。它提供了一个展示作品的空间，设计师可以分享自己的设计作品，获取反馈和灵感。Dribbble 拥有庞大的设计社区，用户可以发现各种创意设计。此外，Dribbble 提供了一系列设计工具和资源，帮助用户提升设计技能。Dribbble 还支持与多种设计软件集成，方便用户管理和分享设计。',
-      category: 'productivity',
-      tags: ['设计作品', '设计社区', '灵感'],
-      rating: 4.6,
-      views: 14000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'behance',
-      name: 'Behance',
-      url: 'https://www.behance.net',
-      logo: 'https://www.behance.net/favicon.ico',
-      description: 'Behance 是一个设计师展示作品和发现创意的平台。它提供了一个展示作品的空间，设计师可以分享自己的设计作品，获取反馈和灵感。Behance 拥有庞大的设计社区，用户可以发现各种创意设计。此外，Behance 提供了一系列设计工具和资源，帮助用户提升设计技能。Behance 还支持与多种设计软件集成，方便用户管理和分享设计。',
-      category: 'productivity',
-      tags: ['设计作品', '创意', '社区'],
-      rating: 4.7,
-      views: 15000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'codepen',
-      name: 'CodePen',
-      url: 'https://codepen.io',
-      logo: 'https://codepen.io/favicon.ico',
-      description: 'CodePen 是一个前端开发者代码分享和原型制作平台。它提供了一个在线代码编辑器，用户可以实时预览和分享代码。CodePen 支持多种前端技术，包括 HTML、CSS 和 JavaScript。此外，CodePen 提供了一个社区，用户可以在其中分享代码片段和项目。CodePen 还支持与 GitHub 集成，方便用户管理和分享代码。',
-      category: 'productivity',
-      tags: ['代码分享', '原型', '前端开发'],
-      rating: 4.8,
-      views: 16000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'jsfiddle',
-      name: 'JSFiddle',
-      url: 'https://jsfiddle.net',
-      logo: 'https://jsfiddle.net/favicon.ico',
-      description: 'JSFiddle 是一个在线JavaScript代码编辑器和原型制作工具。它提供了一个在线代码编辑器，用户可以实时预览和分享代码。JSFiddle 支持多种前端技术，包括 HTML、CSS 和 JavaScript。此外，JSFiddle 提供了一个社区，用户可以在其中分享代码片段和项目。JSFiddle 还支持与 GitHub 集成，方便用户管理和分享代码。',
-      category: 'productivity',
-      tags: ['代码编辑', '原型', '前端开发'],
-      rating: 4.6,
-      views: 17000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'gitlab',
-      name: 'GitLab',
-      url: 'https://gitlab.com',
-      logo: 'https://gitlab.com/favicon.ico',
-      description: 'GitLab 是一个代码托管和DevOps平台，提供GitLab CI/CD。它提供了代码托管、项目管理和DevOps等功能，帮助团队更有效地管理项目。GitLab 的界面直观易用，用户可以快速上手，无需复杂的培训。此外，GitLab 支持多种语言，适合全球团队使用。GitLab 还提供了移动应用，用户可以随时随地访问项目信息。',
-      category: 'productivity',
-      tags: ['代码托管', 'DevOps', 'CI/CD'],
-      rating: 4.7,
-      views: 13000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'bitbucket',
-      name: 'Amazon S3',
-      url: 'https://aws.amazon.com/s3',
-      logo: 'https://aws.amazon.com/favicon.ico',
-      description: 'Amazon S3 是Amazon提供的云存储服务。它提供了文件存储、文件共享和协作等功能，帮助用户管理和共享文件。Amazon S3 的界面简洁直观，用户可以快速上手，无需复杂的培训。此外，Amazon S3 支持多种语言，适合全球用户使用。Amazon S3 还提供了移动应用，用户可以随时随地访问文件。',
-      category: 'productivity',
-      tags: ['云存储', '文件共享', '数据备份'],
-      rating: 4.6,
-      views: 9000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'ADOBE',
-      name: 'Adobe Creative Cloud',
-      url: 'https://adobe.com/creativecloud.html',
-      logo: 'https://adobe.com/favicon.ico',
-      description: 'Adobe Creative Cloud 是Adobe创意软件套件和云服务。它提供了Photoshop、Illustrator和Premiere Pro等软件，帮助用户进行创意设计、图形编辑和视频制作。Adobe Creative Cloud 的界面直观易用，用户可以快速上手，无需复杂的培训。此外，Adobe Creative Cloud 支持多种语言，适合全球用户使用。Adobe Creative Cloud 还提供了移动应用，用户可以随时随地访问和编辑创意作品。',
-      category: 'productivity',
-      tags: ['创意设计', '图形编辑', '视频编辑'],
-      rating: 4.5,
-      views: 8000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'twitch',
-      name: 'Twitch',
-      url: 'https://twitch.tv',
-      logo: 'https://twitch.tv/favicon.ico',
-      description: 'Twitch 是一个游戏直播和娱乐直播平台。它提供了高清直播、互动聊天和游戏功能，帮助用户与观众互动。Twitch 的界面简洁直观，用户可以快速上手，无需复杂的培训。此外，Twitch 支持多种语言，适合全球用户使用。Twitch 还提供了移动应用，用户可以随时随地进行直播和观看。',
-      category: 'productivity',
-      tags: ['直播', '游戏', '娱乐'],
-      rating: 4.4,
-      views: 7000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'patreon',
-      name: 'Patreon',
-      url: 'https://patreon.com',
-      logo: 'https://tse3-mm.cn.bing.net/th/id/OIP-C.RM34mSECeMwSm5e3NJAmiwHaHa?w=180&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7',
-      description: 'Patreon 是一个支持创作者和艺术家的平台。它提供了订阅和打赏功能，帮助创作者获得收入。Patreon 的界面简洁直观，用户可以快速上手，无需复杂的培训。此外，Patreon 支持多种语言，适合全球用户使用。Patreon 还提供了移动应用，用户可以随时随地访问和支持创作者。',
-      category: 'career',
-      tags: ['支持创作者', '打赏', '订阅'],
-      rating: 4.7,
-      views: 13000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'freecodecamp',
-      name: 'freeCodeCamp',
-      url: 'https://www.freecodecamp.org',
-      logo: 'https://s3.amazonaws.com/freecodecamp/freecodecamp-square-logo-large.jpg',
-      description: 'freeCodeCamp 是一个非盈利的编程学习平台，提供全面的编程课程。它提供了HTML、CSS、JavaScript等课程，帮助用户从零开始学习编程。freeCodeCamp 的课程结构清晰，用户可以按照进度学习，无需复杂的培训。此外，freeCodeCamp 支持多种语言，适合全球用户使用。freeCodeCamp 还提供了移动应用，用户可以随时随地访问课程。',
-      category: 'learning',
-      tags: ['编程学习', '在线课程', '免费'],
-      rating: 4.9,
-      views: 23000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'w3schools',
-      name: 'W3Schools',
-      url: 'https://www.w3schools.com',
-      logo: 'https://www.w3schools.com/favicon.ico',
-      description: 'W3Schools 是一个学习Web开发技术的在线教程网站。它提供了HTML、CSS、JavaScript等课程，帮助用户学习Web开发。W3Schools 的课程结构清晰，用户可以按照进度学习，无需复杂的培训。此外，W3Schools 支持多种语言，适合全球用户使用。W3Schools 还提供了移动应用，用户可以随时随地访问课程。',
-      category: 'learning',
-      tags: ['Web开发', '在线教程', '免费'],
-      rating: 4.6,
-      views: 19000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'khan-academy',
-      name: 'Khan Academy',
-      url: 'https://www.khanacademy.org',
-      logo: 'https://www.khanacademy.org/favicon.ico',
-      description: 'Khan Academy 是一个提供免费在线课程和练习，涵盖多个学科领域的在线教育平台。它提供了数学、科学、计算机编程等课程，帮助用户学习新知识。Khan Academy 的课程结构清晰，用户可以按照进度学习，无需复杂的培训。此外，Khan Academy 支持多种语言，适合全球用户使用。Khan Academy 还提供了移动应用，用户可以随时随地访问课程。',
-      category: 'learning',
-      tags: ['在线课程', '教育', '免费'],
-      rating: 4.8,
-      views: 16000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'edX',
-      name: 'edX',
-      url: 'https://www.edx.org',
-      logo: 'https://www.edx.org/favicon.ico',
-      description: 'edX 是一个提供来自全球顶尖大学的在线课程的平台。它提供了计算机科学、工程、商业等课程，帮助用户学习新知识。edX 的课程结构清晰，用户可以按照进度学习，无需复杂的培训。此外，edX 支持多种语言，适合全球用户使用。edX 还提供了移动应用，用户可以随时随地访问课程。',
-      category: 'learning',
-      tags: ['在线课程', '大学课程', '部分免费'],
-      rating: 4.7,
-      views: 14000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'freelancer',
-      name: 'Freelancer',
-      url: 'https://www.freelancer.com',
-      logo: 'https://www.freelancer.com/favicon.ico',
-      description: 'Freelancer 是一个自由职业者和远程工作的平台，它提供了一个广泛的职位列表，涵盖了从编程到设计，再到市场营销等多个领域。Freelancer 为自由职业者提供了一个展示自己技能和经验的空间，同时也为雇主提供了一个寻找高质量远程工作者的场所。',
-      category: 'career',
-      tags: ['自由职业', '远程工作', '职位搜索'],
-      rating: 4.6,
-      views: 11000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'upwork',
-      name: 'Upwork',
-      url: 'https://www.upwork.com',
-      logo: 'https://www.upwork.com/favicon.ico',
-      description: 'Upwork 是一个专注于短期和长期项目的工作平台，它为专业人士提供了一个寻找临时工作机会的平台。无论是寻找全职工作还是兼职项目，Upwork 都能满足不同用户的需求。',
-      category: 'career',
-      tags: ['短期工作', '长期项目', '职位搜索'],
-      rating: 4.5,
-      views: 10000,
-      isPaid: false,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'toptalent',
-      name: 'Toptalent',
-      url: 'https://www.toptalent.com',
-      logo: 'https://assets.toptal.io/images?url=https%3A%2F%2Fwww.toptal.com%2Ftoptal-logo.png&width=360',
-      description: 'Toptalent 是一个在线招聘平台，专注于技术、设计和产品管理等领域的高端职位。它为求职者提供了一个展示自己才华和经验的机会，同时也为雇主提供了一个寻找顶尖人才的场所。',
-      category: 'career',
-      tags: ['高端职位', '技术招聘', '设计招聘'],
-      rating: 4.8,
-      views: 12000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-    {
-      id: 'indeed',
-      name: 'Indeed',
-      url: 'https://www.indeed.com',
-      logo: 'https://www.indeed.com/favicon.ico',
-      description: 'Indeed 是一个全球性的招聘平台，它为求职者和雇主提供了一个广泛的职位列表，涵盖了从初级到高级的各个职位。Indeed 为求职者提供了一个展示自己技能和经验的空间，同时也为雇主提供了一个寻找高质量员工的场所。',
-      category: 'career',
-      tags: ['全球招聘', '职位搜索', '职业发展'],
-      rating: 4.7,
-      views: 14000,
-      isPaid: true,
-      language: ['English'],
-      accessSpeed: '快速'
-    },
-
-  ]);
-
+  let websites = ref<Website[]>([]);
   const categories = ref([
     { id: 'learning', name: '学习资源', icon: '📚' },
     { id: 'research', name: '科研工具', icon: '🔬' },
     { id: 'career', name: '职业发展', icon: '💼' },
     { id: 'life', name: '生活服务', icon: '🏡' },
     { id: 'productivity', name: '效率工具', icon: '⚡' }
-  ])
+  ]);
+
+  const apiUrl = 'https://jy8b5cnnmg.hzh.sealos.run/getWebList';
+
+  // 使用 axios 从 API 获取数据
+  const fetchWebsites = async () => {
+    try {
+      const response = await axios.get(apiUrl);
+      const apiResponse = response.data; // 获取 API 返回的数据
+
+      // 检查返回的结构是否正确
+      if (apiResponse.code === 200 && Array.isArray(apiResponse.data)) {
+        websites.value = apiResponse.data; // 将返回的网站数据存储到 websites 中
+      } else {
+        console.warn('Invalid API response:', apiResponse);
+      }
+    } catch (error) {
+      console.error('Error fetching websites:', error);
+    }
+  };
+
+  // 在组件挂载时获取数据
+  onMounted(fetchWebsites);
 
   const getWebsitesByCategory = (categoryId: string) => {
-    return websites.value.filter(site => site.category === categoryId)
-  }
+    return websites.value.filter(site => site.category === categoryId);
+  };
 
   const getPopularWebsites = () => {
-    return [...websites.value].sort((a, b) => b.views - a.views).slice(0, 10)
-  }
+    return [...websites.value].sort((a, b) => b.views - a.views).slice(0, 10);
+  };
 
   return {
     websites,
     categories,
     getWebsitesByCategory,
     getPopularWebsites
-  }
-})
+  };
+});
