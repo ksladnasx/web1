@@ -7,6 +7,7 @@ import Profile from '../views/Profile.vue'
 import About from '../views/About.vue'
 import SearchResults from '../views/SearchResults.vue'
 import LoginView from '../views/LoginView.vue'
+import RegisterView from '../views/RegisterView.vue';
 
 // 配置首位路由
 import { useAuthStore } from '../stores/authStore';
@@ -51,6 +52,11 @@ const routes = [
     path: '/',
     name: 'Login',
     component: () => LoginView
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: RegisterView
   },
   {
     path: '/profile',

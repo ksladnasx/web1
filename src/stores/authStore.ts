@@ -28,6 +28,23 @@ export const useAuthStore = defineStore('auth', {
         throw new Error('Login failed. Please check your credentials.');
       }
     },
+    //添加一个 register action，用于处理注册逻辑。
+    async register(credentials: Credentials) {
+      try {
+        const response = await axios.post('https://jy8b5cnnmg.hzh.sealos.run/adduser', credentials);
+        // console.log(response)
+        if (response.data.code == 401 || response.data.code == 400) {
+          throw new Error('注册失败,用户名已存在');
+        } else {
+          this.isAuthenticated = true;
+          this.user = response.data;
+          localStorage.setItem('user', JSON.stringify(response.data));
+        }
+
+      } catch (error) {
+        throw new Error('注册失败,用户名已存在');
+      }
+    },
     logout() {
       // 登出逻辑
       this.isAuthenticated = false;

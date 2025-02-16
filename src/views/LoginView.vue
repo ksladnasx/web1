@@ -1,44 +1,47 @@
 <template>
     <div class="login-container">
-      <h2>Login</h2>
-      <form @submit.prevent="handleLogin" >
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" v-model="username" required />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" v-model="password" required />
-        </div>
-        <div class="login">
-          <button type="submit">Login</button>
-        </div>
-      </form>
+    <h2>Login</h2>
+    <form @submit.prevent="handleLogin">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" v-model="username" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" v-model="password" required />
+      </div>
+      <div class="login">
+        <button type="submit">Login</button>
+      </div>
+    </form>
+    <div class="register-link">
+      <router-link to="/register">Don't have an account? Register now</router-link>
     </div>
+  </div>
     <!-- 分割线 -->
     <div style="padding-top: 600px;">
         -----------------------------------------------------------------------------------------------------------------------
-      </div>
+    </div>
   </template>
   
   <script setup>
   import { ref } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { useAuthStore } from '../stores/authStore';
-  
-  const store = useAuthStore();
-  const router = useRouter();
-  const username = ref('');
-  const password = ref('');
-  
-  const handleLogin = async () => {
-    try {
-      await store.login({ username: username.value, password: password.value });
-      router.push('/home'); // 登录成功后跳转到主页
-    } catch (error) {
-      alert('Login failed. Please check your credentials.');
-    }
-  };
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/authStore';
+
+const store = useAuthStore();
+const router = useRouter();
+const username = ref('');
+const password = ref('');
+
+const handleLogin = async () => {
+  try {
+    await store.login({ username: username.value, password: password.value });
+    router.push('/home'); // 登录成功后跳转到主页
+  } catch (error) {
+    alert('登录失败，请检查你的账号密码');
+  }
+};
   </script>
   
   <style scoped>
