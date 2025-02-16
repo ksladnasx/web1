@@ -1,5 +1,31 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView, useRouter } from 'vue-router'
+import { useAuthStore } from './stores/authStore';
+import { computed } from 'vue';
+const router = useRouter();
+const store = useAuthStore();
+
+// 三元表达式，用于判断登录状态的store.$state.isAuthenticated值为true的话就显示'退出登录' 
+// 使用 computed 属性来动态计算 title使得它是响应式的
+const title = computed(() => {
+  return store.$state.isAuthenticated ? '退出登录' : '登录';
+});
+
+const logout = async () => {
+  if (store.$state.isAuthenticated == true) {
+    try {
+      await store.logout();
+      alert('已退出登录'); // 退出成功后弹出提示
+      router.push('/home'); // 登录成功后跳转到主页
+    } catch (error) {
+      alert('退出登录失败');
+    }
+  } else {
+    // 如果没登陆点击的话就到登录页面
+    router.push('/');
+  }
+
+};
 </script>
 
 <template>
@@ -16,6 +42,7 @@ import { RouterView } from 'vue-router'
             <router-link to="/submit" class="text-gray-600 hover:text-gray-900"><span>🙋‍♂️提交网站</span></router-link>
             <router-link to="/profile" class="text-gray-600 hover:text-gray-900"><span>👤个人中心</span></router-link>
             <router-link to="/about" class="text-gray-600 hover:text-gray-900"><span>🎈关于</span></router-link>
+            <div><button style="padding: 5px;" @click="logout">{{ title }}</button></div>
 
           </div>
         </div>
@@ -29,17 +56,18 @@ import { RouterView } from 'vue-router'
 </template>
 
 <style scoped>
-*{
+* {
   font-family: 'Courier New', Courier, monospace;
   color: aliceblue;
 }
+
 .min-h-screen {
   min-height: 100vh;
 }
 
 .max-w-7xl {
   max-width: 80rem;
-}  
+}
 
 /* .mx-auto {
   margin-left: auto;
@@ -77,7 +105,7 @@ import { RouterView } from 'vue-router'
   align-items: center;
 }
 
-.space-x-4 > :not([hidden]) ~ :not([hidden]) {
+.space-x-4> :not([hidden])~ :not([hidden]) {
   margin-left: 1rem;
 }
 
