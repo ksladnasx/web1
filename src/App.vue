@@ -8,7 +8,7 @@ import { RouterView } from 'vue-router'
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
           <div class="flex items-center">
-            <router-link to="/" class="flex items-center">
+            <router-link to="/home" class="flex items-center">
               <span class="text-xl font-bold">🏠主页</span>
             </router-link>
           </div>
@@ -16,6 +16,7 @@ import { RouterView } from 'vue-router'
             <router-link to="/submit" class="text-gray-600 hover:text-gray-900"><span>🙋‍♂️提交网站</span></router-link>
             <router-link to="/profile" class="text-gray-600 hover:text-gray-900"><span>👤个人中心</span></router-link>
             <router-link to="/about" class="text-gray-600 hover:text-gray-900"><span>🎈关于</span></router-link>
+
           </div>
         </div>
       </div>

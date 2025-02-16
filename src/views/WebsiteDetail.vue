@@ -116,6 +116,9 @@ const categoryName = computed(() => {
             <!-- 其他info-item保持相同结构 -->
           </div>
         </section>
+        <button>
+          更多详细信息，问问AI?
+        </button>
 
         <button class="visit-btn" @click="goToWebsite(website.url)">
           访问网站🔗
