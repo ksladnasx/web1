@@ -2,7 +2,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
+import { useAuthStore } from '../stores/authStore'
 
+const Authstore = useAuthStore()
 const store = useWebsiteStore()
 const router = useRouter()
 
@@ -17,8 +19,13 @@ const form = ref({
 const submitWebsite = () => {
   // Here we would normally submit to backend
   // For now, just show success and redirect
-  alert('感谢提交！我们会在24小时内审核。')
-  router.push('/')
+  if(Authstore.$state.isAuthenticated == false){
+    alert("请先登录")
+    router.push('/')
+  }else{
+    alert("感谢您的提交，我们会在一周内审核并返回结果到您的邮箱")
+    router.push('/home')
+  }
 }
 </script>
 

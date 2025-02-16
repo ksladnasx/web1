@@ -15,7 +15,7 @@
       </div>
     </form>
     <div class="register-link">
-      <router-link to="/register">Don't have an account? Register now</router-link>
+      <router-link to="/register">没有账号？注册</router-link>
     </div>
   </div>
     <!-- 分割线 -->

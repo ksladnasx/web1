@@ -2,9 +2,8 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { User, Credentials } from '../types/types';
-import { ref } from 'vue';
 
-export let names = ref('')
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     isAuthenticated: false,
@@ -28,6 +27,7 @@ export const useAuthStore = defineStore('auth', {
         throw new Error('Login failed. Please check your credentials.');
       }
     },
+
     //添加一个 register action，用于处理注册逻辑。
     async register(credentials: Credentials) {
       try {
@@ -45,11 +45,12 @@ export const useAuthStore = defineStore('auth', {
         throw new Error('注册失败,用户名已存在');
       }
     },
+
+    // 处理退出登录逻辑
     logout() {
       // 登出逻辑
       this.isAuthenticated = false;
       this.user = null;
-
       // 可选：清除用户信息
       localStorage.removeItem('user');
     }

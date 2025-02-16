@@ -19,7 +19,7 @@ const submissions = ref([
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
       <div>
-        你好! {{ store.user }}
+        你好! {{ store.user }} 
       </div>
 
       <!-- 头部 -->
