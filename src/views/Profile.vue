@@ -173,7 +173,7 @@ const handlefavorites = () => {
 .submission-card:hover {
   transform: translateY(-10px);
   /* 向上移动 */
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 24px rgba(225, 222, 222, 0.2);
   /* 更强的阴影 */
 }
 

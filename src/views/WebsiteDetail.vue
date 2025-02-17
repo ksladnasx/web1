@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import {  computed } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
 import { useFavoritesStore } from '../stores/favorites'
+import { useAuthStore } from '../stores/authStore'
 
 const route = useRoute()
 const router = useRouter()
 const store = useWebsiteStore()
 const favoritesStore = useFavoritesStore()
+const authstore = useAuthStore()
 
 const website = computed(() => {
   return store.websites.find(site => site.id === route.params.id)
@@ -19,22 +21,28 @@ const isFavorite = computed(() => {
 })
 
 const toggleFavorite = () => {
-  if (!website.value) return
-  
-  if (isFavorite.value) {
-    favoritesStore.removeFavorite(website.value.id)
+  if (authstore.isAuthenticated == false) {
+    // 没登陆要先登录
+    alert('请先登录')
+    router.push('/');
+    return
   } else {
-    favoritesStore.addFavorite(website.value)
+    if (!website.value) return
+    if (isFavorite.value) {
+      favoritesStore.removeFavorite(website.value.id)
+    } else {
+      favoritesStore.addFavorite(website.value)
+    }
   }
 }
 
 const relatedWebsites = computed(() => {
   if (!website.value) return []
   return store.websites
-    .filter(site => 
-      site.id !== website.value?.id && 
-      (site.category === website.value?.category || 
-       site.tags.some(tag => website.value?.tags.includes(tag)))
+    .filter(site =>
+      site.id !== website.value?.id &&
+      (site.category === website.value?.category ||
+        site.tags.some(tag => website.value?.tags.includes(tag)))
     )
     .slice(0, 3)
 })
@@ -53,7 +61,7 @@ const categoryName = computed(() => {
   <div class="website-detail-container" v-if="website">
     <div class="back">
       <button class="back-btn" @click="router.back()">
-     ◀  返回
+        ◀ 返回
       </button>
     </div>
     <div>
@@ -66,11 +74,8 @@ const categoryName = computed(() => {
           <div class="logo-wrapper">
             <img :src="website.logo" :alt="website.name" class="logo-exp" />
           </div>
-          <button
-            @click="toggleFavorite"
-            class="p-2 rounded-full hover:bg-gray-100 transition-colors"
-            :class="{ 'text-red-500': isFavorite }"
-          >
+          <button @click="toggleFavorite" class="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            :class="{ 'text-red-500': isFavorite }">
             <span class="text-2xl">{{ isFavorite ? '❤️' : '🤍' }}</span>
           </button>
           <div class="title-section">
@@ -231,7 +236,7 @@ const categoryName = computed(() => {
 }
 
 /* 返回按钮的样式 */
-.back{
+.back {
   width: 90px;
   margin-bottom: 2rem;
   display: flex;
@@ -243,7 +248,8 @@ const categoryName = computed(() => {
   padding-right: 1rem;
   border-radius: 0.5rem;
 }
-.back-btn{
+
+.back-btn {
   padding: 0.5rem 1rem;
   background-color: #383a42;
   border: none;
@@ -252,7 +258,8 @@ const categoryName = computed(() => {
   border-radius: 0.5rem;
   cursor: pointer;
 }
-.back-btn:hover{
+
+.back-btn:hover {
   background-color: #3b82f6;
 }
 
