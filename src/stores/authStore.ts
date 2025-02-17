@@ -14,7 +14,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         // 发送登录请求到后端
         const response = await axios.post('https://jy8b5cnnmg.hzh.sealos.run/login', credentials);
-        console.log(response)
+        // console.log(response)
         // 返回的用户名是存在data.user.username中的
         // 如果登录成功，更新状态
         this.isAuthenticated = true;

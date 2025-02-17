@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 // import { useWebsiteStore } from '../stores/website'
 import { useFavoritesStore } from '../stores/favorites'
 import WebsiteCard from '../components/WebsiteCard.vue'
@@ -13,13 +13,30 @@ const store = useAuthStore();
 const submissions = ref([
   // Would normally come from backend
 ])
+let username:any = ref(null)
+// 挂载完成之后再更新值不然会undefind
+let usernames:any = ref(null)
+onMounted(() => {
+    usernames = username.value.textContent; // 获取元素的文本内容
+    console.log('Element text content:', usernames);
+});
+
+//将更新好的当前
+const handlefavorites =   ()=>{
+  try{
+    favoritesStore.updateFavorites(usernames)
+  }catch(e){
+    console.error(e);
+  }
+}
 </script>
 
 <template>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-      <div>
-        你好! {{ store.user }} 
+      你好!
+      <div ref="username" >
+         {{ store.user }} 
       </div>
 
       <!-- 头部 -->
@@ -49,7 +66,7 @@ const submissions = ref([
 
       <!-- 收藏夹功能实现 -->
       <div class="p-6">
-        <div v-if="activeTab === 'favorites'">
+        <div v-if="activeTab === 'favorites'" >
           <div v-if="favoritesStore.favorites.length === 0" class="text-center py-12">
             <div class="text-6xl mb-4">🤍</div>
             <h3 class="text-xl font-medium text-gray-900 mb-2">暂无收藏的网站</h3>
@@ -60,6 +77,7 @@ const submissions = ref([
           <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <WebsiteCard v-for="website in favoritesStore.favorites" :key="website.id" :website="website" />
           </div>
+          <button @click="handlefavorites">保存</button>
         </div>
 
         <!-- 提交记录功能实现 -->

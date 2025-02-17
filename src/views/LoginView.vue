@@ -28,8 +28,10 @@
   import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
+import { useFavoritesStore } from '../stores/favorites';
 
 const store = useAuthStore();
+const favoritesstore =useFavoritesStore();
 const router = useRouter();
 const username = ref('');
 const password = ref('');
@@ -37,6 +39,9 @@ const password = ref('');
 const handleLogin = async () => {
   try {
     await store.login({ username: username.value, password: password.value });
+    // 登录成功后更新收藏夹
+    await favoritesstore.fetchFavorites(username.value);
+    alert('登录成功'); // 登录成功后弹出提示
     router.push('/home'); // 登录成功后跳转到主页
   } catch (error) {
     alert('登录失败，请检查你的账号密码');

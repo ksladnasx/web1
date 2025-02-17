@@ -51,7 +51,7 @@ const routes = [
   {
     path: '/',
     name: 'Login',
-    component: () => LoginView
+    component: LoginView
   },
   {
     path: '/register',
@@ -61,7 +61,7 @@ const routes = [
   {
     path: '/profile',
     name: 'profile',
-    component: () => Profile,
+    component: Profile,
     meta: { requiresAuth: true }
   }
 ]
