@@ -62,7 +62,7 @@ button:focus-visible {
   padding: 2em;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(236, 233, 233, 0.1);
   margin: 1rem 0;
 }
 
