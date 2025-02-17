@@ -35,15 +35,14 @@ const logout = async () => {
         <div class="flex justify-between h-16 items-center">
           <div class="flex items-center">
             <router-link to="/home" class="flex items-center">
-              <span class="text-xl font-bold">🏠主页</span>
+              <span class="text-xl font-bold">🏠 主页</span>
             </router-link>
           </div>
           <div class="flex items-center space-x-4">
-            <router-link to="/submit" class="text-gray-600 hover:text-gray-900"><span>🙋‍♂️提交网站</span></router-link>
-            <router-link to="/profile" class="text-gray-600 hover:text-gray-900"><span>👤个人中心</span></router-link>
-            <router-link to="/about" class="text-gray-600 hover:text-gray-900"><span>🎈关于</span></router-link>
+            <router-link to="/submit" class="text-gray-600 hover:text-gray-900"><span>🙋‍♂️ 提交网站</span></router-link>
+            <router-link to="/profile" class="text-gray-600 hover:text-gray-900"><span>👤 个人中心</span></router-link>
+            <router-link to="/about" class="text-gray-600 hover:text-gray-900"><span>🎈 关于</span></router-link>
             <div><button style="padding: 5px;" @click="logout">{{ title }}</button></div>
-
           </div>
         </div>
       </div>
@@ -55,6 +54,7 @@ const logout = async () => {
   </div>
 </template>
 
+
 <style scoped>
 * {
   font-family: 'Courier New', Courier, monospace;
@@ -62,17 +62,12 @@ const logout = async () => {
 }
 
 .min-h-screen {
-  min-height: 100vh;
+  min-height: 100vh; /* 使元素最小高度为视口高度 */
 }
 
 .max-w-7xl {
   max-width: 80rem;
 }
-
-/* .mx-auto {
-  margin-left: auto;
-  margin-right: auto;
-} */
 
 .px-4 {
   padding-left: 1rem;
@@ -105,7 +100,7 @@ const logout = async () => {
   align-items: center;
 }
 
-.space-x-4> :not([hidden])~ :not([hidden]) {
+.space-x-4 > :not([hidden])~ :not([hidden]) {
   margin-left: 1rem;
 }
 
