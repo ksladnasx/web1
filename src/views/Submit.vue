@@ -3,7 +3,10 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
 import { useAuthStore } from '../stores/authStore'
+import { usesubmitstore } from '../stores/submitStore'
 
+// 获取 Authstore 和 store 实例
+const submitStores = usesubmitstore()
 const Authstore = useAuthStore()
 const store = useWebsiteStore()
 const router = useRouter()
@@ -17,16 +20,29 @@ const form = ref({
 })
 
 const submitWebsite = () => {
-  // Here we would normally submit to backend
-  // For now, just show success and redirect
-  if(Authstore.$state.isAuthenticated == false){
-    alert("请先登录")
-    router.push('/')
-  }else{
-    alert("感谢您的提交，我们会在一周内审核并返回结果到您的邮箱")
-    router.push('/home')
+  // 检查用户是否登录
+  if (!Authstore.$state.isAuthenticated) {
+    alert("请先登录");
+    router.push('/');
+  } else {
+    // 获取表单数据
+    const formData = form.value; // 获取绑定的表单数据
+    console.log("提交的表单数据：", formData);
+    let username: any = Authstore.user// 获取元素的文本内容
+    console.log(username)
+    // 向后端提交数据,直接根据现有的数据封装传给函数
+    submitStores.addsubmits({ username: username, submit: formData });
+    // 在这里可以将 formData 发送到后端
+    // 示例：使用 axios 发送数据
+
+    // 调用函数传用户名来更新提交记录
+    submitStores.fetchSubmissions(username)
+    
+    // 模拟成功提交
+    alert("感谢您的提交，我们会在一周内审核并返回结果到您的邮箱");
+    router.push('/home');
   }
-}
+};
 </script>
 
 <template>
@@ -34,46 +50,25 @@ const submitWebsite = () => {
     <div class="form-card">
       <h1 class="form-title">网站提交</h1>
       <div>
-      --------------------------------------------------------------------------------------------------------------------
-    </div>
-    <br>
+        --------------------------------------------------------------------------------------------------------------------
+      </div>
+      <br>
       <form @submit.prevent="submitWebsite" class="form-content">
         <div class="form-group">
           <label for="name">网站名称</label>
-          <input
-            type="text"
-            id="name"
-            v-model="form.name"
-            required
-            class="form-input"
-          />
+          <input type="text" id="name" v-model="form.name" required class="form-input" />
         </div>
 
         <div class="form-group">
           <label for="url">网站地址</label>
-          <input
-            type="url"
-            id="url"
-            v-model="form.url"
-            required
-            class="form-input"
-          />
+          <input type="url" id="url" v-model="form.url" required class="form-input" />
         </div>
 
         <div class="form-group">
           <label for="category">分类</label>
-          <select
-            id="category"
-            v-model="form.category"
-            required
-            class="form-select"
-          >
+          <select id="category" v-model="form.category" required class="form-select">
             <option value="">请选择分类</option>
-            <option
-              v-for="category in store.categories"
-              :key="category.id"
-              :value="category.id"
-            >
+            <option v-for="category in store.categories" :key="category.id" :value="category.id">
               {{ category.name }}
             </option>
           </select>
@@ -81,25 +76,13 @@ const submitWebsite = () => {
 
         <div class="form-group">
           <label for="description">简短描述</label>
-          <textarea
-            id="description"
-            v-model="form.description"
-            rows="3"
-            required
-            class="form-textarea"
-          ></textarea>
+          <textarea id="description" v-model="form.description" rows="3" required class="form-textarea"></textarea>
         </div>
 
         <div class="form-group">
           <label for="reason">推荐理由</label>
-          <textarea
-            id="reason"
-            v-model="form.reason"
-            rows="4"
-            required
-            maxlength="200"
-            class="form-textarea"
-          ></textarea>
+          <textarea id="reason" v-model="form.reason" rows="4" required maxlength="200"
+            class="form-textarea"></textarea>
           <p class="form-hint">最多200字</p>
         </div>
 
@@ -124,7 +107,7 @@ const submitWebsite = () => {
   min-height: 100vh;
   padding: 2rem 1rem;
   /* 弹性布局 */
-  display: flex; 
+  display: flex;
   margin: 0 auto;
 }
 

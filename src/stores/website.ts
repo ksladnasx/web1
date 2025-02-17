@@ -1,21 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { Website } from '../types/types';
 
-export interface Website {
-  id: string;
-  name: string;
-  url: string;
-  logo: string;
-  description: string;
-  category: string;
-  tags: string[];
-  rating: number;
-  views: number;
-  isPaid: boolean;
-  language: string[];
-  accessSpeed: string;
-}
+
 
 export const useWebsiteStore = defineStore('website', () => {
   let websites = ref<Website[]>([{
@@ -105,3 +93,6 @@ export const useWebsiteStore = defineStore('website', () => {
     getPopularWebsites
   };
 });
+
+
+

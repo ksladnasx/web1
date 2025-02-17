@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { Website } from './website'
+import type { Website } from '../types/types'
 import axios from 'axios'
 import {lovedata} from '../types/types'
 
