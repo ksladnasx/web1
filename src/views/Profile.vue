@@ -186,7 +186,7 @@ const handlefavorites = () => {
                   <img :src="avatarPreview" class="avatar-preview" alt="头像">
                 </div>
                 <label class="block">
-                  <span class="xz"><h4>选择头像:</h4></span>
+                  <span class="xz"><h4></h4></span>
                   <input type="file" accept="image/*" @change="handleAvatarUpload" class="file-input" />
                 </label>
               </div>
@@ -394,16 +394,16 @@ input:focus {
   display: block;
   position: relative;
   top: 8px;
-  right: 27em;
+  right:520px;
   font-size: larger;
 }
 /* 文件上传按钮样式 */
 .file-input {
   position: relative;
-  bottom: 3.7em;
-  left: 6em;
+  bottom: 30px;
+  left: 80px;
   display: block;
-  width: 16%;
+  width: 150px;
   padding: 8px 12px;
   font-size: 14px;
   color: #121212;
