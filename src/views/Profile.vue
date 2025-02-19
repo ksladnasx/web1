@@ -2,12 +2,12 @@
 import { ref } from 'vue'
 // import { useWebsiteStore } from '../stores/website'
 import { useFavoritesStore } from '../stores/favorites'
-import WebsiteCard from '../components/WebsiteCard.vue'
+import profliewebCard from '../components/profliewebCard.vue';
 import { useAuthStore } from '../stores/authStore';
 import { usesubmitstore } from '../stores/submitStore';
 // 新增导入
 import { useProfileStore } from '../stores/profileStore'
-import { computed } from 'vue'
+
 
 // 新增profileStore
 const profileStore = useProfileStore()
@@ -130,7 +130,7 @@ const handlefavorites = () => {
           </div>
           <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="submission-card">
-              <WebsiteCard v-for="website in favoritesStore.favorites" :key="website.id" :website="website"
+              <profliewebCard v-for="website in favoritesStore.favorites" :key="website.id" :website="website"
                 @remove="favoritesStore.removeFavorite(website.id)" />
 
             </div>
@@ -159,11 +159,13 @@ const handlefavorites = () => {
                 <!-- 显示提交记录 -->
                 <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   <div v-for="submission in submitStore.submissions" :key="submission.name" class="submission-card">
-                    <h4 class="submission-title">{{ submission.name }}</h4>
+                    <div>
+                      <h4 class="submission-title" style="position: relative;right: 15em;">{{ submission.name }}</h4>
+                    </div>
                     <p class="submission-description">{{ submission.description }}</p>
                     <p class="submission-category">分类: {{ submission.category }}</p>
                     <p class="submission-reason">推荐理由: {{ submission.reason }}</p>
-                    <a :href="submission.url" target="_blank" class="submission-link">访问网站</a>
+                    <p><a :href="submission.url" target="_blank" class="submission-link">访问网站</a></p>
                   </div>
                 </div>
               </div>
@@ -181,44 +183,37 @@ const handlefavorites = () => {
               <!-- 头像上传 -->
               <div class="flex items-center gap-4">
                 <div class="shrink-0">
-                  <img :src="avatarPreview" class="h-16 w-16 rounded-full object-cover" alt="头像">
+                  <img :src="avatarPreview" class="avatar-preview" alt="头像">
                 </div>
                 <label class="block">
-                  <span class="sr-only">选择头像</span>
-                  <input type="file" accept="image/*" @change="handleAvatarUpload" class="block w-full text-sm text-gray-400
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-blue-50 file:text-blue-700
-                hover:file:bg-blue-100" />
+                  <span class="xz"><h4>选择头像:</h4></span>
+                  <input type="file" accept="image/*" @change="handleAvatarUpload" class="file-input" />
                 </label>
               </div>
 
               <!-- 用户名 -->
-              <div>
-                <label for="username" class="block text-sm font-medium text-gray-300">用户名</label>
-                <input v-model="form.username" type="text" id="username"
-                  class="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+              <div class="items">
+                <label for="username" class="form-label">用户名</label>
+                <input v-model="form.username" type="text" id="username" class="form-input" />
               </div>
 
               <!-- 邮箱 -->
-              <div>
-                <label for="email" class="block text-sm font-medium text-gray-300">邮箱</label>
-                <input v-model="form.email" type="email" id="email"
-                  class="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+              <div class="items">
+                <label for="email" class="form-label">邮箱</label>
+                <input v-model="form.email" type="email" id="email" class="form-input" />
               </div>
 
               <!-- 出生日期 -->
-              <div>
-                <label for="birthdate" class="block text-sm font-medium text-gray-300">出生日期</label>
-                <input v-model="form.birthdate" type="date" id="birthdate"
-                  class="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+              <div class="items">
+                <label for="birthdate" class="form-label">出生日期</label>
+                <input v-model="form.birthdate" type="date" id="birthdate" class="form-input" />
               </div>
 
-              <button type="submit"
-                class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+              <div class="items">
+                <button type="submit" class="submit-button" >
                 保存设置
               </button>
+              </div>
             </form>
           </div>
         </div>
@@ -369,5 +364,107 @@ input {
 input:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* 外联样式表 */
+
+
+.submission-card {
+  height: auto;
+  background-color: #1e1e1e;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 头像样式 */
+.avatar-preview {
+  height: 64px;
+  width: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.avatar-preview:hover {
+  transform: scale(1.05);
+}
+
+.xz{
+  display: block;
+  position: relative;
+  top: 8px;
+  right: 27em;
+  font-size: larger;
+}
+/* 文件上传按钮样式 */
+.file-input {
+  position: relative;
+  bottom: 3.7em;
+  left: 6em;
+  display: block;
+  width: 16%;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #121212;
+  background-color: #2b2c2e;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.file-input:hover {
+  background-color: #3477bd;
+}
+
+/* 表单标签样式 */
+.form-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #a0a0a0;
+}
+
+/* 输入框样式 */
+.form-input {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  color: #e0e0e0;
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+.items{
+ padding-bottom: 3em;
+}
+
+.form-input:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+/* 提交按钮样式 */
+.submit-button {
+  display: block;
+  margin-top: 1em;
+  width: 100%;
+  /* padding: 12px; */
+  font-size: 16px;
+  font-weight: 500;
+  color: #e0e0e0;
+  background-color: #4a90e2;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #3477bd;
 }
 </style>

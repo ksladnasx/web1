@@ -1,4 +1,23 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+import router from '../router';
+import { useAuthStore } from '../stores/authStore';
+const form = ref()
+
+const Authstore = useAuthStore()
+const handleComplain = () => {
+  if (!Authstore.$state.isAuthenticated) {
+    alert("请先登录");
+    router.push('/');
+  } else {
+    // 获取表单数据
+    const formData = form.value; // 获取绑定的表单数据
+    console.log("提交的表单数据：", formData);
+    // 模拟成功提交
+    alert("感谢您的反馈！");
+    router.push('/home');
+  }
+}
 </script>
 
 <template>
@@ -6,8 +25,8 @@
     <div class="bg-white rounded-lg shadow-lg p-6">
       <h1 class="text-3xl font-bold mb-6">关于我们</h1>
       <div>
-    -----------------------------------------------------------------------------------------------------------------------
-  </div>
+        -----------------------------------------------------------------------------------------------------------------------
+      </div>
       <section class="mb-8">
         <h2 class="text-xl font-semibold mb-4">网站目标</h2>
         <p class="text-gray-600">
@@ -28,22 +47,17 @@
 
       <section>
         <h2 class="text-xl font-semibold mb-4">联系我们</h2>
-        <form class="space-y-4">
+        <form class="space-y-4" @submit.prevent="handleComplain">
           <div>
             <label for="feedback" class="block text-sm font-medium text-gray-700">
               反馈建议
             </label>
-            <textarea
-              id="feedback"
-              rows="4"
+            <textarea v-model="form" id="feedback" rows="1"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              placeholder="请输入您的反馈或建议..."
-            ></textarea>
+              placeholder="请输入您的反馈或建议..."></textarea>
           </div>
-          <button
-            type="submit"
-            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
+          <button type="submit"
+            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             提交反馈
           </button>
         </form>
@@ -52,6 +66,4 @@
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,6 +1,10 @@
 <template>
+  
     <div class="register-container">
       <h2>Register</h2>
+      <div>
+    ---------------------------------------------------------------------------------------------------------------
+  </div>
       <form @submit.prevent="handleRegister">
         <div class="form-group">
           <label for="username">Username</label>
@@ -50,7 +54,7 @@
   
   <style scoped>
   .register-container {
-    max-width: 400px;
+    max-width: 2000px;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;

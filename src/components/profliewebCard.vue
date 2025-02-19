@@ -34,7 +34,19 @@ const goToDetail = () => {
         <span class="text-blue-400">👁️</span>
         <span>{{ website.views.toLocaleString() }}</span>
       </div>
-    
+      <div>
+
+        <!-- 删除按钮 -->
+        <button 
+        @click.stop="$emit('remove')"
+        class="delete-btn"
+        title="取消收藏"
+        
+        style=""
+      >
+       X
+      </button>
+      </div>
     </div>
   </div>
 </template>

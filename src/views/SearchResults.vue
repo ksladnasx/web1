@@ -2,7 +2,7 @@
 import {computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
-import WebsiteCard from '../components/WebsiteCard.vue'
+import WebsiteexpressCard from '../components/WebsiteexpressCard.vue'
 
 const route = useRoute()
 const store = useWebsiteStore()
@@ -39,7 +39,7 @@ const searchResults = computed(() => {
       </div>
 
       <div v-if="searchResults.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <WebsiteCard
+        <WebsiteexpressCard
           v-for="website in searchResults"
           :key="website.id"
           :website="website"
