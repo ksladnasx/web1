@@ -12,13 +12,9 @@ export const useFavoritesStore = defineStore('favorites', () => {
     }
   }
 
- // 在收藏store中添加
-const removeFavorite = (id: string) => {
-  const index = favorites.value.findIndex(item => item.id === id)
-  if (index !== -1) {
-    favorites.value.splice(index, 1)
+  const removeFavorite = (websiteId: string) => {
+    favorites.value = favorites.value.filter(f => f.id !== websiteId)
   }
-}
 
   const isFavorite = (websiteId: string) => {
     return favorites.value.some(f => f.id === websiteId)

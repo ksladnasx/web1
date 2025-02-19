@@ -1,6 +1,7 @@
+<!-- 这个用于个人中心页的网站卡片展示 -->
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import type { Website } from '../stores/website'
+import type { Website } from '../types/types'
 
 const props = defineProps<{
   website: Website
@@ -14,40 +15,17 @@ const goToDetail = () => {
 </script>
 
 <template>
-  <div 
-    @click="goToDetail"
-    class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-4 cursor-pointer transform hover:-translate-y-1"
-  >
-    <div class="flex items-center space-x-3 mb-3">
-      <div class="w-10 h-10 flex-shrink-0 overflow-hidden rounded-lg bg-gray-50 border border-gray-100">
-       <img
-          :src="website.logo"
-          :alt="website.name"
-          class="w-full h-full object-contain p-1.5"
-        />
-      </div>
-      <div class="flex-1 min-w-0">
-        
-        <h3 class="text-base font-semibold text-gray-900 truncate">{{ website.name }}</h3>
-        <div class="flex flex-wrap gap-1.5 mt-1">
-          <span
-            v-for="tag in website.tags.slice(0, 2)"
-            :key="tag"
-            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700"
-          >
-            {{ tag }}
-          </span>
-          <!-- <span 
-            v-if="website.tags.length > 2" 
-            class="text-xs text-gray-500"
-          >
-            +{{ website.tags.length - 2 }}
-          </span> -->
-        </div>
-      </div>
-    </div>
-    <!-- <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ website.description }}</p> -->
-    <div class="flex justify-between items-center text-xs text-gray-500">
+  <!-- 图片部分 -->
+  <div @click="goToDetail" class="website-card group">
+    <img :src="website.logo" :alt="website.name" />
+    <div class="content">
+      <h3>{{ website.name }}</h3>
+      <span v-for="tag in website.tags.slice(0, 2)" :key="tag"
+        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+        {{ tag }}
+      </span>
+
+      <!-- 内容部分 -->
       <div class="flex items-center space-x-1">
         <span class="text-yellow-400">⭐</span>
         <span>{{ website.rating.toFixed(1) }}</span>
@@ -56,22 +34,76 @@ const goToDetail = () => {
         <span class="text-blue-400">👁️</span>
         <span>{{ website.views.toLocaleString() }}</span>
       </div>
+      <div>
+
+        <!-- 删除按钮 -->
+        <button 
+        @click.stop="$emit('remove')"
+        class="delete-btn"
+        title="取消收藏"
+        
+        style=""
+      >
+       X
+      </button>
+      </div>
     </div>
   </div>
 </template>
 
 
 <style scoped>
-*{
-  flex: auto;
+.content{
+  position: relative;
+  bottom: 2.5em;
 }
+.website-card {
+  background: #2a2a2a;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.website-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  background: #333;
+}
+
+.website-card:hover img {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
 img{
+  width: 10%;
   object-fit: cover;
-  width:10% ;
-  height: 100%;
-  border-radius: 5px;
-  transition: transform 0.3s ease;
-  filter: brightness(90%);
-  transform: scale(1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+
+
+.delete-btn {
+  background: rgba(239, 68, 68, 0.9);
+  position: relative;left: 40%;bottom: 6em;
+  /* border-radius: 100%; */
+  transition: all 0.2s ease;
+  transform: translateY(-10px);
+}
+
+.delete-btn:hover {
+  background: rgba(220, 38, 38, 0.9);
+  transform: scale(1.1);
+}
+
+
+
+.website-card:hover .delete-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
 </style>

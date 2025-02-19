@@ -5,61 +5,6 @@ import { useFavoritesStore } from '../stores/favorites'
 import WebsiteCard from '../components/WebsiteCard.vue'
 import { useAuthStore } from '../stores/authStore';
 import { usesubmitstore } from '../stores/submitStore';
-// 新增导入
-import { useProfileStore } from '../stores/profileStore'
-import { computed } from 'vue'
-
-// 新增profileStore
-const profileStore = useProfileStore()
-
-// 头像预览
-const avatarPreview = ref(profileStore.avatar)
-const avatarFile = ref<File | null>(null)
-
-// 表单数据
-const form = ref({
-  username: profileStore.username,
-  email: profileStore.email,
-  birthdate: profileStore.birthdate
-})
-
-// 处理头像选择
-const handleAvatarUpload = (e: Event) => {
-  const input = e.target as HTMLInputElement
-  if (input.files?.length) {
-    avatarFile.value = input.files[0]
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      avatarPreview.value = e.target?.result as string
-    }
-    reader.readAsDataURL(avatarFile.value)
-  }
-}
-
-// 提交表单
-const handleSubmit = async () => {
-  const updatedData = {
-    ...form.value,
-    avatar: avatarFile.value ? await toBase64(avatarFile.value) : profileStore.avatar
-  }
-
-  try {
-    await profileStore.updateProfile(updatedData)
-    // 显示成功提示
-  } catch (error) {
-    // 处理错误
-  }
-}
-
-// 文件转Base64
-const toBase64 = (file: File) => new Promise<string>((resolve, reject) => {
-  const reader = new FileReader()
-  reader.readAsDataURL(file)
-  reader.onload = () => resolve(reader.result as string)
-  reader.onerror = error => reject(error)
-})
-
-
 
 // const store = useWebsiteStore()
 const favoritesStore = useFavoritesStore()
@@ -130,10 +75,9 @@ const handlefavorites = () => {
           </div>
           <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="submission-card">
-              <WebsiteCard v-for="website in favoritesStore.favorites" :key="website.id" :website="website"
-                @remove="favoritesStore.removeFavorite(website.id)" />
-
+              <WebsiteCard v-for="website in favoritesStore.favorites" :key="website.id" :website="website" />
             </div>
+
           </div>
           <button @click="handlefavorites">保存</button>
         </div>
@@ -174,53 +118,32 @@ const handlefavorites = () => {
 
 
         <!-- 基础设置功能实现 -->
-        <!-- 修改设置部分 -->
         <div v-if="activeTab === 'settings'" class="max-w-md mx-auto">
           <div class="submission-card">
-            <form @submit.prevent="handleSubmit" class="space-y-6">
-              <!-- 头像上传 -->
-              <div class="flex items-center gap-4">
-                <div class="shrink-0">
-                  <img :src="avatarPreview" class="h-16 w-16 rounded-full object-cover" alt="头像">
-                </div>
-                <label class="block">
-                  <span class="sr-only">选择头像</span>
-                  <input type="file" accept="image/*" @change="handleAvatarUpload" class="block w-full text-sm text-gray-400
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-blue-50 file:text-blue-700
-                hover:file:bg-blue-100" />
+            <form class="space-y-6">
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">
+                  邮箱
                 </label>
+                <input type="email" id="email"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
               </div>
 
-              <!-- 用户名 -->
               <div>
-                <label for="username" class="block text-sm font-medium text-gray-300">用户名</label>
-                <input v-model="form.username" type="text" id="username"
-                  class="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500" />
-              </div>
-
-              <!-- 邮箱 -->
-              <div>
-                <label for="email" class="block text-sm font-medium text-gray-300">邮箱</label>
-                <input v-model="form.email" type="email" id="email"
-                  class="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500" />
-              </div>
-
-              <!-- 出生日期 -->
-              <div>
-                <label for="birthdate" class="block text-sm font-medium text-gray-300">出生日期</label>
-                <input v-model="form.birthdate" type="date" id="birthdate"
-                  class="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500" />
+                <label for="password" class="block text-sm font-medium text-gray-700">
+                  修改密码
+                </label>
+                <input type="password" id="password"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
               </div>
 
               <button type="submit"
-                class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 保存设置
               </button>
             </form>
           </div>
+
         </div>
       </div>
     </div>

@@ -3,8 +3,7 @@ import { ref } from 'vue'
 import { useWebsiteStore } from '../stores/website';
 import SearchBar from '../components/SearchBar.vue'
 import CategoryGrid from '../components/CategoryGrid.vue'
-import WebsiteexpressCard from '../components/WebsiteexpressCard.vue';
-
+import WebsiteCard from '../components/WebsiteCard.vue'
 
 const store = useWebsiteStore()
 const searchQuery = ref('')
@@ -26,7 +25,7 @@ const searchQuery = ref('')
     <section class="recommend-websites">
   <h2 class="section-title">推荐网站</h2>
   <div class="cards-container">
-    <WebsiteexpressCard 
+    <WebsiteCard 
       v-for="website in store.websites.slice(0, 6)" 
       :key="website.id" 
       :website="website"
