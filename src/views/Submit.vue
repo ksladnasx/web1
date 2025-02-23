@@ -103,7 +103,7 @@ const submitWebsite = () => {
 
 <style scoped>
 .form-container {
-  background: #222;
+  width:100%; 
   min-height: 100vh;
   padding: 2rem 1rem;
   /* 弹性布局 */

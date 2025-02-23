@@ -86,7 +86,7 @@ const handlefavorites = () => {
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="proflie-container">
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
       你好!
       <div ref="username">
@@ -113,8 +113,8 @@ const handlefavorites = () => {
 
       <!-- 分割线 -->
       <div>
-        -----------------------------------------------------------------------------------------------------------------------
-      </div>
+      ------------------------------------------------------------------------------------------------------------------------------
+    </div>
 
       <!-- 基础设置功能实现 -->
 
@@ -217,12 +217,17 @@ const handlefavorites = () => {
             </form>
           </div>
         </div>
-      </div>
+      </div>          
     </div>
   </div>
 </template>
 
 <style scoped>
+.proflie-container{
+  width:100%; 
+}
+
+
 /* 基础样式 */
 .submission-card {
   background-color: #222;

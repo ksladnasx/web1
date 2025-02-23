@@ -29,26 +29,27 @@ const logout = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="menu">
     <nav class="bg-white shadow">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
           <div class="flex items-center">
             <router-link to="/home" class="flex items-center">
-              <span class="text-xl font-bold">🏠 主页</span>
+              <button>🏠 主页</button>
             </router-link>
           </div>
           <div class="flex items-center space-x-4">
-            <router-link to="/submit" class="text-gray-600 hover:text-gray-900"><span>🙋‍♂️ 提交网站</span></router-link>
-            <router-link to="/profile" class="text-gray-600 hover:text-gray-900"><span>👤 个人中心</span></router-link>
-            <router-link to="/about" class="text-gray-600 hover:text-gray-900"><span>🎈 关于</span></router-link>
-            <div><button style="padding: 5px;" @click="logout">{{ title }}</button></div>
+            <router-link to="/star-map" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 hover:scale-105"><button>⭐ 学习星图</button></router-link>
+            <router-link to="/submit" class="text-gray-600 hover:text-green-500 transition-colors duration-300 hover:scale-105"><button>🙋‍♂️ 提交网站</button></router-link>
+            <router-link to="/profile" class="text-gray-600 hover:text-purple-500 transition-colors duration-300 hover:scale-105"><button>👤 个人中心</button></router-link>
+            <router-link to="/about" ><button>🎈 关于</button></router-link>
+            <div><button style="padding: 5px;" @click="logout" class="transition-colors duration-300 hover:bg-red-500 hover:text-white">{{ title }}</button></div>
           </div>
         </div>
       </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 bgc">
       <RouterView />
     </main>
   </div>
@@ -59,14 +60,31 @@ const logout = async () => {
 * {
   font-family: 'Courier New', Courier, monospace;
   color: aliceblue;
+  transition: all 0.3s ease; /* 添加全局过渡效果 */
 }
+  
+/* ... 其他现有样式 ... */
 
+a.router-link:hover {
+  transform: scale(1.05); /* 鼠标悬停时稍微放大 */
+  color: #c3ff00; /* 鼠标悬停时文本颜色变化 */
+}
+button:hover {
+  transform: scale(1.05); /* 鼠标悬停时稍微放大 */
+  background-color: #14b6f1; /* 鼠标悬停时背景颜色变化 */
+  color: rgb(255, 204, 0); /* 鼠标悬停时文本颜色变化 */
+}
 .min-h-screen {
-  min-height: 100vh; /* 使元素最小高度为视口高度 */
+  min-height: 100vh;
+  /* 使元素最小高度为视口高度 */
 }
 
+.bgc{
+  background-color: #1c212f;
+}
 .max-w-7xl {
-  max-width: 80rem;
+  
+  max-width: 1280px;
 }
 
 .px-4 {
@@ -100,7 +118,7 @@ const logout = async () => {
   align-items: center;
 }
 
-.space-x-4 > :not([hidden])~ :not([hidden]) {
+.space-x-4> :not([hidden])~ :not([hidden]) {
   margin-left: 1rem;
 }
 

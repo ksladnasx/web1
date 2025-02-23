@@ -10,11 +10,11 @@ const store = useWebsiteStore()
 const searchQuery = ref('')
 </script>
 
-<template>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<template>              
+  <div >
     <h1 class="text-4xl font-bold text-center mb-8">学术网站导航</h1>
     <div>
-      -----------------------------------------------------------------------------------------------------------------------
+      ------------------------------------------------------------------------------------------------------------------------------
     </div>
     <SearchBar v-model="searchQuery" class="mb-12" />
 
@@ -24,38 +24,33 @@ const searchQuery = ref('')
     </section>
 
     <section class="recommend-websites">
-  <h2 class="section-title">推荐网站</h2>
-  <div class="cards-container">
-    <WebsiteexpressCard 
-      v-for="website in store.websites.slice(0, 6)" 
-      :key="website.id" 
-      :website="website"
-      class="website-card"
-    />
-  </div>
-</section>
+      <h2 class="section-title">推荐网站</h2>
+      <div class="cards-container">
+        <WebsiteexpressCard v-for="website in store.websites.slice(0, 6)" :key="website.id" :website="website"
+          class="website-card" />
+      </div>
+    </section>
     <br>
     <br>
     <br>
+   
 
     <section class="popular-section">
-  <h2 class="section-title">热门榜单</h2>
-  <div class="ranking-container">
-    <ol class="ranking-list">
-      <li v-for="(website, index) in store.getPopularWebsites()"
-          :key="website.id"
-          class="ranking-item">
-        <a :href=website.url>
-          <div class="rank-number">{{ index + 1 }}</div>
-        <div class="website-info">
-          <h3 class="website-name">{{ website.name }}</h3>
-          <p class="website-description">{{ website.description }}</p>
-        </div>
-        </a>
-      </li>
-    </ol>
-  </div>
-</section>
+      <h2 class="section-title">热门榜单</h2>
+      <div class="ranking-container">
+        <ol class="ranking-list">
+          <li v-for="(website, index) in store.getPopularWebsites()" :key="website.id" class="ranking-item">
+            <a :href=website.url>
+              <div class="rank-number">{{ index + 1 }}</div>
+              <div class="website-info">
+                <h3 class="website-name">{{ website.name }}</h3>
+                <p class="website-description">{{ website.description }}</p>
+              </div>
+            </a>
+          </li>
+        </ol>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -135,6 +130,7 @@ const searchQuery = ref('')
   font-size: 0.875rem;
   line-height: 1.5;
 }
+
 .popular-section {
   margin-top: 3rem;
   padding: 0 1rem;
