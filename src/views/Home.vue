@@ -8,9 +8,10 @@ import WebsiteexpressCard from '../components/WebsiteexpressCard.vue';
 
 const store = useWebsiteStore()
 const searchQuery = ref('')
+
 </script>
 
-<template>              
+<template >           
   <div >
     <h1 class="text-4xl font-bold text-center mb-8">学术网站导航</h1>
     <div>
@@ -19,7 +20,7 @@ const searchQuery = ref('')
     <SearchBar v-model="searchQuery" class="mb-12" />
 
     <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-6">热门分类</h2>
+      <h2 class="text-2xl font-semibold mb-6 fl">热门分类</h2>
       <CategoryGrid :categories="store.categories" />
     </section>
 
@@ -51,10 +52,14 @@ const searchQuery = ref('')
         </ol>
       </div>
     </section>
+
+
+    
   </div>
 </template>
 
 <style scoped>
+  
 .recommend-websites {
   margin-bottom: 3rem;
   padding: 0 1rem;

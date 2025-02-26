@@ -54,5 +54,5 @@ export const useAuthStore = defineStore('auth', {
       // 可选：清除用户信息
       localStorage.removeItem('user');
     }
-  }
+  }                 
 });

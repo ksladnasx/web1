@@ -9,6 +9,7 @@ import SearchResults from '../views/SearchResults.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue';
 import StarMap from '../views/StarMap.vue'
+import Test from "../../test/index.vue"
 
 // 配置首位路由
 import { useAuthStore } from '../stores/authStore';
@@ -68,6 +69,11 @@ const routes = [
     name: 'profile',
     component: Profile,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: Test
   }
 ]
 

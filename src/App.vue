@@ -39,6 +39,7 @@ const logout = async () => {
             </router-link>
           </div>
           <div class="flex items-center space-x-4">
+            <router-link to="/test" class="text-gray-600 hover:text-red-500 transition-colors duration-300 hover:scale-105"><button>🎵 音乐</button></router-link>
             <router-link to="/star-map" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 hover:scale-105"><button>⭐ 学习星图</button></router-link>
             <router-link to="/submit" class="text-gray-600 hover:text-green-500 transition-colors duration-300 hover:scale-105"><button>🙋‍♂️ 提交网站</button></router-link>
             <router-link to="/profile" class="text-gray-600 hover:text-purple-500 transition-colors duration-300 hover:scale-105"><button>👤 个人中心</button></router-link>
@@ -49,7 +50,7 @@ const logout = async () => {
       </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 bgc">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 bgc" >
       <RouterView />
     </main>
   </div>
