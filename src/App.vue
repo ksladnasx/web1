@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from 'vue-router'
 import { useAuthStore } from './stores/authStore';
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted } from 'vue';
 const router = useRouter();
-const store = useAuthStore();
+const store = useAuthStore();                               
 
 // 三元表达式，用于判断登录状态的store.$state.isAuthenticated值为true的话就显示'退出登录' 
 // 使用 computed 属性来动态计算 title使得它是响应式的
@@ -26,6 +26,47 @@ const logout = async () => {
   }
 
 };
+
+let snowScript: HTMLScriptElement | null = null;
+onMounted(() => {
+    // 动态加载雪花脚本
+    snowScript = document.createElement('script');
+    snowScript.type = 'text/javascript';
+    snowScript.src = 'https://api.vvhan.com/api/script/snow';
+    snowScript.defer = true;
+
+    // 将脚本插入到页面
+    document.head.appendChild(snowScript);
+});
+
+onUnmounted(() => {
+    // 卸载组件时移除脚本
+    if (snowScript) {
+        document.head.removeChild(snowScript);
+    }
+});
+
+
+
+// 灯笼
+
+// let newyearScript: HTMLScriptElement | null = null;
+// onMounted(() => {
+//     newyearScript = document.createElement('script');
+//     newyearScript.type = 'text/javascript';
+//     newyearScript.src = 'https://api.vvhan.com/api/script/denglong';
+//     newyearScript.defer = true;
+
+//     // 将脚本插入到页面
+//     document.head.appendChild(newyearScript);
+// });
+
+// onUnmounted(() => {
+//     // 卸载组件时移除脚本
+//     if (snowScript) {
+//         document.head.removeChild(snowScript);
+//     }
+// });
 </script>
 
 <template>
@@ -39,7 +80,7 @@ const logout = async () => {
             </router-link>
           </div>
           <div class="flex items-center space-x-4">
-            <router-link to="/test" class="text-gray-600 hover:text-red-500 transition-colors duration-300 hover:scale-105"><button>🎵 音乐</button></router-link>
+            <router-link to="/music" class="text-gray-600 hover:text-red-500 transition-colors duration-300 hover:scale-105"><button>🎵 音乐</button></router-link>
             <router-link to="/star-map" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 hover:scale-105"><button>⭐ 学习星图</button></router-link>
             <router-link to="/submit" class="text-gray-600 hover:text-green-500 transition-colors duration-300 hover:scale-105"><button>🙋‍♂️ 提交网站</button></router-link>
             <router-link to="/profile" class="text-gray-600 hover:text-purple-500 transition-colors duration-300 hover:scale-105"><button>👤 个人中心</button></router-link>
@@ -51,7 +92,8 @@ const logout = async () => {
     </nav>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 bgc" >
-      <RouterView />
+      <router-view v-if="$route.meta.keepAlive" keep-alive></router-view>
+    <router-view v-else></router-view>
     </main>
   </div>
 </template>

@@ -9,7 +9,10 @@ import SearchResults from '../views/SearchResults.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue';
 import StarMap from '../views/StarMap.vue'
-import Test from "../../test/index.vue"
+import Music from "../views/Music.vue"
+import Test from "../views/test.vue"
+
+
 
 // 配置首位路由
 import { useAuthStore } from '../stores/authStore';
@@ -71,9 +74,15 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/test',
-    name: 'test',
-    component: Test
+    path: '/music',
+    name: 'music',
+    component: Music,
+    meta: { keepAlive: true } // 标记需要缓存的页面
+  },
+  {
+    path:"/test",
+    name:"test",
+    component:Test
   }
 ]
 
