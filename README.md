@@ -1,5 +1,5 @@
-# Vue 3 + TypeScript + Vite
+# 针对大学生的黄页网站开发
+源码是基于Vue 3 + TypeScript + Vite，
+同时后端基于laf的云函数与云数据库来实现各种接口，
+并且利用了现有的API在网页增加了一个网易云音乐播放器。
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
