@@ -76,8 +76,7 @@ const routes = [
   {
     path: '/music',
     name: 'music',
-    component: Music,
-    meta: { keepAlive: true } // 标记需要缓存的页面
+    component: Music
   },
   {
     path:"/test",

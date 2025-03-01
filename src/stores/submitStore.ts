@@ -31,7 +31,7 @@ export const usesubmitstore = defineStore('submits', () => {
     };
 
     // 获取用户提交记录
-    const fetchSubmissions = async (username: string) => {
+    const fetchSubmissions = async (username: any) => {
         try {
             const response = await axios.post('https://jy8b5cnnmg.hzh.sealos.run/getsubmit', { username });
             console.log('Response from server:', response.data);

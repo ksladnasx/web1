@@ -54,10 +54,8 @@ async function changeSongs() {
     
     // 更新歌曲 URL 后，自动播放音频
     const audio = document.querySelector('audio')!;
-    audio.load(); // 重新加载音频
-    audio.play().catch((error) => {
-        console.error('自动播放失败:', error);
-    });
+    // audio.load(); // 重新加载音频
+    audio.play(); // 播放音频
 }
 
 

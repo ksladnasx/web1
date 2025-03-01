@@ -2,6 +2,9 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { User, Credentials } from '../types/types';
+import { useFavoritesStore } from './favorites';
+import { usesubmitstore } from './submitStore';
+
 
 
 export const useAuthStore = defineStore('auth', {
@@ -21,7 +24,8 @@ export const useAuthStore = defineStore('auth', {
         this.user = response.data.user.username;
 
         // 可选：保存用户信息到 localStorage 或其他存储
-        localStorage.setItem('user', JSON.stringify(response.data));
+        localStorage.setItem('user', JSON.stringify(response.data.user.username));
+
       } catch (error) {
         // 如果登录失败，抛出错误
         throw new Error('Login failed. Please check your credentials.');
@@ -45,6 +49,20 @@ export const useAuthStore = defineStore('auth', {
         throw new Error('注册失败,用户名已存在');
       }
     },
+    // 初始化用户
+    initUser() {
+      // 从缓存中获取用户信息
+      const userStr = localStorage.getItem('user');
+      // 如果存在则设置为当前用户
+      if (userStr) {
+        this.user = JSON.parse(userStr);
+        this.isAuthenticated = true;
+        const favoritesStore = useFavoritesStore();
+        const submitstore = usesubmitstore();
+        favoritesStore.fetchFavorites(this.user);
+        submitstore.fetchSubmissions(this.user);
+      }
+    },
 
     // 处理退出登录逻辑
     logout() {
@@ -54,5 +72,5 @@ export const useAuthStore = defineStore('auth', {
       // 可选：清除用户信息
       localStorage.removeItem('user');
     }
-  }                 
+  }
 });
