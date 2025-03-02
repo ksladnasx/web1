@@ -2,22 +2,55 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import type { Website } from '../types/types'
+import axios from 'axios';
+import { ref } from 'vue';
 
 const props = defineProps<{
   website: Website
 }>()
 
 const router = useRouter()
+let imgSrc: any = ref(props.website.logo)
 
 const goToDetail = () => {
   router.push(`/website/${props.website.id}`)
+}
+
+let count = ref(0)
+async function handleimgError(name: string) {
+  // console.log(localStorage.getItem(name))
+  count.value += 1
+  try {
+    if (localStorage.getItem(name)) {
+      imgSrc.value = localStorage.getItem(name)
+    } else {
+      if (count.value == 2) {
+        imgSrc.value = "https://tse4-mm.cn.bing.net/th/id/OIP-C.6UPoB06C1fT3bDl2WMNvYAHaHa?rs=1&pid=ImgDetMain";
+        localStorage.setItem(name, "https://tse4-mm.cn.bing.net/th/id/OIP-C.6UPoB06C1fT3bDl2WMNvYAHaHa?rs=1&pid=ImgDetMain")
+        console.error("图片加载失败，已切换到备用图片");  // 也可以记录错误日志
+      } else {
+        // 当图片加载失败时执行的逻辑
+        const res = await axios.get(`https://v2.xxapi.cn/api/ico?url=${props.website.url}`)
+        localStorage.setItem(name, res.data.data)
+        imgSrc.value = res.data.data  // 替换为备用图片
+        console.log(localStorage.getItem(name))
+        // console.log(res.data.data)
+        // console.error("图片加载失败，已切换到备用图片");                                      
+        // 可以执行其他操作，如记录错误日志等
+      }
+
+    }
+  } catch (e) {
+    console.error("请求失败，使用备用图片：", e);
+    imgSrc.value = "https://tse4-mm.cn.bing.net/th/id/OIP-C.6UPoB06C1fT3bDl2WMNvYAHaHa?rs=1&pid=ImgDetMain";
+  }
 }
 </script>
 
 <template>
   <!-- 图片部分 -->
   <div @click="goToDetail" class="website-card group">
-    <img :src="website.logo" :alt="website.name" />
+    <img :src="imgSrc" :alt="website.name" @error="handleimgError(website.name)" />
     <div class="content">
       <h3>{{ website.name }}</h3>
       <span v-for="tag in website.tags.slice(0, 2)" :key="tag"
@@ -42,10 +75,11 @@ const goToDetail = () => {
 
 
 <style scoped>
-.content{
+.content {
   position: relative;
   bottom: 2.5em;
 }
+
 .website-card {
   background: #2a2a2a;
   border-radius: 12px;
@@ -66,7 +100,7 @@ const goToDetail = () => {
   filter: brightness(1.1);
 }
 
-img{
+img {
   width: 10%;
   object-fit: cover;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -76,7 +110,9 @@ img{
 
 .delete-btn {
   background: rgba(239, 68, 68, 0.9);
-  position: relative;left: 40%;bottom: 6em;
+  position: relative;
+  left: 40%;
+  bottom: 6em;
   /* border-radius: 100%; */
   transition: all 0.2s ease;
   transform: translateY(-10px);
@@ -93,6 +129,4 @@ img{
   opacity: 1;
   transform: translateY(0);
 }
-
-
 </style>

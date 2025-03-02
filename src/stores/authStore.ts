@@ -70,7 +70,10 @@ export const useAuthStore = defineStore('auth', {
       this.isAuthenticated = false;
       this.user = null;
       // 可选：清除用户信息
-      localStorage.removeItem('user');
+      localStorage.removeItem('user');  
+      //清除缓存
+      localStorage.clear();
+
     }
   }
 });

@@ -51,11 +51,15 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #e5ff64;
+  color: #ff6e64;
+  background-color: #1a1a1a;
+  box-shadow: #1a1a1a;
+  transition: background-color 0.25s;
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: none;
 }
 
 .card {

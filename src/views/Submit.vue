@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
 import { useAuthStore } from '../stores/authStore'
 import { usesubmitstore } from '../stores/submitStore'
+import axios from 'axios';
 
 // 获取 Authstore 和 store 实例
 const submitStores = usesubmitstore()
@@ -43,11 +44,29 @@ const submitWebsite = () => {
     router.push('/home');
   }
 };
+
+
+// 获取网站图标
+const geticon = async () => {
+  const url = form.value.url
+  if (!url) {
+    alert('请输入网站地址')
+    return
+  }
+  const Myres = await axios.get(`https://v2.xxapi.cn/api/ico?url=${url}`)
+  console.log(Myres.data.data)
+  imgSrc.value = Myres.data.data
+}
+
+let imgSrc = ref('')
 </script>
 
 <template>
   <div class="form-container">
+    
     <div class="form-card">
+      <img :src="imgSrc" alt="网站图标" class="img-icon" />
+      <button class="get-icon-btn" @click="geticon">预览网站图标</button>
       <h1 class="form-title">网站提交</h1>
       <div>
         --------------------------------------------------------------------------------------------------------------------
@@ -63,7 +82,6 @@ const submitWebsite = () => {
           <label for="url">网站地址</label>
           <input type="url" id="url" v-model="form.url" required class="form-input" />
         </div>
-
         <div class="form-group">
           <label for="category">分类</label>
           <select id="category" v-model="form.category" required class="form-select">
@@ -97,11 +115,30 @@ const submitWebsite = () => {
           提交网站
         </button>
       </form>
+      
     </div>
   </div>
 </template>
 
 <style scoped>
+/* 网站图标样式 */
+.get-icon-btn{
+ display: inline-block flex;
+ position: relative;
+ left: 43%;
+ bottom: 9%;
+}
+.img-icon{
+  display: inline-block flex;
+  position: relative;
+  bottom: 2%;
+  /* right: 400px; */
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+}
+
+
 .form-container {
   width:100%; 
   min-height: 100vh;
@@ -119,12 +156,14 @@ const submitWebsite = () => {
 }
 
 .form-title {
+  /* display: flex; */
   color: #f3f4f6;
   font-size: 1.75rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
   position: relative;
-  padding-left: 1.25rem;
+  bottom: 3%;
+  /* padding-left: 1.25rem; */
 }
 
 .form-title::before {
