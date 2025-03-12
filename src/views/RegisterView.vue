@@ -1,10 +1,8 @@
 <template>
   
     <div class="register-container">
-      <h2>Register</h2>
-      <div>
-    ---------------------------------------------------------------------------------------------------------------
-  </div>
+      <center><h2>Register</h2></center>
+      
       <form @submit.prevent="handleRegister">
         <div class="form-group">
           <label for="username">Username</label>
@@ -47,18 +45,22 @@
       alert('注册成功请登录');
       router.push('/'); // 注册成功后跳转到登录页面
     } catch (error) {
-      alert('注册失败，用户名已存在');
+      alert(error)
+      // alert('注册失败，用户名已存在');
     }
   };
   </script>
   
   <style scoped>
   .register-container {
-    max-width: 2000px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
   }
   
   .form-group {

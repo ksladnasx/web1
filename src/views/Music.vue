@@ -1,6 +1,6 @@
 <template>
-  <div>
-      <!-- <button @click="changeSongs">换图片</button> -->
+  <div class="mainpage">
+      <!-- <button >换图片</button> -->
       <h1>{{ songsname }}</h1>
       <h6>{{ player }}</h6>
       <img :src="imageUrl" id="im" alt="动态图片" class="imge" />
@@ -12,7 +12,7 @@
           <button @click="changeRanks('新歌榜')" :class="{ 'active': rank === '新歌榜' }" id="新歌榜">新歌榜</button>
       </p>
       <div style="padding-top:30px ;">
-          <audio :src="songUrl" controls style="width: 600px; " @error="handleError" @pause="stopRotation" @play="startRotation" @ended="stopRotation"></audio>
+          <audio :src="songUrl" controls style="width: 600px; " @error="handleError"></audio>
           <!-- @error="handleError"当播放源因为是vip歌曲而产生错误时，触发handleError函数，自动跳到下一首 -->
           <button @click="changeSongs" class="nextSongs">下一首</button>
       </div>
@@ -28,50 +28,43 @@ const imageUrl = ref("https://p1.music.126.net/R7yzr15Ftp4Mf59kTvy_uA==/10995116
 let songsname = ref("紫荆花盛开")
 let songUrl = ref("https://music.163.com/song/media/outer/url?id=1959528822")
 let player = ref("李荣浩/梁咏琪")
-let mainUrl = ref("https://api.uomg.com/api/rand.music?sort=热歌榜&format=json")
+let mainUrl = ref("https://api.vvhan.com/api/wyMusic/飙升榜?type=json")
 let rank = ref("热歌榜")
 // 排行榜切换函数
 
 function changeRanks(name: string) {
   rank.value = name;
-  mainUrl.value = `/api/rand.music?sort=${name}&format=json`
+  mainUrl.value = `https://api.vvhan.com/api/wyMusic/${name}?type=json`
   // const button = document.getElementById(name)
   // button.style.backgroundColor = "#ff6600";
   // console.log(mainUrl.value)
 }
 
-// 更换歌曲函数
-async function changeSongs() {        
+
+// 图片更换函数
+async function changeSongs() {
   // const res = await axios.get("https://api.vvhan.com/api/wallpaper/views?type=json") //json格式的风景图片API
   const ress = await axios.get(mainUrl.value)
   console.log(ress.data)
   // 通过随机查询参数或使用新的图片 API 来加载新图片
-  imageUrl.value = ress.data.data.picurl;
-  songsname.value = ress.data.data.name;
-  songUrl.value = ress.data.data.url;
-  player.value = ress.data.data.artistsname; 
-
+  imageUrl.value = ress.data.info.pic_url;
+  songsname.value = ress.data.info.name;
+  songUrl.value = ress.data.info.url;
+  player.value = ress.data.info.auther;
+  
   // 更新歌曲 URL 后，自动播放音频
   const audio = document.querySelector('audio')!;
   // audio.load(); // 重新加载音频
   audio.play(); // 播放音频
 }
 
+
+
 // 处理音频播放错误
 function handleError() {
   changeSongs(); // 当播放遇到错误时，自动切换到下一首
 }
 
-// 图片旋转控制
-function startRotation() {
-  const img = document.querySelector('.imge')!;
-  img.classList.add('rotate-animation'); // 添加旋转动画类
-}
-
-function stopRotation() {
-  const img = document.querySelector('.imge')!;
-  img.classList.remove('rotate-animation'); // 移除旋转动画类
-}
 
 // 波浪效果脚本
 let boLangScript: HTMLScriptElement | null = null;
@@ -83,6 +76,21 @@ boLangScript.type = 'text/javascript';
 boLangScript.src = 'https://api.vvhan.com/api/script/bolang';
 boLangScript.defer = true;
 document.body.appendChild(boLangScript);
+
+
+// 找到音频元素
+const audio = document.querySelector('audio')!;
+
+// 监听音频播放和暂停事件
+audio.addEventListener('play', () => {
+  const img = document.querySelector('.imge')!;
+  img.classList.add('rotate-animation'); // 添加旋转动画类
+});
+
+audio.addEventListener('pause', () => {
+  const img = document.querySelector('.imge')!;
+  img.classList.remove('rotate-animation'); // 移除旋转动画类
+});
 });
 
 onUnmounted(() => {
@@ -115,6 +123,13 @@ styleSheets.forEach((styleSheet) => {
 </script>
 
 <style scoped>
+.mainpage{
+  text-align: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
 /* 当前选中榜单的按钮样式 */
 button.active {
   background-color: red !important;
@@ -124,7 +139,7 @@ button.active {
 /* 这里可以添加样式 */
 .imge {
   position: relative;
-  left: 32%;
+ 
   width: 300px;
   border-radius: 100%;
 }

@@ -140,11 +140,13 @@ let imgSrc = ref('')
 
 
 .form-container {
-  width:100%; 
+  width:80%; 
   min-height: 100vh;
   padding: 2rem 1rem;
   /* 弹性布局 */
   display: flex;
+  text-align: center;
+  justify-content: center;
   margin: 0 auto;
 }
 
@@ -196,7 +198,7 @@ label {
   background: #374151;
   border: 1px solid #4b5563;
   border-radius: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0;
   color: #f3f4f6;
   font-size: 0.875rem;
   transition: all 0.2s ease;

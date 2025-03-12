@@ -12,14 +12,12 @@ const searchQuery = ref('')
 </script>
 
 <template >           
-  <div >
-    <h1 class="text-4xl font-bold text-center mb-8">学术网站导航</h1>
-    <div>
-      ------------------------------------------------------------------------------------------------------------------------------
-    </div>
-    <SearchBar v-model="searchQuery" class="mb-12" />
+  <div class="mainpage">
+    <center><h1 class="">学术网站导航</h1></center>
+    <br>
+    <SearchBar v-model="searchQuery"  />
 
-    <section class="mb-12">
+    <section class="header">
       <h2 class="text-2xl font-semibold mb-6 fl">热门分类</h2>
       <CategoryGrid :categories="store.categories" />
     </section>
@@ -59,10 +57,25 @@ const searchQuery = ref('')
 </template>
 
 <style scoped>
+.mainpage{  
+  width: 80%;
+  margin: 0 auto;
+  padding: 2rem 0;
+  display: flex;
   
+  flex-direction: column;
+  
+}
+.header{
+  position: relative;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
 .recommend-websites {
   margin-bottom: 3rem;
   padding: 0 1rem;
+ 
 }
 
 .section-title {

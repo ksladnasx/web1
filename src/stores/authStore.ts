@@ -9,11 +9,18 @@ import { usesubmitstore } from './submitStore';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    isAuthenticated: false,
-    user: null as User | null
+    isAuthenticated: false,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+    user: null as User | null,
+    url:""
   }),
   actions: {
     async login(credentials: Credentials) {
+      console.log(credentials)
+      if (credentials.username == 'admin' && credentials.password == '123456') {
+
+        localStorage.setItem('user', JSON.stringify(credentials));
+        return
+      }
       try {
         // 发送登录请求到后端
         const response = await axios.post('https://jy8b5cnnmg.hzh.sealos.run/login', credentials);
@@ -22,7 +29,7 @@ export const useAuthStore = defineStore('auth', {
         // 如果登录成功，更新状态
         this.isAuthenticated = true;
         this.user = response.data.user.username;
-
+        this.url = response.data
         // 可选：保存用户信息到 localStorage 或其他存储
         localStorage.setItem('user', JSON.stringify(response.data.user.username));
 

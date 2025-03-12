@@ -21,7 +21,7 @@ const handleComplain = () => {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mainpage">
     <div class="bg-white rounded-lg shadow-lg p-6">
       <h1 class="text-3xl font-bold mb-6">关于我们</h1>
       <div>
@@ -66,4 +66,9 @@ const handleComplain = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.mainpage{
+  text-align: center;
+  height: 100%;
+}
+</style>

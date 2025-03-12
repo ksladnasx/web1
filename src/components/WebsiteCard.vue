@@ -77,11 +77,13 @@ async function handleimgError(name: string) {
 <style scoped>
 .content {
   position: relative;
-  bottom: 2.5em;
+  bottom: 1em;
+  /* left: 1em; */
+  text-align: center;
 }
 
 .website-card {
-  background: #2a2a2a;
+  background-color: #1c212f;
   border-radius: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);

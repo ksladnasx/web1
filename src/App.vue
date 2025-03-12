@@ -112,6 +112,10 @@ a.router-link:hover {
   transform: scale(1.05); /* 鼠标悬停时稍微放大 */
   color: #c3ff00; /* 鼠标悬停时文本颜色变化 */
 }
+button{
+  background-color: rgb(0, 0, 0);
+  color: #ffffff;
+}
 button:hover {
   transform: scale(1.05); /* 鼠标悬停时稍微放大 */
   background-color: #14b6f1; /* 鼠标悬停时背景颜色变化 */
@@ -121,13 +125,19 @@ button:hover {
   min-height: 100vh;
   /* 使元素最小高度为视口高度 */
 }
-
+main{
+  min-height: 100vh;
+}
 .bgc{
   background-color: #1c212f;
 }
 .max-w-7xl {
+  flex:1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   
-  max-width: 1280px;
+  /* max-width: 1280px; */
 }
 
 .px-4 {
@@ -174,7 +184,7 @@ button:hover {
 }
 
 .bg-gray-50 {
-  background-color: #222222;
+  background-color: #1c212f;
 }
 
 .bg-white {
@@ -182,7 +192,7 @@ button:hover {
 }
 
 .shadow {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(255, 255, 255, 0.06);
 }
 
 .py-6 {

@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
 import { useFavoritesStore } from '../stores/favorites'
 import { useAuthStore } from '../stores/authStore'
+import { Website } from '../types/types';
 
 const route = useRoute()
 const router = useRouter()
@@ -58,15 +59,13 @@ const categoryName = computed(() => {
 </script>
 
 <template>
+  <div class="back">
+    <button class="back-btn" @click="router.back()">
+      ◀ 返回
+    </button>
+  </div>
   <div class="website-detail-container" v-if="website">
-    <div class="back">
-      <button class="back-btn" @click="router.back()">
-        ◀ 返回
-      </button>
-    </div>
-    <div>
-      -----------------------------------------------------------------------------------------------------------------------
-    </div>
+
     <div class="main-card">
       <!-- 保持原有卡片结构不变 -->
       <div class="card-header">
@@ -74,13 +73,14 @@ const categoryName = computed(() => {
           <div class="logo-wrapper">
             <img :src="website.logo" :alt="website.name" class="logo-exp" />
           </div>
-          <button @click="toggleFavorite" class="p-2 rounded-full hover:bg-gray-100 transition-colors"
-            :class="{ 'text-red-500': isFavorite }">
-            <span class="text-2xl">{{ isFavorite ? '❤️' : '🤍' }}</span>
-          </button>
+
           <div class="title-section">
             <div class="title-row">
+              <button @click="toggleFavorite" class="love-btn" :class="{ 'text-red-500': isFavorite }">
+                <span class="text-2xl">{{ isFavorite ? '❤️' : '🤍' }}</span><br>
+              </button>
               <h1>{{ website.name }}</h1>
+
               <span class="category-badge">{{ categoryName }}</span>
             </div>
             <div class="stats-row">
@@ -152,6 +152,21 @@ const categoryName = computed(() => {
 </template>
 
 <style scoped>
+.website-detail-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  width: 60%;
+  position: relative;
+  left: 20%;
+}
+
+.love-btn {
+  display: inline-flex;
+}
+
+
 .related-section {
   margin-top: 3rem;
   padding: 0 1rem;

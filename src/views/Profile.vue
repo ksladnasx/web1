@@ -7,8 +7,7 @@ import { useAuthStore } from '../stores/authStore';
 import { usesubmitstore } from '../stores/submitStore';
 // 新增导入
 import { useProfileStore } from '../stores/profileStore'
-
-
+import file from './file.vue';
 // 新增profileStore
 const profileStore = useProfileStore()
 
@@ -90,7 +89,7 @@ const handlefavorites = () => {
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
       你好!
       <div ref="username">
-        {{ store.user }}
+        {{ store.user?.username }}
       </div>
 
       <!-- 头部 -->
@@ -111,10 +110,6 @@ const handlefavorites = () => {
         </nav>
       </div>
 
-      <!-- 分割线 -->
-      <div>
-      ------------------------------------------------------------------------------------------------------------------------------
-    </div>
 
       <!-- 基础设置功能实现 -->
 
@@ -175,6 +170,7 @@ const handlefavorites = () => {
 
 
 
+
         <!-- 基础设置功能实现 -->
         <!-- 修改设置部分 -->
         <div v-if="activeTab === 'settings'" class="max-w-md mx-auto">
@@ -215,6 +211,7 @@ const handlefavorites = () => {
               </button>
               </div>
             </form>
+            <file />
           </div>
         </div>
       </div>          
@@ -224,13 +221,17 @@ const handlefavorites = () => {
 
 <style scoped>
 .proflie-container{
-  width:100%; 
+  width:80%; 
+  text-align: center;
+  position: relative;
+  left: 10%;
+  font-size: larger;
 }
 
 
 /* 基础样式 */
 .submission-card {
-  background-color: #222;
+  background-color: #334579;
   /* 深色背景 */
   border-radius: 12px;
   /* 更圆润的边角 */
@@ -318,10 +319,10 @@ const handlefavorites = () => {
   animation: fadeIn 0.5s ease forwards;
   /* 使用淡入动画 */
 }
-
+  
 
 .bg-white {
-  background-color: #222;
+  background-color: #1c212f;
 }
 
 .text-gray-900 {
@@ -376,7 +377,7 @@ input:focus {
 
 .submission-card {
   height: auto;
-  background-color: #1e1e1e;
+  background-color: #1c212f;
   padding: 24px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -472,4 +473,5 @@ input:focus {
 .submit-button:hover {
   background-color: #3477bd;
 }
+
 </style>

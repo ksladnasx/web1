@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <h2>Login</h2>
+    <center><h2>Login</h2></center>
     <form @submit.prevent="handleLogin">
       <div class="form-group">
         <label for="username">Username</label>
@@ -63,6 +63,9 @@ const handleLogin = async () => {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  display: flex;
+  
+  flex-direction: column;
 }
 
 .form-group {

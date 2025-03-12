@@ -41,9 +41,13 @@ const goToDetail = () => {
 
 
 <style scoped>
+h3{
+  font-size: 1.5em;
+  
+}
 .content{
   position: relative;
-  bottom: 2.5em;
+  bottom: 1em;
 }
 .website-card {
   margin-top: 20px;

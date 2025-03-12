@@ -1,7 +1,9 @@
+/* 修复全屏问题的关键修改版 */
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  height: 100%; /* 新增 */
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -13,6 +15,28 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* 重置HTML和body高度 */
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  width: 100%; /* 新增 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 修改APP容器 */
+#app {
+  flex: 1; /* 关键修改 */
+  width: 100%;
+  min-height: 100vh; /* 新增 */
+  display: flex; /* 新增 */
+  flex-direction: column; /* 新增 */
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -20,17 +44,6 @@ a {
 }
 a:hover {
   color: #535bf2;
-}
-
-body {
-  margin: 0px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 320px;
-  min-height: 100vh;
-  padding: 0px;
 }
 
 h1 {
@@ -46,16 +59,15 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color:black;
+  background-color: black;
   cursor: pointer;
   transition: border-color 0.25s;
+  width: max-content; /* 新增 */
 }
 button:hover {
   border-color: #e5ff64;
   color: #ff6e64;
   background-color: #1a1a1a;
-  box-shadow: #1a1a1a;
-  transition: background-color 0.25s;
 }
 button:focus,
 button:focus-visible {
@@ -64,17 +76,10 @@ button:focus-visible {
 
 .card {
   padding: 2em;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #1c212f;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(236, 233, 233, 0.1);
   margin: 1rem 0;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0;
-  text-align: center;
 }
 
 /* 新增图片样式 */
@@ -89,7 +94,7 @@ img {
 
 /* 新增图标样式 */
 .icon {
-  width: 80px; /* 调整图标大小 */
+  width: 80px;
   height: 80px;
   display: flex;
   align-items: center;
@@ -101,7 +106,7 @@ img {
   text-align: center;
   cursor: pointer;
   transition: background-color 0.25s;
-  margin: 10px; /* 调整图标之间的间距 */
+  margin: 10px;
 }
 
 .icon:hover {
