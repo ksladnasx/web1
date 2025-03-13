@@ -90,7 +90,7 @@ async function handleimgError(name: string) {
   cursor: pointer;
   
   /* overflow: hidden; */
-}
+}  
 
 .website-card:hover {
   transform: translateY(-3px);

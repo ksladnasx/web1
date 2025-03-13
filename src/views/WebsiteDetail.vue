@@ -106,9 +106,9 @@ const categoryName = computed(() => {
             </span>
           </div>
         </section>
-
+<h2>网站介绍</h2>
         <section class="description-section">
-          <h2>网站介绍</h2>
+          
           <p>{{ website.description }}</p>
         </section>
 
@@ -166,7 +166,13 @@ const categoryName = computed(() => {
   display: inline-flex;
 }
 
-
+/* 允许网站介绍部分的文本能被用户选中 */
+.description-section{
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
 .related-section {
   margin-top: 3rem;
   padding: 0 1rem;
