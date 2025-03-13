@@ -49,9 +49,9 @@ h3{
   position: relative;
   bottom: 1em;
 }
-.website-card {
-  margin-top: 20px;
-  background: #1f1e1e;
+.website-card { 
+  margin-top: 10px;
+  background-color: #1c212f;
   border-radius: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 6px rgba(156, 156, 156, 0.1);
@@ -62,7 +62,7 @@ h3{
 .website-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-  background: #333;
+  background: #1f323c;
 }
 
 .website-card:hover img {

@@ -36,9 +36,7 @@ const websites = computed(() => {
   <div class="category-container">
     <div class="header-section">
       <h1 class="category-title">{{ currentCategory?.name }}</h1>
-      <div>
-      -----------------------------------------------------------------------------------------------------------------------
-    </div>
+    
       <p class="category-description">发现优质{{ currentCategory?.name }}网站</p>
     </div>
 
@@ -70,7 +68,8 @@ const websites = computed(() => {
 
 <style scoped>
 .category-container {
-  background: #222;
+  background-color: #1c212f;
+  width:80%;
   color: white;
   max-width: 1200px;
   margin: 0 auto;
@@ -150,7 +149,7 @@ const websites = computed(() => {
 
 .websites-grid {
   display: grid;
-  gap: 1.5rem;
+  gap: 5rem;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 

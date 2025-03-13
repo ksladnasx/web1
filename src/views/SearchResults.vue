@@ -62,7 +62,12 @@ const searchResults = computed(() => {
 
 <style scoped>
 .min-h-screen {
+  width: 80%;
+  padding-left: 10%;
   min-height: 100vh;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
 }
 
 .bg-gray-50 {

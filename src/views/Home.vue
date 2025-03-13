@@ -58,7 +58,7 @@ const searchQuery = ref('')
 
 <style scoped>
 .mainpage{  
-  width: 80%;
+  width:70%;
   margin: 0 auto;
   padding: 2rem 0;
   display: flex;
