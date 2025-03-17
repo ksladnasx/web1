@@ -343,6 +343,9 @@ const handlefavorites = () => {
 
 .border-gray-200 {
   border-color: #444;
+  display: flex;
+  justify-content: center;
+  
 }
 
 .text-blue-600 {

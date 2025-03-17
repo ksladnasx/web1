@@ -19,7 +19,7 @@ import { useAuthStore } from '../stores/authStore';
 
 const routes = [
   {
-    path: '/home',
+    path: '/',
     name: 'home',
     component: Home
   },
@@ -54,7 +54,7 @@ const routes = [
     component: SearchResults
   },
   {
-    path: '/',
+    path: '/login',
     name: 'Login',
     component: LoginView
   },
@@ -97,7 +97,7 @@ router.beforeEach((to, _from, next) => {
   if (requiresAuth && !authStore.isAuthenticated) {
     next({ name: 'Login' });
   } else {
-    next();
+    next();   
   }
 });
 
