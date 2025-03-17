@@ -49,7 +49,7 @@ const handleLogin = async () => {
     await submitstore.fetchSubmissions(username.value);
 
     alert('登录成功'); // 登录成功后弹出提示
-    router.push('/home'); // 登录成功后跳转到主页
+    router.push('/'); // 登录成功后跳转到主页
   } catch (error) {
     alert('登录失败，请检查你的账号密码');
   }

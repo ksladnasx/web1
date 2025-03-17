@@ -16,7 +16,7 @@ const logout = async () => {
     try {
       await store.logout();
       alert('已退出登录'); // 退出成功后弹出提示
-      router.push('/home'); // 登录成功后跳转到主页
+      router.push('/'); // 登录成功后跳转到主页
     } catch (error) {
       alert('退出登录失败');
     }

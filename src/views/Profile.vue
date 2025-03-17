@@ -211,7 +211,7 @@ const handlefavorites = () => {
               </button>
               </div>
             </form>
-            <file />
+            
           </div>
         </div>
       </div>          

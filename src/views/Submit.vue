@@ -41,7 +41,7 @@ const submitWebsite = () => {
     
     // 模拟成功提交
     alert("感谢您的提交，我们会在一周内审核并返回结果到您的邮箱");
-    router.push('/home');
+    router.push('/');
   }
 };
 

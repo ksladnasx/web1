@@ -15,7 +15,7 @@ const handleComplain = () => {
     console.log("提交的表单数据：", formData);
     // 模拟成功提交
     alert("感谢您的反馈！");
-    router.push('/home');
+    router.push('/');
   }
 }
 </script>
