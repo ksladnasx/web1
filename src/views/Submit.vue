@@ -29,20 +29,25 @@ const submitWebsite = () => {
     // 获取表单数据
     const formData = form.value; // 获取绑定的表单数据
     console.log("提交的表单数据：", formData);
-    let username: any = Authstore.user// 获取元素的文本内容
-    console.log(username)
+    const userinfo = localStorage.getItem('user')
+    let username1 = ref("")// 获取元素的文本内容
+    if(userinfo){
+      username1.value =  JSON.parse(userinfo).username
+    }
     // 向后端提交数据,直接根据现有的数据封装传给函数
-    submitStores.addsubmits({ username: username, submit: formData });
+    submitStores.addsubmits({ username: username1.value, submit: formData });
     // 在这里可以将 formData 发送到后端
     // 示例：使用 axios 发送数据
 
-    // 调用函数传用户名来更新提交记录
-    submitStores.fetchSubmissions(username)
+  //半秒后 调用函数传用户名来更新提交记录
+    setTimeout(() => submitStores.fetchSubmissions(username1.value), 500);
+    
+    
     
     // 模拟成功提交
     alert("感谢您的提交，我们会在一周内审核并返回结果到您的邮箱");
     router.push('/');
-  }
+  }                             
 };
 
 

@@ -74,7 +74,7 @@ export const useAuthStore = defineStore('auth', {
       const userStr = localStorage.getItem('user');
       // 如果存在则设置为当前用户
       if (userStr) {
-        this.user = JSON.parse(userStr);
+        this.user = JSON.parse(userStr).username;
         this.isAuthenticated = true;
         const favoritesStore = useFavoritesStore();
         const submitstore = usesubmitstore();

@@ -1,132 +1,105 @@
 <script setup lang="ts">
-// import { useWebsiteStore } from '../stores/website'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useFavoritesStore } from '../stores/favorites'
 import profliewebCard from '../components/profliewebCard.vue';
 import { useAuthStore } from '../stores/authStore';
 import { usesubmitstore } from '../stores/submitStore';
-// 新增导入
 import { useProfileStore } from '../stores/profileStore'
-import file from './file.vue';
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
-// 新增profileStore
-const profileStore = useProfileStore()
+
+// 状态初始化
 const AuthStore = useAuthStore()
-// 头像预览
-const avatarPreview = ref("https://tse3-mm.cn.bing.net/th/id/OIP-C.g5M-iZUiocFCi9YAzojtRAAAAA?rs=1&pid=ImgDetMain")
+const profileStore = useProfileStore()
+const favoritesStore = useFavoritesStore()
+const submitStore = usesubmitstore()
+const user = localStorage.getItem('user')
+
+const userid = ref("")
+if(user){
+   userid.value = JSON.parse(user).userid
+}
+// 响应式数据
+const activeTab = ref('settings')
+const isedict = ref(false)
+const avatarPreview = ref( "https://tse3-mm.cn.bing.net/th/id/OIP-C.g5M-iZUiocFCi9YAzojtRAAAAA?rs=1&pid=ImgDetMain")
 const avatarFile = ref<File | null>(null)
 
 // 表单数据
 const form = ref({
-  username: profileStore.username,
+  username: AuthStore.user?.username || '',
   password: "****************",
-  birthdate: profileStore.birthdate
+  birthdate: '2024-12-29'
 })
 
-//初始化数据
+// 初始化加载
+onMounted(()=>{
+  // 调用函数传用户名来更新提交记录
+  submitStore.fetchSubmissions(AuthStore.user?.username )
+  
+})
 
 
-// 页面加载时读取本地存储
-onMounted(() => {
-  const savedAvatar = localStorage.getItem('avatar')
-  if (savedAvatar) {
-    avatarPreview.value = savedAvatar
+// 标签切换监听
+watch(activeTab, async (newTab) => {
+  if (newTab === 'favorites') {
+    await favoritesStore.fetchFavorites(AuthStore.user?.username)
   }
 })
 
+// 头像上传处理
 const handleAvatarUpload = (e: Event) => {
   const input = e.target as HTMLInputElement
   if (input.files?.length) {
-    avatarPreview.value = URL.createObjectURL(input.files[0])
-    localStorage.setItem("url", JSON.stringify(avatarPreview.value))
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      avatarPreview.value = e.target?.result as string
-    }
+    const file = input.files[0]
+    avatarFile.value = file
+    avatarPreview.value = URL.createObjectURL(file)
+    localStorage.setItem("avatar", avatarPreview.value)
   }
 }
 
+// 保存收藏
+const handlefavorites = async () => {
+  try {
+    if (!AuthStore.user?.username) return
+    await favoritesStore.updateFavorites(AuthStore.user.username)
+    alert('收藏已保存')
+  } catch (e) {
+    console.error(e)
+    alert('保存失败')
+  }
+}
 
 // 提交表单
-const handleSubmit = async () => {
-  const updatedData = {
-    ...form.value,
-    avatar: avatarFile.value ? await toBase64(avatarFile.value) : profileStore.avatar
-  }
-
-  try {
-    await profileStore.updateProfile(updatedData)
-    // 显示成功提示
-  } catch (error) {
-    // 处理错误
-  }
-}
-
-// 文件转Base64
-const toBase64 = (file: File) => new Promise<string>((resolve, reject) => {
-  const reader = new FileReader()
-  reader.readAsDataURL(file)
-  reader.onload = () => resolve(reader.result as string)
-  reader.onerror = error => reject(error)
-})
-
-
-
-// const store = useWebsiteStore()
-const favoritesStore = useFavoritesStore()
-const activeTab = ref('favorites')
-const store = useAuthStore();
-const submitStore = usesubmitstore()
-
-
-
-// 获取当前用户名
-let usernames: any = store.user// 获取元素的文本内容
-
-
-
-
-//更新当前收藏
-const handlefavorites = () => {
-  try {
-    favoritesStore.updateFavorites(usernames)
-  } catch (e) {
-    console.error(e);
-  }
-}
-
 const handleSubmits = async () => {
-  const user = localStorage.getItem('user');
-  if (!user) {
+  if (!AuthStore.user) {
     alert('请先登录')
     return
   }
+
   try {
     const res = await axios.post('https://jy8b5cnnmg.hzh.sealos.run/updateuser', {
-      userid: JSON.parse(user).userid,
+      userid: userid.value,
       username: form.value.username,
       password: form.value.password
     })
-    if (res.data.code != 200) {
+
+    if (res.data.code !== 200) {
       alert(res.data.message)
       return
     }
-    alert("更改成功")
-    AuthStore.$state.user = { username: form.value.username }
-    console.log(AuthStore.$state.user)
-    localStorage.setItem('user', JSON.stringify({
-      userid: JSON.parse(user).userid,
-      username: form.value.username,
-      password: form.value.password
-    }))
-    isedict.value = !isedict.value
 
+    localStorage.setItem('user', JSON.stringify({
+      userid: userid.value,
+      username: form.value.username
+    }))
+    alert("更改成功")
+    AuthStore.$state.user = {username: form.value.username}
+    isedict.value = false
   } catch (e) {
-    console.error(e);
+    console.error(e)
+    alert('更新失败:'+e)
   }
 }
-
-const isedict = ref(false)
 </script>
 
 <template>
@@ -134,7 +107,7 @@ const isedict = ref(false)
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
       你好!
       <div ref="username">
-        {{ AuthStore.user?.username }}
+        {{ AuthStore.$state.user }}
       </div>
 
       <!-- 头部 -->
@@ -161,7 +134,7 @@ const isedict = ref(false)
       <!-- 收藏夹功能实现 -->
       <div class="p-6">
         <div v-if="activeTab === 'favorites'">
-          <div v-if="favoritesStore.favorites.length === 0" class="text-center py-12">
+          <div v-if="favoritesStore.favorites.length=== 0" class="text-center py-12">
             <div class="text-6xl mb-4">🤍</div>
             <h3 class="text-xl font-medium text-gray-900 mb-2">暂无收藏的网站</h3>
             <p class="text-gray-600">
@@ -220,7 +193,7 @@ const isedict = ref(false)
         <!-- 修改设置部分 -->
         <div v-if="activeTab === 'settings'" class="max-w-md mx-auto">
           <div class="submission-card">
-            <form @submit.prevent="handleSubmit" class="space-y-6">
+            <form  class="space-y-6">
               <!-- 头像上传 -->
               <div class="avatar-container">
                 <div class="shrink-0">
@@ -236,7 +209,7 @@ const isedict = ref(false)
               <!-- 用户名 -->
               <div class="items">
                 <label for="username" class="form-label">用户名</label>
-                <span v-if="!isedict">{{ AuthStore.$state.user?.username }}</span>
+                <span v-if="!isedict">{{ AuthStore.$state.user }}</span>
                 <input v-if="isedict" v-model="form.username" type="text" id="username" class="form-input" />
               </div>
 

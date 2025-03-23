@@ -24,7 +24,7 @@ const removeFavorite = (id: string) => {
     return favorites.value.some(f => f.id === websiteId)
   }
 
-  const updateFavorites = async (username:string) => {
+  const updateFavorites = async (username:any) => {
     
     // 构造发送到后端的数据
     let data:lovedata ={

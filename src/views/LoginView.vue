@@ -42,10 +42,12 @@ const handleLogin = async () => {
     // 登录
     await store.login({ username: username.value, password: password.value });
     alert('登录成功'); // 登录成功后弹出提示
-    
+
 
     
-    router.push('/'); // 登录成功后跳转到主页
+    router.push('/profile'); // 登录成功后跳转到主页
+    
+
   } catch (error) {
     // alert(error)
     console.log(error)
