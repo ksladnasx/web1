@@ -13,7 +13,7 @@ const searchQuery = ref('')
 
 <template >           
   <div class="mainpage">
-    <center><h1 class="">学术网站导航</h1></center>
+    <div style="display: flex;flex-direction: column;align-items: center;"><h1 class="">学术网站导航</h1></div>
     <br>
     <SearchBar v-model="searchQuery"  />
 

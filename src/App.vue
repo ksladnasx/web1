@@ -11,7 +11,7 @@ const title = computed(() => {
   return store.$state.isAuthenticated ? '退出登录' : '登录';
 });
 
-const logout = async () => {
+const handleclick = async () => {
   if (store.$state.isAuthenticated == true) {
     try {
       await store.logout();
@@ -22,7 +22,7 @@ const logout = async () => {
     }
   } else {
     // 如果没登陆点击的话就到登录页面
-    router.push('/');
+    router.push('/login');
   }
 
 };
@@ -85,7 +85,7 @@ onUnmounted(() => {
             <router-link to="/submit" class="text-gray-600 hover:text-green-500 transition-colors duration-300 hover:scale-105"><button>🙋‍♂️ 提交网站</button></router-link>
             <router-link to="/profile" class="text-gray-600 hover:text-purple-500 transition-colors duration-300 hover:scale-105"><button>👤 个人中心</button></router-link>
             <router-link to="/about" ><button>🎈 关于</button></router-link>
-            <div><button style="padding: 5px;" @click="logout" class="transition-colors duration-300 hover:bg-red-500 hover:text-white">{{ title }}</button></div>
+            <div><button style="padding: 5px;" @click="handleclick" class="transition-colors duration-300 hover:bg-red-500 hover:text-white">{{ title }}</button></div>
           </div>
         </div>
       </div>

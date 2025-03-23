@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <center><h2>Login</h2></center>
+    <h2>Login</h2>
     <form @submit.prevent="handleLogin">
       <div class="form-group">
         <label for="username">Username</label>
@@ -41,18 +41,20 @@ const handleLogin = async () => {
   try {
     // 登录
     await store.login({ username: username.value, password: password.value });
+    alert('登录成功'); // 登录成功后弹出提示
+    
 
-    // 登录成功后更新收藏夹
+    
+    router.push('/'); // 登录成功后跳转到主页
+  } catch (error) {
+    // alert(error)
+    console.log(error)
+    alert('登录失败，请检查你的账号密码');
+  }// 登录成功后更新收藏夹
     await favoritesstore.fetchFavorites(username.value);
 
     //登录成功后更新提交记录
     await submitstore.fetchSubmissions(username.value);
-
-    alert('登录成功'); // 登录成功后弹出提示
-    router.push('/'); // 登录成功后跳转到主页
-  } catch (error) {
-    alert('登录失败，请检查你的账号密码');
-  }
 };
 </script>
 

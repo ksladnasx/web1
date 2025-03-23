@@ -4,34 +4,45 @@ import axios from 'axios';
 import { User, Credentials } from '../types/types';
 import { useFavoritesStore } from './favorites';
 import { usesubmitstore } from './submitStore';
-
+import { Ref } from 'vue';
 
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     isAuthenticated: false,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-    user: null as User | null,
+    user: null as Ref<User> | null,
     url:""
   }),
   actions: {
     async login(credentials: Credentials) {
       console.log(credentials)
-      if (credentials.username == 'admin' && credentials.password == '123456') {
+      //测试账户
+      if (credentials.username == 'doctor@126.com' && credentials.password == 'password') {
+        this.$state.isAuthenticated = true;
+        this.$state.user = { ...this.$state.user, username: credentials.username };
+        localStorage.setItem('user', JSON.stringify({
+          userid:"response.data.userid",
+          username: credentials.username
+        }));
 
-        localStorage.setItem('user', JSON.stringify(credentials));
         return
       }
+
       try {
         // 发送登录请求到后端
         const response = await axios.post('https://jy8b5cnnmg.hzh.sealos.run/login', credentials);
+        console.log(credentials)
         // console.log(response)
         // 返回的用户名是存在data.user.username中的
         // 如果登录成功，更新状态
+        this.user = response.data.user.username
         this.isAuthenticated = true;
-        this.user = response.data.user.username;
         this.url = response.data
-        // 可选：保存用户信息到 localStorage 或其他存储
-        localStorage.setItem('user', JSON.stringify(response.data.user.username));
+        console.log(response.data)
+        localStorage.setItem('user', JSON.stringify({
+          userid:response.data.user.userid,
+          username: credentials.username
+        }));
 
       } catch (error) {
         // 如果登录失败，抛出错误
@@ -45,7 +56,7 @@ export const useAuthStore = defineStore('auth', {
         const response = await axios.post('https://jy8b5cnnmg.hzh.sealos.run/adduser', credentials);
         // console.log(response)
         if (response.data.code == 401 || response.data.code == 400) {
-          throw new Error('注册失败,用户名已存在');
+          throw new Error('注册失败');
         } else {
           this.isAuthenticated = true;
           this.user = response.data;
@@ -53,7 +64,8 @@ export const useAuthStore = defineStore('auth', {
         }
 
       } catch (error) {
-        throw new Error('注册失败,用户名已存在');
+        console.log(error)
+        throw new Error('注册失败');
       }
     },
     // 初始化用户

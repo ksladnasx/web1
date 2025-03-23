@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 // import { useWebsiteStore } from '../stores/website'
 import { useFavoritesStore } from '../stores/favorites'
 import profliewebCard from '../components/profliewebCard.vue';
@@ -8,32 +7,45 @@ import { usesubmitstore } from '../stores/submitStore';
 // 新增导入
 import { useProfileStore } from '../stores/profileStore'
 import file from './file.vue';
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
 // 新增profileStore
 const profileStore = useProfileStore()
-
+const AuthStore = useAuthStore()
 // 头像预览
-const avatarPreview = ref(profileStore.avatar)
+const avatarPreview = ref("https://tse3-mm.cn.bing.net/th/id/OIP-C.g5M-iZUiocFCi9YAzojtRAAAAA?rs=1&pid=ImgDetMain")
 const avatarFile = ref<File | null>(null)
 
 // 表单数据
 const form = ref({
   username: profileStore.username,
-  email: profileStore.email,
+  password: "****************",
   birthdate: profileStore.birthdate
 })
 
-// 处理头像选择
+//初始化数据
+
+
+// 页面加载时读取本地存储
+onMounted(() => {
+  const savedAvatar = localStorage.getItem('avatar')
+  if (savedAvatar) {
+    avatarPreview.value = savedAvatar
+  }
+})
+
 const handleAvatarUpload = (e: Event) => {
   const input = e.target as HTMLInputElement
   if (input.files?.length) {
-    avatarFile.value = input.files[0]
+    avatarPreview.value = URL.createObjectURL(input.files[0])
+    localStorage.setItem("url", JSON.stringify(avatarPreview.value))
     const reader = new FileReader()
     reader.onload = (e) => {
       avatarPreview.value = e.target?.result as string
     }
-    reader.readAsDataURL(avatarFile.value)
   }
 }
+
 
 // 提交表单
 const handleSubmit = async () => {
@@ -82,6 +94,39 @@ const handlefavorites = () => {
     console.error(e);
   }
 }
+
+const handleSubmits = async () => {
+  const user = localStorage.getItem('user');
+  if (!user) {
+    alert('请先登录')
+    return
+  }
+  try {
+    const res = await axios.post('https://jy8b5cnnmg.hzh.sealos.run/updateuser', {
+      userid: JSON.parse(user).userid,
+      username: form.value.username,
+      password: form.value.password
+    })
+    if (res.data.code != 200) {
+      alert(res.data.message)
+      return
+    }
+    alert("更改成功")
+    AuthStore.$state.user = { username: form.value.username }
+    console.log(AuthStore.$state.user)
+    localStorage.setItem('user', JSON.stringify({
+      userid: JSON.parse(user).userid,
+      username: form.value.username,
+      password: form.value.password
+    }))
+    isedict.value = !isedict.value
+
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+const isedict = ref(false)
 </script>
 
 <template>
@@ -89,7 +134,7 @@ const handlefavorites = () => {
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
       你好!
       <div ref="username">
-        {{ store.user?.username }}
+        {{ AuthStore.user?.username }}
       </div>
 
       <!-- 头部 -->
@@ -177,51 +222,64 @@ const handlefavorites = () => {
           <div class="submission-card">
             <form @submit.prevent="handleSubmit" class="space-y-6">
               <!-- 头像上传 -->
-              <div class="flex items-center gap-4">
+              <div class="avatar-container">
                 <div class="shrink-0">
-                  <img :src="avatarPreview" class="avatar-preview" alt="头像">
+                  <!-- 使用 label 包裹图片，并关联到 input -->
+                  <label for="avatar-upload" class="cursor-pointer">
+                    <img :src="avatarPreview" class="avatar-preview" alt="头像">
+                  </label>
+                  <!-- 隐藏 input -->
+                  <input id="avatar-upload" type="file" accept="image/*" @change="handleAvatarUpload" class="hidden" />
                 </div>
-                <label class="block">
-                  <span class="xz"><h4></h4></span>
-                  <input type="file" accept="image/*" @change="handleAvatarUpload" class="file-input" />
-                </label>
               </div>
 
               <!-- 用户名 -->
               <div class="items">
                 <label for="username" class="form-label">用户名</label>
-                <input v-model="form.username" type="text" id="username" class="form-input" />
+                <span v-if="!isedict">{{ AuthStore.$state.user?.username }}</span>
+                <input v-if="isedict" v-model="form.username" type="text" id="username" class="form-input" />
               </div>
 
               <!-- 邮箱 -->
               <div class="items">
-                <label for="email" class="form-label">邮箱</label>
-                <input v-model="form.email" type="email" id="email" class="form-input" />
+                <label for="password" class="form-label">密码</label>
+                <span v-if="!isedict">********</span>
+                <input v-if="isedict" v-model="form.password" type="password" id="password" class="form-input" />
               </div>
 
               <!-- 出生日期 -->
               <div class="items">
                 <label for="birthdate" class="form-label">出生日期</label>
-                <input v-model="form.birthdate" type="date" id="birthdate" class="form-input" />
+                <span v-if="!isedict">2024年12月29日</span>
+                <input v-if="isedict" v-model="form.birthdate" type="date" id="birthdate" class="form-input" />
               </div>
 
-              <div class="items">
-                <button type="submit" class="submit-button" >
-                保存设置
-              </button>
+              <div v-if="!isedict" class="items">
+                <button @click="() => { isedict = !isedict }" class="submit-button">
+                  编辑
+                </button>
+              </div>
+
+              <div v-if="isedict" class="items">
+                <button type="submit" class="submit-button" @click="handleSubmits">
+                  保存设置
+                </button>
+                <button @click="() => { isedict = !isedict }" class="submit-button">
+                  取消
+                </button>
               </div>
             </form>
-            
+
           </div>
         </div>
-      </div>          
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.proflie-container{
-  width:80%; 
+.proflie-container {
+  width: 80%;
   text-align: center;
   position: relative;
   left: 10%;
@@ -319,7 +377,7 @@ const handlefavorites = () => {
   animation: fadeIn 0.5s ease forwards;
   /* 使用淡入动画 */
 }
-  
+
 
 .bg-white {
   background-color: #1c212f;
@@ -345,7 +403,7 @@ const handlefavorites = () => {
   border-color: #444;
   display: flex;
   justify-content: center;
-  
+
 }
 
 .text-blue-600 {
@@ -387,9 +445,24 @@ input:focus {
 }
 
 /* 头像样式 */
+.avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .avatar-preview {
-  height: 64px;
-  width: 64px;
+  height: 20vh;
+  width: 20vh;
   border-radius: 50%;
   object-fit: cover;
   transition: transform 0.3s ease;
@@ -399,29 +472,14 @@ input:focus {
   transform: scale(1.05);
 }
 
-.xz{
+.xz {
   display: block;
   position: relative;
-  top: 8px;
-  right:520px;
   font-size: larger;
 }
+
 /* 文件上传按钮样式 */
-.file-input {
-  position: relative;
-  bottom: 30px;
-  left: 80px;
-  display: block;
-  width: 150px;
-  padding: 8px 12px;
-  font-size: 14px;
-  color: #121212;
-  background-color: #2b2c2e;
-  border: none;
-  border-radius: 24px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+
 
 .file-input:hover {
   background-color: #3477bd;
@@ -439,8 +497,8 @@ input:focus {
 /* 输入框样式 */
 .form-input {
   display: block;
-  width: 100%;
-  padding: 12px;
+  width: 40vh;
+  padding: 1vh;
   font-size: 16px;
   color: #e0e0e0;
   background-color: #2a2a2a;
@@ -448,8 +506,12 @@ input:focus {
   border-radius: 8px;
   transition: border-color 0.3s ease;
 }
-.items{
- padding-bottom: 3em;
+
+.items {
+  padding-bottom: 3em;
+  justify-items: center;
+  align-items: center;
+
 }
 
 .form-input:focus {
@@ -461,7 +523,7 @@ input:focus {
 .submit-button {
   display: block;
   margin-top: 1em;
-  width: 100%;
+  width: 20vh;
   /* padding: 12px; */
   font-size: 16px;
   font-weight: 500;
@@ -473,8 +535,9 @@ input:focus {
   transition: background-color 0.3s ease;
 }
 
+
+
 .submit-button:hover {
   background-color: #3477bd;
 }
-
 </style>

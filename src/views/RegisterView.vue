@@ -1,28 +1,3 @@
-<template>
-  
-    <div class="register-container">
-      <center><h2>Register</h2></center>
-      
-      <form @submit.prevent="handleRegister">
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" v-model="username" required />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" v-model="password" required />
-        </div>
-        <div class="form-group">
-          <label for="confirm-password">Confirm Password</label>
-          <input type="password" id="confirm-password" v-model="confirmPassword" required />
-        </div>
-        <div class="register">
-          <button type="submit">Register</button>
-        </div>
-      </form>
-    </div>
-  </template>
-  
   <script setup>
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
@@ -43,14 +18,36 @@
     try {
       await store.register({ username: username.value, password: password.value });
       alert('注册成功请登录');
-      router.push('/'); // 注册成功后跳转到登录页面
+      router.push('/login'); // 注册成功后跳转到登录页面
     } catch (error) {
       alert(error)
-      // alert('注册失败，用户名已存在');
     }
   };
   </script>
+  <template>
   
+    <div class="register-container">
+     <h2>Register</h2>
+      
+      <form @submit.prevent="handleRegister">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" v-model="username" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" v-model="password" required />
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input type="password" id="confirm-password" v-model="confirmPassword" required />
+        </div>
+        <div class="register">
+          <button type="submit">Register</button>
+        </div>
+      </form>
+    </div>
+  </template>
   <style scoped>
   .register-container {
     max-width: 400px;
