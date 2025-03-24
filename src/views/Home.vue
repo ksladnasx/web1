@@ -71,6 +71,7 @@ const searchQuery = ref('')
   align-items: center;
   display: flex;
   flex-direction: column;
+  
 }
 .recommend-websites {
   margin-bottom: 3rem;

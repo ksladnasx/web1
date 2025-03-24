@@ -4,13 +4,15 @@ import axios from 'axios';
 import { User, Credentials } from '../types/types';
 import { useFavoritesStore } from './favorites';
 import { usesubmitstore } from './submitStore';
-import { Ref } from 'vue';
+import { ref, Ref } from 'vue';
 
 
 export const useAuthStore = defineStore('auth', {
+
+  // state中的数据都是默认响应式的
   state: () => ({
     isAuthenticated: false,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-    user: null as Ref<User> | null,
+    user: "",
     url:""
   }),
   actions: {
@@ -19,7 +21,7 @@ export const useAuthStore = defineStore('auth', {
       //测试账户
       if (credentials.username == 'doctor@126.com' && credentials.password == 'password') {
         this.$state.isAuthenticated = true;
-        this.$state.user = { ...this.$state.user, username: credentials.username };
+        this.$state.user = credentials.username;
         localStorage.setItem('user', JSON.stringify({
           userid:"response.data.userid",
           username: credentials.username
@@ -59,8 +61,11 @@ export const useAuthStore = defineStore('auth', {
           throw new Error('注册失败');
         } else {
           this.isAuthenticated = true;
-          this.user = response.data;
-          localStorage.setItem('user', JSON.stringify(response.data));
+          this.user = response.data.data.username;
+          localStorage.setItem('user', JSON.stringify({
+            userid:response.data.data.userid,
+            username: credentials.username
+          }));
         }
 
       } catch (error) {
@@ -87,7 +92,7 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       // 登出逻辑
       this.isAuthenticated = false;
-      this.user = null;
+      this.user = "";
       // 可选：清除用户信息
       localStorage.removeItem('user');  
       //清除缓存

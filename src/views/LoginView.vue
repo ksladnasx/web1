@@ -1,29 +1,3 @@
-<template>
-  <div class="login-container">
-    <h2>Login</h2>
-    <form @submit.prevent="handleLogin">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" v-model="username" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" v-model="password" required />
-      </div>
-      <div class="login">
-        <button type="submit">Login</button>
-      </div>
-    </form>
-    <div class="register-link">
-      <router-link to="/register">没有账号？注册</router-link>
-    </div>
-  </div>
-  <!-- 分割线 -->
-  <div style="padding-top: 600px;">
-    -----------------------------------------------------------------------------------------------------------------------
-  </div>
-</template>
-
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -60,6 +34,32 @@ const handleLogin = async () => {
 };
 </script>
 
+
+<template>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form @submit.prevent="handleLogin">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" v-model="username" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" v-model="password" required />
+      </div>
+      <div class="login">
+        <button type="submit">Login</button>
+      </div>
+    </form>
+    <div class="register-link">
+      <router-link to="/register">没有账号？注册</router-link>
+    </div>
+  </div>
+  <!-- 分割线 -->
+  <div style="padding-top: 600px;">
+    -----------------------------------------------------------------------------------------------------------------------
+  </div>
+</template>
 <style scoped>
 .login-container {
   max-width: 400px;

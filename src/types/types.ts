@@ -38,5 +38,6 @@ export interface MySub2 {
   url:string,
   description:string,
   category:string,
-  reason:string
+  reason:string,
+  logo:string
 }

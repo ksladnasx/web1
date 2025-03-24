@@ -166,7 +166,6 @@ const categoryName = computed(() => {
   display: inline-flex;
 }
 
-/* 允许网站介绍部分的文本能被用户选中 */
 .description-section {
   -webkit-user-select: text;
   -moz-user-select: text;
@@ -244,7 +243,6 @@ const categoryName = computed(() => {
   gap: 1rem;
 }
 
-/* 图标样式 */
 .logo-exp {
   width: 100px;
 }
@@ -252,12 +250,9 @@ const categoryName = computed(() => {
 .site-logo {
   width: 60px;
   object-fit: contain;
-  /* padding-bottom: 5rem; */
-  /* padding: auto; */
   margin-bottom: 20px;
 }
 
-/* 返回按钮的样式 */
 .back {
   width: 90px;
   margin-bottom: 2rem;
@@ -305,12 +300,10 @@ const categoryName = computed(() => {
   font-size: 0.875rem;
   line-height: 1.25rem;
   display: -webkit-box;
-  /* -webkit-line-clamp: 2; */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* 响应式调整 */
 @media (max-width: 768px) {
   .recommendation-grid {
     grid-template-columns: 1fr;

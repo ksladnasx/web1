@@ -15,36 +15,23 @@ const submitStore = usesubmitstore()
 const user = localStorage.getItem('user')
 
 const userid = ref("")
-if(user){
-   userid.value = JSON.parse(user).userid
+if (user) {
+  userid.value = JSON.parse(user).userid
 }
 // 响应式数据
 const activeTab = ref('settings')
 const isedict = ref(false)
-const avatarPreview = ref( "https://tse3-mm.cn.bing.net/th/id/OIP-C.g5M-iZUiocFCi9YAzojtRAAAAA?rs=1&pid=ImgDetMain")
+const avatarPreview = ref("https://tse3-mm.cn.bing.net/th/id/OIP-C.g5M-iZUiocFCi9YAzojtRAAAAA?rs=1&pid=ImgDetMain")
 const avatarFile = ref<File | null>(null)
 
 // 表单数据
 const form = ref({
-  username: AuthStore.user?.username || '',
-  password: "****************",
+  username: AuthStore.user,
+  password: "",
   birthdate: '2024-12-29'
 })
 
-// 初始化加载
-onMounted(()=>{
-  // 调用函数传用户名来更新提交记录
-  submitStore.fetchSubmissions(AuthStore.user?.username )
-  
-})
 
-
-// 标签切换监听
-watch(activeTab, async (newTab) => {
-  if (newTab === 'favorites') {
-    await favoritesStore.fetchFavorites(AuthStore.user?.username)
-  }
-})
 
 // 头像上传处理
 const handleAvatarUpload = (e: Event) => {
@@ -60,8 +47,9 @@ const handleAvatarUpload = (e: Event) => {
 // 保存收藏
 const handlefavorites = async () => {
   try {
-    if (!AuthStore.user?.username) return
-    await favoritesStore.updateFavorites(AuthStore.user.username)
+    console.log("favorites", AuthStore.user)
+    if (!AuthStore.user) return
+    await favoritesStore.updateFavorites(AuthStore.user)
     alert('收藏已保存')
   } catch (e) {
     console.error(e)
@@ -93,30 +81,28 @@ const handleSubmits = async () => {
       username: form.value.username
     }))
     alert("更改成功")
-    AuthStore.$state.user = {username: form.value.username}
+    AuthStore.$state.user = form.value.username
     isedict.value = false
   } catch (e) {
     console.error(e)
-    alert('更新失败:'+e)
+    alert('更新失败:' + e)
   }
 }
 </script>
 
 <template>
   <div class="proflie-container">
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-      你好!
-      <div ref="username">
-        {{ AuthStore.$state.user }}
-      </div>
+    <div class="bg-white">
+
+
 
       <!-- 头部 -->
-      <div class="border-b border-gray-200">
+      <div class=" border-gray-200">
         <nav class="-mb-px flex">
           <button v-for="tab in [
+            { id: 'settings', name: '基础设置' },
             { id: 'favorites', name: '收藏夹' },
             { id: 'submissions', name: '提交记录' },
-            { id: 'settings', name: '基础设置' }
           ]" :key="tab.id" @click="activeTab = tab.id" :class="[
             activeTab === tab.id
               ? 'border-blue-500 text-blue-600'
@@ -131,126 +117,214 @@ const handleSubmits = async () => {
 
       <!-- 基础设置功能实现 -->
 
+      <!-- 基础设置功能实现 -->
+      <div v-if="activeTab === 'settings'">
+        <div class="submission-card">
+          <form class="space-y-6">
+            <!-- 头像上传 -->
+            <div class="avatar-container">
+              <div class="shrink-0">
+                <!-- 使用 label 包裹图片，并关联到 input -->
+                <label for="avatar-upload" class="cursor-pointer">
+                  <img :src="avatarPreview" class="avatar-preview" alt="头像">
+                </label>
+                <!-- 隐藏 input -->
+                <input id="avatar-upload" type="file" accept="image/*" @change="handleAvatarUpload" class="hidden" />
+              </div>
+            </div>
+
+            <!-- 用户名 -->
+            <div class="items">
+              <label for="username" class="form-label">用户名</label>
+              <span v-if="!isedict">{{ AuthStore.$state.user }}</span>
+              <input v-if="isedict" v-model="form.username" type="text" id="username" class="form-input" />
+            </div>
+
+            <!-- 邮箱 -->
+            <div class="items">
+              <label for="password" class="form-label">密码</label>
+              <span v-if="!isedict">********</span>
+              <input v-if="isedict" v-model="form.password" type="password" id="password" class="form-input" />
+            </div>
+
+            <!-- 出生日期 -->
+            <div class="items">
+              <label for="birthdate" class="form-label">出生日期</label>
+              <span v-if="!isedict">2024年12月29日</span>
+              <input v-if="isedict" v-model="form.birthdate" type="date" id="birthdate" class="form-input" />
+            </div>
+
+            <div v-if="!isedict" class="items">
+              <button @click="() => { isedict = !isedict }" class="submit-button">
+                编辑
+              </button>
+            </div>
+
+            <div v-if="isedict" class="items">
+              <button type="submit" class="submit-button" @click="handleSubmits">
+                保存设置
+              </button>
+              <button @click="() => { isedict = !isedict }" class="submit-button">
+                取消
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
       <!-- 收藏夹功能实现 -->
-      <div class="p-6">
-        <div v-if="activeTab === 'favorites'">
-          <div v-if="favoritesStore.favorites.length=== 0" class="text-center py-12">
-            <div class="text-6xl mb-4">🤍</div>
-            <h3 class="text-xl font-medium text-gray-900 mb-2">暂无收藏的网站</h3>
-            <p class="text-gray-600">
-              浏览网站时点击心形图标即可收藏喜欢的网站
-            </p>
-          </div>
-          <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="submission-card">
-              <profliewebCard v-for="website in favoritesStore.favorites" :key="website.id" :website="website"
-                @remove="favoritesStore.removeFavorite(website.id)" />
 
-            </div>
-          </div>
-          <button @click="handlefavorites">保存</button>
+      <div v-if="activeTab === 'favorites'">
+        <div v-if="favoritesStore.favorites.length === 0">
+          <div>🤍</div>
+          <h3 class=" text-gray-900 ">暂无收藏的网站</h3>
+          <p class="text-gray-600">
+            浏览网站时点击心形图标即可收藏喜欢的网站
+          </p>
         </div>
+        <div v-else>
+          <div >
+            <profliewebCard v-for="website in favoritesStore.favorites" :key="website.id" :website="website"
+              @remove="favoritesStore.removeFavorite(website.id)" />
 
-        <!-- 提交记录功能实现 -->
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div class="p-6">
-              <!-- 提交记录功能实现 -->
-              <div v-if="activeTab === 'submissions'">
-                <!-- 暂无提交记录 -->
-                <div v-if="submitStore.submissions.length === 0" class="text-center py-12">
-                  <div class="text-6xl mb-4">📝</div>
-                  <h3 class="text-xl font-medium text-gray-900 mb-2">暂无提交记录</h3>
-                  <p class="text-gray-600">
-                    还没有提交过网站？
-                    <router-link to="/submit" class="text-blue-600 hover:text-blue-800">
-                      去提交
-                    </router-link>
-                  </p>
-                </div>
-                <!-- 显示提交记录 -->
-                <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <div v-for="submission in submitStore.submissions" :key="submission.name" class="submission-card">
-                    <div>
-                      <h4 class="submission-title" style="position: relative;right: 15em;">{{ submission.name }}</h4>
-                    </div>
-                    <p class="submission-description">{{ submission.description }}</p>
-                    <p class="submission-category">分类: {{ submission.category }}</p>
-                    <p class="submission-reason">推荐理由: {{ submission.reason }}</p>
-                    <p><a :href="submission.url" target="_blank" class="submission-link">访问网站</a></p>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
+        <div style="padding-top: 5vh;">        
+          <button @click="handlefavorites" >保存</button>
+        </div>
+
+      </div>
 
 
+      <!-- 提交记录功能实现 -->
+      <div v-if="activeTab === 'submissions'">
+        <!-- 暂无提交记录 -->
+        <div v-if="submitStore.submissions.length === 0">
+          <div>📝</div>
+          <h3 class=" text-gray-900">暂无提交记录</h3>
+          <p class="text-gray-600">
+            还没有提交过网站？
+            <router-link to="/submit" class="text-blue-600 ">
+              去提交
+            </router-link>
+          </p>
+        </div>
+        <!-- 显示提交记录 -->
+        <div v-else>
+          <div v-for="submission in submitStore.submissions" :key="submission.name" class="submission-cards">
+            <div class="icon-content">
+              <span class="icon icon-wrapper">
+                <img :src="submission.logo" class="icons " alt="网页logo">
+              </span>
 
-
-        <!-- 基础设置功能实现 -->
-        <!-- 修改设置部分 -->
-        <div v-if="activeTab === 'settings'" class="max-w-md mx-auto">
-          <div class="submission-card">
-            <form  class="space-y-6">
-              <!-- 头像上传 -->
-              <div class="avatar-container">
-                <div class="shrink-0">
-                  <!-- 使用 label 包裹图片，并关联到 input -->
-                  <label for="avatar-upload" class="cursor-pointer">
-                    <img :src="avatarPreview" class="avatar-preview" alt="头像">
-                  </label>
-                  <!-- 隐藏 input -->
-                  <input id="avatar-upload" type="file" accept="image/*" @change="handleAvatarUpload" class="hidden" />
-                </div>
-              </div>
-
-              <!-- 用户名 -->
-              <div class="items">
-                <label for="username" class="form-label">用户名</label>
-                <span v-if="!isedict">{{ AuthStore.$state.user }}</span>
-                <input v-if="isedict" v-model="form.username" type="text" id="username" class="form-input" />
-              </div>
-
-              <!-- 邮箱 -->
-              <div class="items">
-                <label for="password" class="form-label">密码</label>
-                <span v-if="!isedict">********</span>
-                <input v-if="isedict" v-model="form.password" type="password" id="password" class="form-input" />
-              </div>
-
-              <!-- 出生日期 -->
-              <div class="items">
-                <label for="birthdate" class="form-label">出生日期</label>
-                <span v-if="!isedict">2024年12月29日</span>
-                <input v-if="isedict" v-model="form.birthdate" type="date" id="birthdate" class="form-input" />
-              </div>
-
-              <div v-if="!isedict" class="items">
-                <button @click="() => { isedict = !isedict }" class="submit-button">
-                  编辑
-                </button>
-              </div>
-
-              <div v-if="isedict" class="items">
-                <button type="submit" class="submit-button" @click="handleSubmits">
-                  保存设置
-                </button>
-                <button @click="() => { isedict = !isedict }" class="submit-button">
-                  取消
-                </button>
-              </div>
-            </form>
-
+              <span class="title-content">
+                <h4 class="submission-title">{{ submission.name }}</h4>
+              </span>
+            </div>
+            <div class="content" style="">
+              <p class="submission-category ">分类: {{ submission.category }}</p>
+              <p class="submission-description ">描述：{{ submission.description }}</p>
+              <p class="submission-reason ">推荐理由: {{ submission.reason }}</p>
+              <p class="action-link">
+                <a :href="submission.url" target="_blank" class="submission-link">
+                  访问网站
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
+
+
+
     </div>
   </div>
 </template>
 
 <style scoped>
+.title-content {
+  max-width: 10vh;
+  display: inline-block;
+}
+
+.icon-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 50vh;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 74%;
+  padding-top: 10vh;
+  padding-bottom: 1vh;
+}
+
+/* 新增卡片布局类 */
+.submission-cards {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.submission-cards:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px rgba(225, 222, 222, 0.2);
+}
+
+/* 标题文本处理 */
+.submission-title {
+  display: inline;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 图标容器 */
+.icon-wrapper {
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+/* 底部链接定位 */
+.action-link {
+  margin-top: auto;
+}
+
+.icon {
+  width: 13vh;
+  height: 13vh;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.icons {
+  width: 13vh;
+  height: 13vh;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
 .proflie-container {
   width: 80%;
   text-align: center;
@@ -259,78 +333,67 @@ const handleSubmits = async () => {
   font-size: larger;
 }
 
-
 /* 基础样式 */
 .submission-card {
   background-color: #334579;
-  /* 深色背景 */
   border-radius: 12px;
-  /* 更圆润的边角 */
   box-shadow: 0 8px 16px rgba(150, 146, 146, 0.1);
-  /* 更强的阴影效果 */
   padding: 1.5rem;
-  /* 更多的内边距 */
   color: #f3f4f6;
-  /* 文字颜色 */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  /* 动画过渡效果 */
   margin-bottom: 1.5rem;
-  /* 卡片之间的间隔 */
 }
 
 /* 鼠标悬停时的动效 */
 .submission-card:hover {
   transform: translateY(-10px);
-  /* 向上移动 */
   box-shadow: 0 12px 24px rgba(225, 222, 222, 0.2);
-  /* 更强的阴影 */
 }
 
 /* 标题样式 */
 .submission-title {
-  font-size: 1.5rem;
-  /* 更大的字体 */
+  font-size: 3vh;
   font-weight: 700;
-  /* 更粗的字体 */
-  margin-bottom: 1rem;
-  /* 更大的间距 */
+  display: inline-flexbox;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 描述样式 */
 .submission-description {
-  font-size: 1rem;
-  /* 标准字体大小 */
+  font-size: 1.2vb;
+  max-width: 60vh;
   color: #e5e7eb;
-  /* 灰色文字 */
   margin-bottom: 1rem;
-  /* 间距 */
+}
+
+.submission-category {
+  font-size: 3vh;
+  font-weight: 700;
+  color: #abc9ee;
+  display: inline-flexbox;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 分类和推荐理由样式 */
-.submission-category,
 .submission-reason {
-  font-size: 0.9rem;
-  /* 小字体 */
+  font-size: 1vh;
+  max-width: 60vh;
   color: #9ca3af;
-  /* 灰色文字 */
   margin-bottom: 1rem;
-  /* 间距 */
 }
 
 /* 链接样式 */
 .submission-link {
   color: #3b82f6;
-  /* 蓝色链接 */
   text-decoration: none;
   font-weight: 600;
-  /* 粗体 */
   transition: color 0.3s ease;
-  /* 颜色过渡效果 */
 }
 
 .submission-link:hover {
   color: #1d4ed8;
-  /* 悬停时更深的蓝色 */
 }
 
 /* 动画效果 */
@@ -339,7 +402,6 @@ const handleSubmits = async () => {
     opacity: 0;
     transform: translateY(20px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -348,11 +410,13 @@ const handleSubmits = async () => {
 
 .submission-card {
   animation: fadeIn 0.5s ease forwards;
-  /* 使用淡入动画 */
 }
 
-
 .bg-white {
+  padding-top: 2vh;
+  max-width: 120vh;
+  position: relative;
+  left: 10%;
   background-color: #1c212f;
 }
 
@@ -368,15 +432,11 @@ const handleSubmits = async () => {
   color: #888;
 }
 
-.hover\:text-gray-700:hover {
-  color: #ccc;
-}
-
 .border-gray-200 {
+  padding-bottom: 2.5vh;
   border-color: #444;
   display: flex;
   justify-content: center;
-
 }
 
 .text-blue-600 {
@@ -391,10 +451,6 @@ const handleSubmits = async () => {
   background-color: #2563eb;
 }
 
-.hover\:bg-blue-700:hover {
-  background-color: #1d4ed8;
-}
-
 input {
   background-color: #444;
   color: white;
@@ -405,9 +461,6 @@ input:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
-
-/* 外联样式表 */
-
 
 .submission-card {
   height: auto;
@@ -445,19 +498,6 @@ input:focus {
   transform: scale(1.05);
 }
 
-.xz {
-  display: block;
-  position: relative;
-  font-size: larger;
-}
-
-/* 文件上传按钮样式 */
-
-
-.file-input:hover {
-  background-color: #3477bd;
-}
-
 /* 表单标签样式 */
 .form-label {
   display: block;
@@ -484,7 +524,6 @@ input:focus {
   padding-bottom: 3em;
   justify-items: center;
   align-items: center;
-
 }
 
 .form-input:focus {
@@ -497,7 +536,6 @@ input:focus {
   display: block;
   margin-top: 1em;
   width: 20vh;
-  /* padding: 12px; */
   font-size: 16px;
   font-weight: 500;
   color: #e0e0e0;
@@ -507,8 +545,6 @@ input:focus {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
-
 
 .submit-button:hover {
   background-color: #3477bd;

@@ -41,7 +41,7 @@ export const usesubmitstore = defineStore('submits', () => {
                 console.log('Fetched submissions:', submissions.value);  // 注意：此处 response.data.commit 是一个数组，包含了该用户的提交记录。
                 console.log(submissions.value.length)
             } else {
-                // console.error('Failed to fetch submissions:', response.data.message);
+                console.error('Failed to fetch submissions:', response.data.message);
             }
         } catch (error) {
             console.error('Error fetch  submissions:', error);

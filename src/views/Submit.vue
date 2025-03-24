@@ -15,6 +15,7 @@ const router = useRouter()
 const form = ref({
   name: '',
   url: '',
+  logo:"",
   description: '',
   category: '',
   reason: ''
@@ -26,6 +27,10 @@ const submitWebsite = () => {
     alert("请先登录");
     router.push('/');
   } else {
+    if (form.value.logo == ""){
+      alert("请点击获取网站头像logo");
+      return;
+    }
     // 获取表单数据
     const formData = form.value; // 获取绑定的表单数据
     console.log("提交的表单数据：", formData);
@@ -59,18 +64,23 @@ const geticon = async () => {
     return
   }
   const Myres = await axios.get(`https://v2.xxapi.cn/api/ico?url=${url}`)
-  console.log(Myres.data.data)
-  imgSrc.value = Myres.data.data
+  if(Myres.data.data ==""){
+    alert('无法获取网站头像，请检查网站是否存在或已关闭(已使用默认头像)')
+    form.value.logo = "https://www.logosc.cn/uploads/icon/2019/07/05/66941bf2-931c-4641-817f-9002d21d89e3.png"
+    return
+  }
+  // console.log(Myres.data.data)
+  form.value.logo = Myres.data.data
+
 }
 
-let imgSrc = ref('')
 </script>
 
 <template>
   <div class="form-container">
     
     <div class="form-card">
-      <img :src="imgSrc" alt="网站图标" class="img-icon" />
+      <img :src="form.logo" alt="网站图标" class="img-icon" />
       <button class="get-icon-btn" @click="geticon">预览网站图标</button>
       <h1 class="form-title">网站提交</h1>
       <div>

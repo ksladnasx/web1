@@ -105,54 +105,46 @@ onUnmounted(() => {
   color: aliceblue;
   transition: all 0.3s ease; /* 添加全局过渡效果 */
 }
-  
-/* ... 其他现有样式 ... */
 
 a.router-link:hover {
   transform: scale(1.05); /* 鼠标悬停时稍微放大 */
   color: #c3ff00; /* 鼠标悬停时文本颜色变化 */
 }
-button{
+
+button {
   background-color: rgb(0, 0, 0);
   color: #ffffff;
 }
+
 button:hover {
   transform: scale(1.05); /* 鼠标悬停时稍微放大 */
   background-color: #14b6f1; /* 鼠标悬停时背景颜色变化 */
   color: rgb(255, 204, 0); /* 鼠标悬停时文本颜色变化 */
 }
+
 .min-h-screen {
   min-height: 100vh;
   /* 使元素最小高度为视口高度 */
 }
-main{
+
+main {
   min-height: 100vh;
 }
-.bgc{
+
+.bgc {
   background-color: #1c212f;
 }
+
 .max-w-7xl {
-  flex:1;
+  flex: 1;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  
-  /* max-width: 1280px; */
 }
 
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
-}
-
-.sm\:px-6 {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-
-.lg\:px-8 {
-  padding-left: 2rem;
-  padding-right: 2rem;
 }
 
 .h-16 {
@@ -171,7 +163,7 @@ main{
   align-items: center;
 }
 
-.space-x-4> :not([hidden])~ :not([hidden]) {
+.space-x-4 > :not([hidden]) ~ :not([hidden]) {
   margin-left: 1rem;
 }
 
@@ -179,24 +171,7 @@ main{
   color: #6b7280;
 }
 
-.hover\:text-gray-900:hover {
-  color: #374151;
-}
-
-.bg-gray-50 {
-  background-color: #1c212f;
-}
-
 .bg-white {
   background-color: #000000;
-}
-
-.shadow {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(255, 255, 255, 0.06);
-}
-
-.py-6 {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
 }
 </style>
