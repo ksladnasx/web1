@@ -40,9 +40,10 @@ const websites = computed(() => {
       <p class="category-description">发现优质{{ currentCategory?.name }}网站</p>
     </div>
 
-    <div>
+    <div class="sort-control">
       <select
         v-model="selectedSort"
+        class="sort-select"
       >
         <option
           v-for="option in sortOptions"
@@ -68,7 +69,7 @@ const websites = computed(() => {
 <style scoped>
 .category-container {
   background-color: #1c212f;
-  width: 80%;
+  width:80%;
   color: white;
   max-width: 1200px;
   margin: 0 auto;
@@ -106,6 +107,75 @@ const websites = computed(() => {
   font-size: 1rem;
 }
 
+.sort-control {
+  position: relative;
+  margin: 2rem 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sort-select {
+  width: 160px;
+  height: 40px;
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  padding: 0 1rem;
+  color: #f3f4f6;
+  font-size: 0.875rem;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%239CA3AF" width="18" height="18"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.sort-select:hover {
+  background: #374151;
+  border-color: #4b5563;
+}
+
+.sort-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.sort-select option {
+  background: #1f2937;
+  color: #f3f4f6;
+  padding: 0.5rem;
+}
+
+.websites-grid {
+  display: grid;
+  gap: 5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.website-card {
+  background: #1f2937;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.website-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 覆盖卡片内部样式 */
+.website-card :deep(.card-title) {
+  color: #f3f4f6;
+  font-size: 1.1rem;
+}
+
+.website-card :deep(.card-description) {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
 @media (max-width: 768px) {
   .header-section {
     padding-left: 1rem;
@@ -118,6 +188,14 @@ const websites = computed(() => {
   .category-title::before {
     left: -1rem;
     height: 1.25rem;
+  }
+
+  .sort-control {
+    justify-content: flex-start;
+  }
+
+  .websites-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

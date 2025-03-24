@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Credentials } from '../types/types';
 import { useFavoritesStore } from './favorites';
 import { usesubmitstore } from './submitStore';
+import { ref } from 'vue';
 
 
 
@@ -11,11 +12,24 @@ export const useAuthStore = defineStore('auth', {
 
   // state中的数据都是默认响应式的
   state: () => ({
-    isAuthenticated: false,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+    isAuthenticated: false,
     user: "",
-    url:""
+    url: ""
   }),
   actions: {
+    setUser(name: string) {
+      const user = localStorage.getItem('user')
+      const userid = ref("")
+      if (user) {
+        userid.value = JSON.parse(user).userid
+      }
+      
+      this.user = name
+      localStorage.setItem('user', JSON.stringify({
+        userid:userid.value ,
+        username: name
+      }))
+    },
     async login(credentials: Credentials) {
       console.log(credentials)
       //测试账户
@@ -23,7 +37,7 @@ export const useAuthStore = defineStore('auth', {
         this.$state.isAuthenticated = true;
         this.$state.user = credentials.username;
         localStorage.setItem('user', JSON.stringify({
-          userid:"response.data.userid",
+          userid: "response.data.userid",
           username: credentials.username
         }));
 
@@ -42,7 +56,7 @@ export const useAuthStore = defineStore('auth', {
         this.url = response.data
         console.log(response.data)
         localStorage.setItem('user', JSON.stringify({
-          userid:response.data.user.userid,
+          userid: response.data.user.userid,
           username: credentials.username
         }));
 
@@ -63,7 +77,7 @@ export const useAuthStore = defineStore('auth', {
           this.isAuthenticated = true;
           this.user = response.data.data.username;
           localStorage.setItem('user', JSON.stringify({
-            userid:response.data.data.userid,
+            userid: response.data.data.userid,
             username: credentials.username
           }));
         }
@@ -94,7 +108,7 @@ export const useAuthStore = defineStore('auth', {
       this.isAuthenticated = false;
       this.user = "";
       // 可选：清除用户信息
-      localStorage.removeItem('user');  
+      localStorage.removeItem('user');
       //清除缓存
       localStorage.clear();
 

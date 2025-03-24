@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useFavoritesStore } from '../stores/favorites'
 import profliewebCard from '../components/profliewebCard.vue';
 import { useAuthStore } from '../stores/authStore';
@@ -21,6 +21,7 @@ const activeTab = ref('settings')
 const isedict = ref(false)
 const avatarPreview = ref("https://tse3-mm.cn.bing.net/th/id/OIP-C.g5M-iZUiocFCi9YAzojtRAAAAA?rs=1&pid=ImgDetMain")
 const avatarFile = ref<File | null>(null)
+
 
 // 表单数据
 const form = ref({
@@ -57,6 +58,7 @@ const handlefavorites = async () => {
 
 // 提交表单
 const handleSubmits = async () => {
+  console.log("submits", AuthStore.user)
   if (!AuthStore.user) {
     alert('请先登录')
     return
@@ -70,22 +72,21 @@ const handleSubmits = async () => {
     })
 
     if (res.data.code !== 200) {
-      alert(res.data.message)
+      alert("错误："+res.data.message)
       return
     }
-
-    localStorage.setItem('user', JSON.stringify({
-      userid: userid.value,
-      username: form.value.username
-    }))
+      console.log(res.data.data.username)
+      AuthStore.setUser(res.data.data.username)
+    
     alert("更改成功")
-    AuthStore.$state.user = form.value.username
+    
     isedict.value = false
   } catch (e) {
     console.error(e)
     alert('更新失败:' + e)
   }
 }
+
 </script>
 
 <template>
@@ -134,7 +135,7 @@ const handleSubmits = async () => {
             <!-- 用户名 -->
             <div class="items">
               <label for="username" class="form-label">用户名</label>
-              <span v-if="!isedict">{{ AuthStore.$state.user }}</span>
+              <span v-if="!isedict">{{ form.username }}</span>
               <input v-if="isedict" v-model="form.username" type="text" id="username" class="form-input" />
             </div>
 
@@ -153,13 +154,15 @@ const handleSubmits = async () => {
             </div>
 
             <div v-if="!isedict" class="items">
-              <button @click="() => { isedict = !isedict }" class="submit-button">
+              <button @click="() => { isedict = !isedict 
+                console.log(favoritesStore.favorites)
+              }" class="submit-button">
                 编辑
               </button>
             </div>
 
             <div v-if="isedict" class="items">
-              <button type="submit" class="submit-button" @click="handleSubmits">
+              <button type="submit" class="submit-button" @click.prevent="handleSubmits">
                 保存设置
               </button>
               <button @click="() => { isedict = !isedict }" class="submit-button">
@@ -174,7 +177,7 @@ const handleSubmits = async () => {
       <!-- 收藏夹功能实现 -->
 
       <div v-if="activeTab === 'favorites'">
-        <div v-if="favoritesStore.favorites.length === 0">
+        <div v-if="favoritesStore.favorites.length == 0">
           <div>🤍</div>
           <h3 class=" text-gray-900 ">暂无收藏的网站</h3>
           <p class="text-gray-600">
