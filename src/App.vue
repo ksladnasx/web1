@@ -48,31 +48,12 @@ onUnmounted(() => {
 
 
 
-// 灯笼
-
-// let newyearScript: HTMLScriptElement | null = null;
-// onMounted(() => {
-//     newyearScript = document.createElement('script');
-//     newyearScript.type = 'text/javascript';
-//     newyearScript.src = 'https://api.vvhan.com/api/script/denglong';
-//     newyearScript.defer = true;
-
-//     // 将脚本插入到页面
-//     document.head.appendChild(newyearScript);
-// });
-
-// onUnmounted(() => {
-//     // 卸载组件时移除脚本
-//     if (snowScript) {
-//         document.head.removeChild(snowScript);
-//     }
-// });
 </script>
 
 <template>
   <div class="menu">
-    <nav class="bg-white shadow">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="bg-white ">
+      <div class="max-w-7xl mx-auto px-4 ">
         <div class="flex justify-between h-16 items-center">
           <div class="flex items-center">
             <router-link to="/" class="flex items-center">
@@ -80,12 +61,12 @@ onUnmounted(() => {
             </router-link>
           </div>
           <div class="flex items-center space-x-4">
-            <router-link to="/music" class="text-gray-600 hover:text-red-500 transition-colors duration-300 hover:scale-105"><button>🎵 音乐</button></router-link>
-            <router-link to="/star-map" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 hover:scale-105"><button>⭐ 学习星图</button></router-link>
-            <router-link to="/submit" class="text-gray-600 hover:text-green-500 transition-colors duration-300 hover:scale-105"><button>🙋‍♂️ 提交网站</button></router-link>
-            <router-link to="/profile" class="text-gray-600 hover:text-purple-500 transition-colors duration-300 hover:scale-105"><button>👤 个人中心</button></router-link>
+            <router-link to="/music" class="text-gray-600 "><button>🎵 音乐</button></router-link>
+            <router-link to="/star-map" class="text-gray-600"><button>⭐ 学习星图</button></router-link>
+            <router-link to="/submit" class="text-gray-600 "><button>🙋‍♂️ 提交网站</button></router-link>
+            <router-link to="/profile" class="text-gray-600 "><button>👤 个人中心</button></router-link>
             <router-link to="/about" ><button>🎈 关于</button></router-link>
-            <div><button style="padding: 5px;" @click="handleclick" class="transition-colors duration-300 hover:bg-red-500 hover:text-white">{{ title }}</button></div>
+            <div><button style="" @click="handleclick" class="transition-colors duration-300 hover:bg-red-500 hover:text-white">{{ title }}</button></div>
           </div>
         </div>
       </div>
@@ -112,8 +93,7 @@ a.router-link:hover {
 }
 
 button {
-  background-color: rgb(0, 0, 0);
-  color: #ffffff;
+  background-color: transparent; 
 }
 
 button:hover {
@@ -160,6 +140,8 @@ main {
 }
 
 .items-center {
+  /* 蓝黑渐变背景 */
+ 
   align-items: center;
 }
 
@@ -172,6 +154,7 @@ main {
 }
 
 .bg-white {
-  background-color: #000000;
+  background: linear-gradient(to bottom, rgb(28, 33, 47), #000000);
+  background: linear-gradient(50deg, rgb(28, 33, 47), #000000);
 }
 </style>

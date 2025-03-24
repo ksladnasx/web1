@@ -1,10 +1,10 @@
 // src/stores/authStore.ts
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import { User, Credentials } from '../types/types';
+import { Credentials } from '../types/types';
 import { useFavoritesStore } from './favorites';
 import { usesubmitstore } from './submitStore';
-import { ref, Ref } from 'vue';
+
 
 
 export const useAuthStore = defineStore('auth', {

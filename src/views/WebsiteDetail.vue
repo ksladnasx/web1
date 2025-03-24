@@ -4,7 +4,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
 import { useFavoritesStore } from '../stores/favorites'
 import { useAuthStore } from '../stores/authStore'
-import { Website } from '../types/types';
 
 const route = useRoute()
 const router = useRouter()

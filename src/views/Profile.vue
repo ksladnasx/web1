@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref } from 'vue'
 import { useFavoritesStore } from '../stores/favorites'
 import profliewebCard from '../components/profliewebCard.vue';
 import { useAuthStore } from '../stores/authStore';
 import { usesubmitstore } from '../stores/submitStore';
-import { useProfileStore } from '../stores/profileStore'
 import axios from 'axios';
 
 // 状态初始化
 const AuthStore = useAuthStore()
-const profileStore = useProfileStore()
 const favoritesStore = useFavoritesStore()
 const submitStore = usesubmitstore()
 const user = localStorage.getItem('user')
@@ -270,12 +268,13 @@ const handleSubmits = async () => {
   display: flex;
   flex-direction: row;
   gap: 12px;
+  box-shadow: 0 12px 24px rgba(225, 222, 222, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .submission-cards:hover {
   transform: translateY(-10px);
-  box-shadow: 0 12px 24px rgba(225, 222, 222, 0.2);
+  box-shadow: 0 12px 24px rgba(115, 165, 240, 0.972);
 }
 
 /* 标题文本处理 */
