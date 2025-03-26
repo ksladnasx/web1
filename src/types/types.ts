@@ -32,12 +32,12 @@ export interface Mysub {
   username: string;
   submit: object;
 }
-// 这里定义的是提交网站时真正存入数据库的类型，也是数据库返回提交记录数组的元素类型
+// 这里定义的是提交网站时真正存入数据库的类型，也是数据库返回自定义网站数组的元素类型
 export interface MySub2 {
-  name:string,
-  url:string,
-  description:string,
-  category:string,
-  reason:string,
-  logo:string
+  name: string,
+  url: string,
+  description: string,
+  category: string,
+  reason: string,
+  logo: string
 }

@@ -63,7 +63,7 @@ onUnmounted(() => {
           <div class="flex items-center space-x-4">
             <router-link to="/music" class="text-gray-600 "><button>🎵 音乐</button></router-link>
             <router-link to="/star-map" class="text-gray-600"><button>⭐ 学习星图</button></router-link>
-            <router-link to="/submit" class="text-gray-600 "><button>🙋‍♂️ 提交网站</button></router-link>
+            <router-link to="/submit" class="text-gray-600 "><button>🙋‍♂️ 自定义网站</button></router-link>
             <router-link to="/profile" class="text-gray-600 "><button>👤 个人中心</button></router-link>
             <router-link to="/about" ><button>🎈 关于</button></router-link>
             <div><button style="" @click="handleclick" class="transition-colors duration-300 hover:bg-red-500 hover:text-white">{{ title }}</button></div>

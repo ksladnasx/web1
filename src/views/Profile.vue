@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { useFavoritesStore } from '../stores/favorites'
 import profliewebCard from '../components/profliewebCard.vue';
 import { useAuthStore } from '../stores/authStore';
@@ -72,18 +72,38 @@ const handleSubmits = async () => {
     })
 
     if (res.data.code !== 200) {
-      alert("错误："+res.data.message)
+      alert("错误：" + res.data.message)
       return
     }
-      console.log(res.data.data.username)
-      AuthStore.setUser(res.data.data.username)
-    
+    console.log(res.data.data.username)
+    AuthStore.setUser(res.data.data.username)
+
     alert("更改成功")
-    
+
     isedict.value = false
   } catch (e) {
     console.error(e)
     alert('更新失败:' + e)
+  }
+}
+
+const handleDel = async(url: string)=>{
+  console.log(url)
+  try{
+    const res = await axios.post("https://jy8b5cnnmg.hzh.sealos.run/Delsubmit",{
+    username: AuthStore.$state.user,
+    submiturl:url
+  })
+  if(res.data.code == 200){
+    alert("删除成功")
+    window.location.reload()
+    
+  }else{
+    alert("删除失败:"+res.data.message)
+  }
+  }catch (e) {
+    console.error(e)
+    alert('删除失败')
   }
 }
 
@@ -101,7 +121,7 @@ const handleSubmits = async () => {
           <button v-for="tab in [
             { id: 'settings', name: '基础设置' },
             { id: 'favorites', name: '收藏夹' },
-            { id: 'submissions', name: '提交记录' },
+            { id: 'submissions', name: '自定义网站' },
           ]" :key="tab.id" @click="activeTab = tab.id" :class="[
             activeTab === tab.id
               ? 'border-blue-500 text-blue-600'
@@ -154,7 +174,8 @@ const handleSubmits = async () => {
             </div>
 
             <div v-if="!isedict" class="items">
-              <button @click="() => { isedict = !isedict 
+              <button @click="() => {
+                isedict = !isedict
                 console.log(favoritesStore.favorites)
               }" class="submit-button">
                 编辑
@@ -185,25 +206,25 @@ const handleSubmits = async () => {
           </p>
         </div>
         <div v-else>
-          <div >
+          <div>
             <profliewebCard v-for="website in favoritesStore.favorites" :key="website.id" :website="website"
               @remove="favoritesStore.removeFavorite(website.id)" />
 
           </div>
         </div>
-        <div style="padding-top: 5vh;">        
-          <button @click="handlefavorites" >保存</button>
+        <div style="padding-top: 5vh;">
+          <button @click="handlefavorites">保存</button>
         </div>
 
       </div>
 
 
-      <!-- 提交记录功能实现 -->
+      <!-- 自定义网站功能实现 -->
       <div v-if="activeTab === 'submissions'">
-        <!-- 暂无提交记录 -->
+        <!-- 暂无自定义网站 -->
         <div v-if="submitStore.submissions.length === 0">
           <div>📝</div>
-          <h3 class=" text-gray-900">暂无提交记录</h3>
+          <h3 class=" text-gray-900">暂无自定义网站</h3>
           <p class="text-gray-600">
             还没有提交过网站？
             <router-link to="/submit" class="text-blue-600 ">
@@ -211,7 +232,7 @@ const handleSubmits = async () => {
             </router-link>
           </p>
         </div>
-        <!-- 显示提交记录 -->
+        <!-- 显示自定义网站 -->
         <div v-else>
           <div v-for="submission in submitStore.submissions" :key="submission.name" class="submission-cards">
             <div class="icon-content">
@@ -233,6 +254,9 @@ const handleSubmits = async () => {
                 </a>
               </p>
             </div>
+            <div class="del"> 
+              <button class="del-btn" @click="handleDel(submission.url)">删除</button>
+            </div>
           </div>
         </div>
       </div>
@@ -248,7 +272,13 @@ const handleSubmits = async () => {
   max-width: 10vh;
   display: inline-block;
 }
-
+.del{
+font-size: 2vh;
+  display: flex;
+  margin-top: 10vh;
+  height: 5vh;
+  border-radius: 100%;
+}
 .icon-content {
   display: flex;
   flex-direction: column;
@@ -404,6 +434,7 @@ img:hover {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

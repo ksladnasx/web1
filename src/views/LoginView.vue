@@ -18,19 +18,19 @@ const handleLogin = async () => {
     alert('登录成功'); // 登录成功后弹出提示
 
 
-    
+
     router.push('/profile'); // 登录成功后跳转到主页
-    
+
 
   } catch (error) {
     // alert(error)
     console.log(error)
     alert('登录失败，请检查你的账号密码');
   }// 登录成功后更新收藏夹
-    await favoritesstore.fetchFavorites(username.value);
+  await favoritesstore.fetchFavorites(username.value);
 
-    //登录成功后更新提交记录
-    await submitstore.fetchSubmissions(username.value);
+  //登录成功后更新自定义网站
+  await submitstore.fetchSubmissions(username.value);
 };
 </script>
 
@@ -68,7 +68,7 @@ const handleLogin = async () => {
   border: 1px solid #ccc;
   border-radius: 5px;
   display: flex;
-  
+
   flex-direction: column;
 }
 

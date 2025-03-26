@@ -15,7 +15,7 @@ const router = useRouter()
 const form = ref({
   name: '',
   url: '',
-  logo:"",
+  logo: "",
   description: '',
   category: '',
   reason: ''
@@ -27,7 +27,7 @@ const submitWebsite = () => {
     alert("请先登录");
     router.push('/');
   } else {
-    if (form.value.logo == ""){
+    if (form.value.logo == "") {
       alert("请点击获取网站头像logo");
       return;
     }
@@ -36,23 +36,23 @@ const submitWebsite = () => {
     console.log("提交的表单数据：", formData);
     const userinfo = localStorage.getItem('user')
     let username1 = ref("")// 获取元素的文本内容
-    if(userinfo){
-      username1.value =  JSON.parse(userinfo).username
+    if (userinfo) {
+      username1.value = JSON.parse(userinfo).username
     }
     // 向后端提交数据,直接根据现有的数据封装传给函数
     submitStores.addsubmits({ username: username1.value, submit: formData });
     // 在这里可以将 formData 发送到后端
     // 示例：使用 axios 发送数据
 
-  //半秒后 调用函数传用户名来更新提交记录
+    //半秒后 调用函数传用户名来更新自定义网站
     setTimeout(() => submitStores.fetchSubmissions(username1.value), 500);
-    
-    
-    
+
+
+
     // 模拟成功提交
     alert("感谢您的提交，我们会在一周内审核并返回结果到您的邮箱");
     router.push('/');
-  }                             
+  }
 };
 
 
@@ -64,7 +64,7 @@ const geticon = async () => {
     return
   }
   const Myres = await axios.get(`https://v2.xxapi.cn/api/ico?url=${url}`)
-  if(Myres.data.data ==""){
+  if (Myres.data.data == "") {
     alert('无法获取网站头像，请检查网站是否存在或已关闭(已使用默认头像)')
     form.value.logo = "https://www.logosc.cn/uploads/icon/2019/07/05/66941bf2-931c-4641-817f-9002d21d89e3.png"
     return
@@ -78,11 +78,11 @@ const geticon = async () => {
 
 <template>
   <div class="form-container">
-    
+
     <div class="form-card">
       <img :src="form.logo" alt="网站图标" class="img-icon" />
       <button class="get-icon-btn" @click="geticon">预览网站图标</button>
-      <h1 class="form-title">网站提交</h1>
+      <h1 class="form-title">网站自定义</h1>
       <div>
         --------------------------------------------------------------------------------------------------------------------
       </div>
@@ -130,20 +130,21 @@ const geticon = async () => {
           提交网站
         </button>
       </form>
-      
+
     </div>
   </div>
 </template>
 
 <style scoped>
 /* 网站图标样式 */
-.get-icon-btn{
- display: inline-block flex;
- position: relative;
- left: 43%;
- bottom: 9%;
+.get-icon-btn {
+  display: inline-block flex;
+  position: relative;
+  left: 43%;
+  bottom: 9%;
 }
-.img-icon{
+
+.img-icon {
   display: inline-block flex;
   position: relative;
   bottom: 2%;
@@ -155,7 +156,7 @@ const geticon = async () => {
 
 
 .form-container {
-  width:80%; 
+  width: 80%;
   min-height: 100vh;
   padding: 2rem 1rem;
   /* 弹性布局 */

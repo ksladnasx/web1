@@ -7,7 +7,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #242424,url(../images/background1.jpg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -22,6 +22,7 @@
 /* 重置HTML和body高度 */
 html {
   height: 100%;
+  
 }
 
 body {
@@ -30,6 +31,7 @@ body {
   width: 100%; /* 新增 */
   display: flex;
   flex-direction: column;
+  
 }
 
 /* 修改APP容器 */
