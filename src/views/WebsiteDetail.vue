@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
 import { useFavoritesStore } from '../stores/favorites'
 import { useAuthStore } from '../stores/authStore'
+import test from './test.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -63,74 +64,81 @@ const categoryName = computed(() => {
       ◀ 返回
     </button>
   </div>
+
   <div class="website-detail-container" v-if="website">
 
-    <div class="main-card">
-      <!-- 保持原有卡片结构不变 -->
-      <div class="card-header">
-        <div class="header-content">
-          <div class="logo-wrapper">
-            <img :src="website.logo" :alt="website.name" class="logo-exp" />
+    <div class="card-header">
+      <div class="logo-wrapper">
+        <img :src="website.logo" :alt="website.name" class="logo-exp" />
+      </div>
+
+      <div class="title-section">
+        <div class="title">
+          <h1>{{ website.name }}</h1>
+          <span class="category-badge">{{ categoryName }}</span>
+        </div>
+
+        <div class="tag_content">
+          <div class="stats-row">
+            <div class="stat-item">
+              <span class="star-icon">⭐</span>
+              {{ website.rating.toFixed(1) }}
+            </div>
+            <div class="stat-item">
+              <span class="eye-icon">👁️</span>
+              {{ website.views.toLocaleString() }}
+            </div>
           </div>
-
-          <div class="title-section">
-            <div class="title-row">
-              <button @click="toggleFavorite" class="love-btn" :class="{ 'text-red-500': isFavorite }">
-                <span class="text-2xl">{{ isFavorite ? '❤️' : '🤍' }}</span><br>
-              </button>
-              <h1>{{ website.name }}</h1>
-
-              <span class="category-badge">{{ categoryName }}</span>
-            </div>
-            <div class="stats-row">
-              <div class="stat-item">
-                <span class="star-icon">⭐</span>
-                {{ website.rating.toFixed(1) }}
-              </div>
-              <div class="stat-item">
-                <span class="eye-icon">👁️</span>
-                {{ website.views.toLocaleString() }}
-              </div>
-            </div>
+          
+          <div class="tag_item">
+            <h5>标签</h5>
+            <span v-for="tag in website.tags" :key="tag" class="tag">
+              {{ tag }}
+            </span>
+            <br>
+            <span class="tag2">{{ website.isPaid ? '付费' : '免费' }}</span>
+            <span class="tag2">{{ website.language[0] }}</span>
+            <span class="tag2">{{ website.accessSpeed }}</span>
+          </div>
+<div class="stat-item">
+            <div><button @click="toggleFavorite" class="love-btn" :class="{ 'text-red-500': isFavorite }">
+                <span class="text-2xl">{{ isFavorite ? '❤️' : '🤍' }}</span>
+              </button></div>
           </div>
         </div>
       </div>
-
-      <div class="card-body">
-        <section class="tags-section">
-          <h2>标签</h2>
-          <div class="tags-container">
-            <span v-for="tag in website.tags" :key="tag" class="tag">
-              {{ tag }},
-            </span>
-          </div>
-        </section>
-        <h2>网站介绍</h2>
-        <section class="description-section">
-
-          <p>{{ website.description }}</p>
-        </section>
-
-        <section class="usage-info">
-          <h2>使用信息</h2>
-          <div class="info-grid">
-            <div class="info-item">
-              <div class="info-label">付费情况💰:{{ website.isPaid ? '付费' : '免费' }}</div>
-            </div>
-            <!-- 其他info-item保持相同结构 -->
-          </div>
-        </section>
-        <button>
-          更多详细信息，问问AI?
-        </button>
-
-        <button class="visit-btn" @click="goToWebsite(website.url)">
-          访问网站🔗
-        </button>
-      </div>
     </div>
 
-    <section class="related-section">
+
+    <div class="info_container">
+      <div class="webdescription_container">
+        <!-- <h2>网站介绍</h2> -->
+        <section class="description-section">
+          {{ website.description }}
+        </section>
+      </div>
+
+
+    </div>
+
+
+    <div class="action-menu">
+      <button class="visit-btn" @click="goToWebsite(website.url)">
+        访问网站🔗
+      </button>
+      <!-- <button class="report-btn">
+        这啥按钮
+      </button> -->
+      <!-- <button>
+          更多详细信息，问问AI?
+        </button> -->
+    </div>
+
+    <div class="comment_container">
+      <test />
+    </div>
+
+    <div class="related-section">
       <h2 class="section-title">相关推荐</h2>
       <div class="recommendation-grid">
         <div v-for="site in relatedWebsites" :key="site.id" @click="router.push(`/website/${site.id}`)"
@@ -144,9 +152,10 @@ const categoryName = computed(() => {
               <p class="site-description">{{ site.tags[0] }}</p>
             </div>
           </div>
-        </div>  
+        </div>
       </div>
-    </section>
+    </div>
+
   </div>
 </template>
 
@@ -161,29 +170,209 @@ const categoryName = computed(() => {
   left: 20%;
 }
 
-.love-btn {
-  display: inline-flex;
+/* 基础样式 */
+.back {
+  width: 90px;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  padding-right: 1rem;
 }
 
-.description-section {
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  user-select: text;
+.back-btn {
+  padding: 0.5rem 1rem;
+  background-color: #383a42;
+  border: none;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.related-section {
+/* 标题区域 */
+.title h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.5rem;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 1rem;
+  font-size: 0.875rem;
+}
+
+/* 标签区域 */
+.tag_content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stats-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+}
+
+
+
+.tag_item h5 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  margin: 0.4vh;
+}
+
+.tag2 {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  background: rgba(168, 209, 243, 0.05);
+  margin: 0.4vh;
+}
+
+.tag2:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 4px rgb(101, 138, 158);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  color: aqua;
+}
+
+.tag:hover {
+  padding: 0.25rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 4px rgb(101, 138, 158);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  color: aqua;
+}
+
+/* 信息容器布局 */
+.info_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 2rem;
+}
+
+/* 按钮样式 */
+.visit-btn {
+  padding: 0.75rem 2rem;
+  background: #3b82f6;
+  border-radius: 2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(230, 233, 237, 0.2);
+}
+
+.report-btn {
+  padding: 0.5rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2rem;
+  transition: all 0.3s ease;
+}
+
+.webdescription_container {
   margin-top: 3rem;
-  padding: 0 1rem;
+}
+
+/* 悬停效果 */
+.back-btn:hover {
+
+  background-color: #3b82f6;
+}
+
+.visit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(243, 241, 241, 0.3);
+}
+
+.report-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 响应式布局 */
+@media (max-width: 800px) {
+  .info_container {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+  }
+
+  .tag_content {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  .action-menu {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .title h1 {
+    font-size: 1.75rem;
+  }
+}
+
+.action-menu {
+
+  margin-top: 10vh;
+}
+
+/* 卡片动画 */
+.recommendation-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recommendation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(248, 244, 244, 0.3);
+}
+
+/* 装饰性元素 */
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: #3b82f6;
 }
 
 .section-title {
-  color: #f3f4f6;
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-left: 1rem;
   position: relative;
-  padding-left: 1.25rem;
 }
 
 .section-title::before {
@@ -198,114 +387,109 @@ const categoryName = computed(() => {
   border-radius: 2px;
 }
 
-.recommendation-grid {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-.recommendation-card {
-  background: #1f2937;
-  border-radius: 0.75rem;
-  padding: 1.25rem;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.recommendation-card:hover {
-  background: #374151;
-  transform: translateY(-4px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.recommendation-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 100%;
-  background: #3b82f6;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.recommendation-card:hover::before {
-  opacity: 1;
-}
-
-.card-content {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
+/* 图片样式 */
 .logo-exp {
-  width: 100px;
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .site-logo {
   width: 60px;
+  height: 60px;
   object-fit: contain;
-  margin-bottom: 20px;
+  border-radius: 12px;
 }
 
-.back {
-  width: 90px;
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0.5rem;
+
+/* 卡片容器样式 */
+.card-header,
+.webdescription_container,
+.related-section {
+  background: rgba(40, 42, 54, 0.8);
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 8px 32px rgba(238, 234, 234, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: cardEntrance 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: all 0.3s ease;
+}
+
+/* 卡片悬停效果 */
+.card-header:hover,
+.webdescription_container:hover,
+.recommendation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(238, 236, 236, 0.2);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* 卡片入场动画 */
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 内容区域微调 */
+.webdescription_container {
+  background: linear-gradient(145deg, rgba(40, 42, 54, 0.9), rgba(50, 52, 65, 0.9));
+  line-height: 1.8;
+  text-align: justify;
   position: relative;
-  z-index: 1;
-  padding-right: 1rem;
-  border-radius: 0.5rem;
-}
-
-.back-btn {
-  padding: 0.5rem 1rem;
-  background-color: #383a42;
-  border: none;
-  color: #ffffff;
-  text-decoration: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-}
-
-.back-btn:hover {
-  background-color: #3b82f6;
-}
-
-.text-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.site-name {
-  color: #f3f4f6;
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.site-description {
-  color: #9ca3af;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
+/* 流光边框效果 */
+.webdescription_container::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg,
+      rgba(59, 130, 246, 0.2),
+      rgba(255, 255, 255, 0.1),
+      rgba(59, 130, 246, 0.2));
+  z-index: -1;
+  border-radius: 22px;
+  animation: borderFlow 6s linear infinite;
+}
+
+@keyframes borderFlow {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 优化按钮卡片效果 */
+
+
+/* 响应式调整 */
 @media (max-width: 768px) {
-  .recommendation-grid {
-    grid-template-columns: 1fr;
+
+  .card-header,
+  .webdescription_container {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+
+  .webdescription_container::before {
+    animation-duration: 8s;
   }
 }
 </style>

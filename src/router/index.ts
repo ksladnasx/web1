@@ -82,13 +82,27 @@ const routes = [
     path:"/test",
     name:"test",
     component:Test
-  }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'notFound',
+    component: () => import('../views/test.vue')
+  },
+  
 ]
 
 // 创建并导出 Vue Router 实例
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  //实现路由变化平滑跳转
+  scrollBehavior(_to, _from, _savedPosition) {
+    //带平滑滚动效果（现代浏览器）
+    return {
+      top: 0,
+      behavior: 'smooth' // 可选平滑滚动
+    }
+  }
 })
 
 router.beforeEach((to, _from, next) => {

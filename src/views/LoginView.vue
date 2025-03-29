@@ -48,7 +48,9 @@ const handleLogin = async () => {
         <input type="password" id="password" v-model="password" required />
       </div>
       <div class="login">
-        <button type="submit">Login</button>
+        
+        <button type="submit" >Login</button>
+        
       </div>
     </form>
     <div class="register-link">
@@ -61,6 +63,26 @@ const handleLogin = async () => {
   </div>
 </template>
 <style scoped>
+.login{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 40px;
+  aspect-ratio: 1.154;
+  --_g: no-repeat radial-gradient(farthest-side,#000 90%,#0000);
+  background: 
+    var(--_g) 50%  0,
+    var(--_g) 0    100%,
+    var(--_g) 100% 100%;
+  background-size: 35% calc(35%*1.154);
+  animation: l16 1s infinite;
+}
+@keyframes l16{ 
+    50%,100% {background-position: 100% 100%,50% 0,0 100%} 
+}
 .login-container {
   max-width: 400px;
   margin: 0 auto;
