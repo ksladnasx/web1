@@ -14,6 +14,7 @@ export interface lovedata {
 }
 
 export interface Website {
+  _id: string;
   id: string;
   name: string;
   url: string;

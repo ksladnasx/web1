@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
 import { useFavoritesStore } from '../stores/favorites'
@@ -56,6 +56,10 @@ const categoryName = computed(() => {
   if (!website.value) return ''
   return store.categories.find(cat => cat.id === website.value?.category)?.name || ''
 })
+
+onMounted(() => {
+  
+})
 </script>
 
 <template>
@@ -75,6 +79,7 @@ const categoryName = computed(() => {
       <div class="title-section">
         <div class="title">
           <h1>{{ website.name }}</h1>
+          <!-- <h3>{{ website._id }}</h3> -->
           <span class="category-badge">{{ categoryName }}</span>
         </div>
 
@@ -135,7 +140,7 @@ const categoryName = computed(() => {
     </div>
 
     <div class="comment_container">
-      <test />
+      <test :webid="website._id" />
     </div>
 
     <div class="related-section">

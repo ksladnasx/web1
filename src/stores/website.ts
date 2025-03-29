@@ -18,7 +18,8 @@ export const useWebsiteStore = defineStore('website', () => {
     "views": 12000,
     "isPaid": false,
     "language": ["English"],
-    "accessSpeed": "需要科学上网"
+    "accessSpeed": "需要科学上网",
+    _id: '67b16d8ede2aa1f4dcd6773b'
   },
   {
     "id": "google-scholar",
@@ -32,7 +33,8 @@ export const useWebsiteStore = defineStore('website', () => {
     "views": 15000,
     "isPaid": false,
     "language": ["English"],
-    "accessSpeed": "快速"
+    "accessSpeed": "快速",
+    _id: '67b16d8ede2aa1f4dcd6773c'
   },
   {
     "id": "kaggle",
@@ -46,7 +48,8 @@ export const useWebsiteStore = defineStore('website', () => {
     "views": 13000,
     "isPaid": false,
     "language": ["English"],
-    "accessSpeed": "快速"
+    "accessSpeed": "快速",
+    _id: '67b16d8ede2aa1f4dcd6773d'
   }]);
   const categories = ref([
     { id: 'learning', name: '学习资源', icon: '📚' },
@@ -63,7 +66,7 @@ export const useWebsiteStore = defineStore('website', () => {
     try {
       const response = await axios.get(apiUrl);
       const apiResponse = response.data; // 获取 API 返回的数据
-
+      
       // 检查返回的结构是否正确
       if (apiResponse.code === 200 && Array.isArray(apiResponse.data)) {
         websites.value = apiResponse.data; // 将返回的网站数据存储到 websites 中
