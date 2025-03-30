@@ -2,8 +2,8 @@
 import { ref, reactive, onMounted, watch } from 'vue';
 import { defineComponent } from 'vue'
 import axios from 'axios';
-import { defineProps } from 'vue';
 import { toRef } from 'vue';
+import { useAuthStore } from '../stores/authStore';
 
 
 // 获取 父组件传的WebID
@@ -18,10 +18,11 @@ const props = defineProps({
 const webid = toRef(props, 'webid'); // 创建响应式引用，并将父组件的 props 值赋给它
 const comments = ref([]);
 const mem = ref("")
-const shouldShow = ref(false); // 控制评论区的显示和隐藏\
+const shouldShow = ref(false); // 控制评论区的显示和隐藏
+// 监听 webid 的变化，如果变化则清空评论数据防止缓存污染
 watch(webid, (newVal) => {
-  comments.value=[]
-  shouldShow.value=false
+  comments.value = []
+  shouldShow.value = false
 });
 // 
 const fetchcomment = async (webids) => {
@@ -50,7 +51,7 @@ const fetchcomment = async (webids) => {
 //if click the button, show the comment area and request the comment data
 const handleclick = () => {
   if (mem.value == webid.value) {
-    shouldShow.value = !shouldShow.value; 
+    shouldShow.value = !shouldShow.value;
     return
   }
   if (!shouldShow.value) {
@@ -66,12 +67,13 @@ const newComment = ref('');
 const newReply = ref('');
 const activeReplyId = ref(null);
 const isAdmin = ref(true); // 模拟管理员身份
-
+const user = JSON.parse(localStorage.getItem('user'))
 const addComment = () => {
   if (newComment.value.trim()) {
-    comments.value.value.unshift({
+    comments.value.unshift({  //插入符合数据格式的数据
       id: Date.now(),
-      username: '当前用户',
+      username: user.username,
+      userid: user.userid,
       avatar: 'https://bpic.588ku.com/element_origin_min_pic/23/07/11/d32dabe266d10da8b21bd640a2e9b611.jpg!r650',
       content: newComment.value.trim(),
       time: new Date(),
@@ -82,6 +84,16 @@ const addComment = () => {
     newComment.value = '';
   }
 };
+
+
+const updateComment = async () => {
+
+  // 后台添加评论的 API
+  const res = axios.post("https://jy8b5cnnmg.hzh.sealos.run/addWebComment", {
+    webid: webid.value,
+    comments: comments.value
+  })
+}
 
 const toggleLike = (commentId) => {
   const comment = comments.value.find(c => c.id === commentId);
@@ -111,12 +123,17 @@ const addReply = (commentId) => {
 const deleteComment = (commentId) => {
   const index = comments.value.findIndex(c => c.id === commentId);
   if (index !== -1) comments.value.splice(index, 1);
+
 };
 
 const formatTime = (date) => {
   return new Date(date).toLocaleString();
 };
 
+//  comments 是 ref 对象（如通过 ref([]) 创建）
+watch(comments, (newVal, oldVal) => {
+  updateComment();
+}, { deep: true }); // 开启深度监听以追踪数组内部变化
 </script>
 
 
@@ -126,44 +143,56 @@ const formatTime = (date) => {
     <!-- 评论输入框 -->
     <div class="comment-input">
       <textarea v-model="newComment" placeholder="写下你的评论..." rows="3"></textarea>
-      <button @click="addComment" :disabled="!newComment.trim()">发布</button>
+      <div class="comment-action">
+        <button @click="addComment" :disabled="!newComment.trim()">发布评论</button>
       <button @click="handleclick">查看评论</button>
+      </div>
     </div>
 
     <!-- 评论列表 -->
     <div class="comment-list" v-if="shouldShow">
       <div v-for="comment in comments" :key="comment.id" class="comment-item">
         <div class="comment-header">
-          <img :src="comment.avatar" class="avatar" alt="用户头像" />
-          <span class="username">{{ comment.username }}</span>
+          <div class="comment-user-info">
+            <span><img :src="comment.avatar" class="avatar" alt="用户头像" /></span>
+            <span class="comment-username">{{ comment.username }}</span>
+          </div>
+
           <span class="time">{{ formatTime(comment.time) }}</span>
         </div>
-        <div class="comment-content">{{ comment.content }}</div>
+        <div class="comment-content">
+          {{ comment.content }}
+        </div>
 
         <!-- 操作按钮 -->
         <div class="comment-actions">
           <button @click="toggleLike(comment.id)" class="like-btn">
             👍 {{ comment.likes }} {{ comment.isLiked ? '已赞' : '' }}
           </button>
-          <button @click="toggleReply(comment.id)">回复</button>
-          <button @click="deleteComment(comment.id)" v-if="isAdmin">删除</button>
+          <div>
+            <button @click="toggleReply(comment.id)">回复</button>
+            <button @click="deleteComment(comment.id)" v-if="comment.userid == user.userid" class="del-btn">删除</button>
+          </div>
+
         </div>
 
         <!-- 回复输入框 -->
         <div v-if="activeReplyId === comment.id" class="reply-input">
-          <textarea v-model="newReply" placeholder="写下你的回复..." rows="2"></textarea>
-          <button @click="addReply(comment.id)">提交回复</button>
+          <textarea v-model="newReply" placeholder="写下你的回复..." rows="3" class="reply-textarea"></textarea>
+          <button @click="addReply(comment.id)" class="reply-btn">提交回复</button>
         </div>
 
         <!-- 回复列表 -->
         <div v-if="comment.replies.length" class="reply-list">
           <div v-for="reply in comment.replies" :key="reply.id" class="reply-item">
-            <div class="reply-header">
-              <img :src="reply.avatar" class="avatar-small" alt="用户头像" />
-              <span class="username">{{ reply.username }}</span>
+            <div class="comment-header">
+              <div class="comment-user-info">
+                <img :src="reply.avatar" class="avatar-small" alt="用户头像" />
+                <span class="comment-username reply-username">{{ reply.username }}</span>
+              </div>
               <span class="time">{{ formatTime(reply.time) }}</span>
             </div>
-            <div class="reply-content">{{ reply.content }}</div>
+            <div class="comment-content">{{ reply.content }}</div>
           </div>
         </div>
       </div>
@@ -189,13 +218,23 @@ const formatTime = (date) => {
   margin: 20px auto;
   padding: 20px;
 }
-
+button{
+  width: auto;
+  height: 30px;
+  font-size: 10px;
+}
 .comment-input textarea {
-  width: 100%;
-  padding: 10px;
+  width: 90%;
+  padding: 20px;
   margin-bottom: 10px;
 }
-
+textarea{
+  height: 20px; 
+}
+.comment-action{
+  display: flex;
+  justify-content: space-between;
+}
 button {
   background: #007bff;
   color: white;
@@ -225,23 +264,83 @@ button:disabled {
   margin-right: 10px;
 }
 
+.comment-user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.reply-username{
+  font-size: 10px;
+}
+.comment-username {
+  font-weight: bold;
+  color: #9cd1ec;
+  margin-left: -8px;
+  margin-top: -10px;
+}
+
 .comment-header {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 10px;
 }
 
 .comment-content {
-  margin-left: 50px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  position: relative;
+  bottom: 40px;
   color: rgb(255, 255, 255);
 }
 
+.del-btn {
+  background: transparent;
+  color: #666;
+  border: 1px solid #ddd;
+
+}
+
+.del-btn:hover {
+  background: #7d9fc0;
+  color: red;
+}
+.reply-input{
+  display: flex;
+  justify-content: space-evenly;
+  padding-top: 20px;
+}
+.reply-textarea{
+  width: 50%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.reply-btn{
+  background: #4e6e78;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 10px;
+  height: 40px;
+  cursor: pointer;
+}
+.reply-btn:hover{
+  background: #45798c;  
+}
 .reply-list {
   margin-left: 50px;
   border-left: 2px solid #376967;
   padding-left: 20px;
 }
-
+.reply-header{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
 .reply-item {
   margin: 10px 0;
   padding: 10px;
@@ -267,7 +366,9 @@ button:disabled {
 }
 
 .comment-actions {
-  margin-top: 10px;
-  margin-left: 50px;
+  /* margin-top: 10px;
+  margin-left: 50px; */
+  display: flex;
+  justify-content: space-between;
 }
 </style>
