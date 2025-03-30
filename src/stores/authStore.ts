@@ -38,7 +38,8 @@ export const useAuthStore = defineStore('auth', {
         this.$state.user = credentials.username;
         localStorage.setItem('user', JSON.stringify({
           userid: "response.data.userid",
-          username: credentials.username
+          username: credentials.username,
+          avatar:"https://tse3-mm.cn.bing.net/th/id/OIP-C.g5M-iZUiocFCi9YAzojtRAAAAA?rs=1&pid=ImgDetMain"
         }));
 
         return
@@ -57,7 +58,8 @@ export const useAuthStore = defineStore('auth', {
         console.log(response.data)
         localStorage.setItem('user', JSON.stringify({
           userid: response.data.user.userid,
-          username: credentials.username
+          username: credentials.username  ,
+          avatar: response.data.user.avatar,
         }));
 
       } catch (error) {
@@ -78,7 +80,8 @@ export const useAuthStore = defineStore('auth', {
           this.user = response.data.data.username;
           localStorage.setItem('user', JSON.stringify({
             userid: response.data.data.userid,
-            username: credentials.username
+            username: credentials.username,
+            avatar:credentials.avatar,
           }));
         }
 

@@ -2,6 +2,7 @@
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { useAuthStore } from '../stores/authStore';
+import axios from 'axios';
   
   const store = useAuthStore();
   const router = useRouter();
@@ -16,7 +17,10 @@
     }
   
     try {
-      await store.register({ username: username.value, password: password.value });
+
+      await store.register({ username: username.value, password: password.value,
+        avatar: "https://tse3-mm.cn.bing.net/th/id/OIP-C.g5M-iZUiocFCi9YAzojtRAAAAA?rs=1&pid=ImgDetMain" 
+      });
       alert('注册成功请登录');
       router.push('/login'); // 注册成功后跳转到登录页面
     } catch (error) {

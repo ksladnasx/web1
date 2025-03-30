@@ -7,6 +7,7 @@ export interface User {
 export interface Credentials {
   username: string
   password: string;
+  avatar: string
 }
 export interface lovedata {
   username: string; //代表一个字符串

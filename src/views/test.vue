@@ -66,7 +66,6 @@ const handleclick = () => {
 const newComment = ref('');
 const newReply = ref('');
 const activeReplyId = ref(null);
-const isAdmin = ref(true); // 模拟管理员身份
 const user = JSON.parse(localStorage.getItem('user'))
 const addComment = () => {
   if (newComment.value.trim()) {
@@ -74,7 +73,7 @@ const addComment = () => {
       id: Date.now(),
       username: user.username,
       userid: user.userid,
-      avatar: 'https://bpic.588ku.com/element_origin_min_pic/23/07/11/d32dabe266d10da8b21bd640a2e9b611.jpg!r650',
+      avatar: user.avatar,
       content: newComment.value.trim(),
       time: new Date(),
       likes: 0,
@@ -110,8 +109,9 @@ const addReply = (commentId) => {
     const comment = comments.value.find(c => c.id === commentId);
     comment.replies.push({
       id: Date.now(),
-      username: '当前用户',
-      avatar: 'https://bpic.588ku.com/element_origin_min_pic/23/07/11/d32dabe266d10da8b21bd640a2e9b611.jpg!r650',
+      username:user.username,
+      userid: user.userid,
+      avatar: user.avatar,
       content: newReply.value.trim(),
       time: new Date()
     });
