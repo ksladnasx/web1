@@ -12,6 +12,8 @@ const searchQuery = ref('')
 </script>
 
 <template >           
+
+  
   <div class="mainpage">
     <div style="display: flex;flex-direction: column;align-items: center;"><h1 class="">学术网站导航</h1></div>
     <br>

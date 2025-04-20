@@ -36,66 +36,84 @@ const handleLogin = async () => {
 
 
 <template>
-  <div class="login-container">
-    <h2>Login</h2>
-    <form @submit.prevent="handleLogin">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" v-model="username" required />
+  <div class="loginview">
+    <div class="login-container">
+      <h2>Login</h2>
+      <form @submit.prevent="handleLogin">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <el-input type="text" id="username" v-model="username" required clearable />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <el-input type="password" id="password" v-model="password" required clearable />
+        </div>
+        <div class="login ">
+
+          <button type="submit">Login</button>
+
+        </div>
+      </form>
+      <div class="register-link">
+        <router-link to="/register">没有账号？注册</router-link>
       </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" v-model="password" required />
-      </div>
-      <div class="login">
-        
-        <button type="submit" >Login</button>
-        
-      </div>
-    </form>
-    <div class="register-link">
-      <router-link to="/register">没有账号？注册</router-link>
     </div>
-  </div>
-  <!-- 分割线 -->
-  <div style="padding-top: 600px;">
-    -----------------------------------------------------------------------------------------------------------------------
+    <!-- 分割线 -->
+    <div style="padding-top: 600px;">
+      -----------------------------------------------------------------------------------------------------------------------
+    </div>
   </div>
 </template>
 <style scoped>
-.login{
+.login {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 /* HTML: <div class="loader"></div> */
 .loader {
   width: 40px;
   aspect-ratio: 1.154;
-  --_g: no-repeat radial-gradient(farthest-side,#000 90%,#0000);
-  background: 
-    var(--_g) 50%  0,
-    var(--_g) 0    100%,
+  --_g: no-repeat radial-gradient(farthest-side, #000 90%, #0000);
+  background:
+    var(--_g) 50% 0,
+    var(--_g) 0 100%,
     var(--_g) 100% 100%;
   background-size: 35% calc(35%*1.154);
   animation: l16 1s infinite;
 }
-@keyframes l16{ 
-    50%,100% {background-position: 100% 100%,50% 0,0 100%} 
+
+@keyframes l16 {
+
+  50%,
+  100% {
+    background-position: 100% 100%, 50% 0, 0 100%
+  }
+}
+.loginview{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 18vh;
 }
 .login-container {
-  max-width: 400px;
-  margin: 0 auto;
+  max-width: 900px;
+  width: 500px;
+  height: 400px;
+  margin: 0 0;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   display: flex;
-
   flex-direction: column;
+  justify-content: space-evenly;
+  align-items: stretch;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  padding-bottom:3vh;
 }
 
 label {

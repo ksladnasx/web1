@@ -31,6 +31,7 @@ const categories: Category[] = [
   { name: 'state', title: '状态管理', x: 40, y: 75 },
   { name: 'api', title: 'API 工具', x: 60, y: 75 },
   { name: 'cloud', title: '云服务', x: 80, y: 15 },
+  { name: 'clouds', title: '云服务', x: 80, y: 15 },
 ];
 
 // 将网站按照类别分组，确保相关网站的坐标较近

@@ -71,7 +71,7 @@ const searchResults = computed(() => {
 }
 
 .bg-gray-50 {
-  background-color: #222222;
+  background-color: #1c212f;
 }
 
 .text-gray-900 {

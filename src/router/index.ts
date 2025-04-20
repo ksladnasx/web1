@@ -11,6 +11,7 @@ import RegisterView from '../views/RegisterView.vue';
 import StarMap from '../views/StarMap.vue'
 import Music from "../views/Music.vue"
 import Test from "../views/test.vue"
+import Homepage from '../views/Homepage.vue'  
 
 
 
@@ -21,7 +22,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: Homepage
   },
   {
     path: '/category/:id',
@@ -88,6 +89,12 @@ const routes = [
     name: 'notFound',
     component: () => import('../views/test.vue')
   },
+  {
+    path: '/homepage',
+    name: 'homepage',
+    component: Home 
+  }
+
   
 ]
 

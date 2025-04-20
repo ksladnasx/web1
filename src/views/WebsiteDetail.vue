@@ -236,7 +236,10 @@ onMounted(() => {
   font-weight: 500;
 }
 
-
+.logo-container{
+  padding-left: 20px;
+  padding-top: 20px;
+}
 
 .tag_item h5 {
   font-size: 0.875rem;
@@ -353,11 +356,14 @@ onMounted(() => {
 /* 卡片动画 */
 .recommendation-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 1%;
+  box-shadow: 0 8px 16px rgba(78, 73, 73, 0.3);
+  padding-bottom: 0.5vh;
 }
 
 .recommendation-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(248, 244, 244, 0.3);
+  transform: translateX(-5px);
+  box-shadow: 0 8px 16px rgba(255, 255, 255, 0.3);
 }
 
 /* 装饰性元素 */
@@ -431,6 +437,7 @@ onMounted(() => {
   box-shadow: 0 12px 24px rgba(238, 236, 236, 0.2);
   border-color: rgba(59, 130, 246, 0.3);
 }
+
 
 /* 卡片入场动画 */
 @keyframes cardEntrance {

@@ -2,6 +2,7 @@
 import { RouterView, useRouter } from 'vue-router'
 import { useAuthStore } from './stores/authStore';
 import { computed, onMounted, onUnmounted } from 'vue';
+import Homepage from './views/Homepage.vue';
 const router = useRouter();
 const store = useAuthStore();                               
 
@@ -46,18 +47,28 @@ onUnmounted(() => {
     }
 });
 
-
+// 判断当前路由是否需要显示侧边栏
+const shouldShowSidebar = () => {
+  const publicRoutes = ['home' ];
+  return !publicRoutes.includes(router.currentRoute.value.name as string);
+};
 
 </script>
 
 <template>
-  <div class="menu">
+  <div v-if="!shouldShowSidebar()">
+    <Homepage />
+  </div>
+  <div class="menu" v-if="shouldShowSidebar()">
     <nav class="bg-white ">
       <div class="max-w-7xl mx-auto px-4 ">
         <div class="flex justify-between h-16 items-center">
           <div class="flex items-center">
-            <router-link to="/" class="flex items-center">
+            <router-link to="/homepage" class="flex items-center">
               <button>🏠 主页</button>
+            </router-link>
+            <router-link to="/" class="flex items-center">
+              <button>🔍 搜索</button>
             </router-link>
           </div>
           <div class="flex items-center space-x-4">
@@ -74,7 +85,7 @@ onUnmounted(() => {
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 bgc" >
       <router-view v-if="$route.meta.keepAlive" keep-alive></router-view>
-    <router-view v-else></router-view>
+      <router-view v-else></router-view>
     </main>
   </div>
 </template>

@@ -19,11 +19,7 @@
   user-select: none;          /* 标准语法 */
 }
 
-/* 重置HTML和body高度 */
-html {
-  height: 100%;
-  
-}
+
 
 body {
   margin: 0;
