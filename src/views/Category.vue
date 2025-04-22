@@ -67,90 +67,80 @@ const websites = computed(() => {
 </template>
 
 <style scoped>
+/* 深度适配评论区的色彩体系 */
 .category-container {
-  background-color: #1c212f;
-  width:80%;
-  color: white;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  min-height: 100vh;
+  background: #1a2330;
+  width: 100%;
+  /* max-width: 1400px; */
+  padding: 2rem;
+  align-self: center;
 }
 
+/* 头部样式优化 */
 .header-section {
-  margin-bottom: 2rem;
-  position: relative;
-  padding-left: 1.25rem;
+  margin-bottom: 3rem;
+  padding-left: 2rem;
+  border-bottom: 1px solid #2d3a4a;
+  padding-bottom: 1.5rem;
 }
 
 .category-title {
-  font-size: 2rem;
+  color: #c8d6e5;
+  font-size: 2.2rem;
   font-weight: 600;
-  position: relative;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
 }
 
 .category-title::before {
-  content: "";
-  position: absolute;
-  left: -1.25rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 1.5rem;
-  background: #3b82f6;
-  border-radius: 2px;
+  background: linear-gradient(180deg, #4a90e2 0%, #3b7fc1 100%);
+  height: 2rem;
+  width: 5px;
+  border-radius: 4px;
 }
 
 .category-description {
-  color: #9ca3af;
-  font-size: 1rem;
+  color: #9ab8d9;
+  font-size: 1.1rem;
 }
 
+/* 排序控件优化 */
 .sort-control {
-  position: relative;
-  margin: 2rem 0;
+  margin: 3.5rem 0;
   display: flex;
   justify-content: flex-end;
+  margin-right: 4.5rem;
 }
 
 .sort-select {
-  width: 160px;
-  height: 40px;
-  background: #1f2937;
-  border: 1px solid #374151;
-  border-radius: 6px;
-  padding: 0 1rem;
-  color: #f3f4f6;
-  font-size: 0.875rem;
-  appearance: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%239CA3AF" width="18" height="18"><path d="M7 10l5 5 5-5z"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 12px center;
+  background: #212c38;
+  border: 1px solid #2d3a4a;
+  border-radius: 8px;
+  color: #c8d6e5;
+  padding: 0.6rem 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-image: url('data:image/svg+xml;utf8,<svg ... fill="%239ab8d9" ...></svg>');
 }
 
 .sort-select:hover {
-  background: #374151;
-  border-color: #4b5563;
+  background: #2d3a4a;
+  border-color: #364456;
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.1);
 }
 
 .sort-select:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
 }
 
 .sort-select option {
-  background: #1f2937;
-  color: #f3f4f6;
-  padding: 0.5rem;
+  background: #5a87b7;
 }
 
 .websites-grid {
   display: grid;
   gap: 5rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 450px));
+  padding-right: 3rem;
+  padding-left: 3rem;
 }
 
 .website-card {
@@ -191,7 +181,7 @@ const websites = computed(() => {
   }
 
   .sort-control {
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 
   .websites-grid {

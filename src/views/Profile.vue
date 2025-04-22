@@ -432,6 +432,7 @@ img:hover {
   position: relative;
   left: 10%;
   font-size: larger;
+  
 }
 
 /* 基础样式 */
@@ -520,7 +521,7 @@ img:hover {
   max-width: 120vh;
   position: relative;
   left: 10%;
-  background-color: #1c212f;
+  /* background: #1a2330; */
 }
 
 .text-gray-900 {
@@ -659,5 +660,33 @@ input:focus {
 
 .submit-button:hover {
   background-color: #3477bd;
+}
+
+.border-gray-200 {
+  border-color: #2d3a4a;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #2d3a4a;
+}
+
+nav button {
+  color: #9ab8d9;
+  border-bottom: 2px solid transparent;
+  padding: 1rem 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+nav button.border-blue-500 {
+  color: #4a90e2;
+  border-color: #4a90e2;
+  background: linear-gradient(to right, rgba(74, 144, 226, 0.1), transparent);
+}
+
+nav button:hover {
+  color: #c8d6e5;
+  border-color: #364456;
 }
 </style>

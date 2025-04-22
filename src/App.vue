@@ -108,12 +108,15 @@ const shouldShowSidebar = () => {
   background: linear-gradient(135deg, #1a2330 0%, #121820 100%);
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
   border-bottom: 1px solid #2d3a4a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 2rem;
+  width: 96%;
+  margin: 0 0rem;
+  padding: 0 0rem;
 }
 
 .nav-content {
@@ -156,7 +159,7 @@ const shouldShowSidebar = () => {
 .app-main {
   background: #1a2330;
   min-height: 100vh;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 /* 响应式调整 */

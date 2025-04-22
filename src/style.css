@@ -3,40 +3,39 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  height: 100%; /* 新增 */
+  height: 100%;
 
+  /* 颜色方案声明 */
   color-scheme: light dark;
+  
+  /* 默认暗色模式样式 */
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424,url(../images/background1.jpg);
+  background: #242424 url(../images/background1.jpg); /* 修复背景语法 */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-user-select: none;  /* Chrome/Safari/Edge */
-  -moz-user-select: none;     /* Firefox */
-  -ms-user-select: none;      /* IE10+ */
-  user-select: none;          /* 标准语法 */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
-
-
 
 body {
   margin: 0;
   min-height: 100vh;
-  width: 100%; /* 新增 */
+  width: 100%;
   display: flex;
   flex-direction: column;
-  
 }
 
-/* 修改APP容器 */
 #app {
-  flex: 1; /* 关键修改 */
+  flex: 1;
   width: 100%;
-  min-height: 100vh; /* 新增 */
-  display: flex; /* 新增 */
-  flex-direction: column; /* 新增 */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 a {
@@ -61,10 +60,10 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: black;
+  background-color: black; /* 暗色模式默认按钮颜色 */
   cursor: pointer;
   transition: border-color 0.25s;
-  width: max-content; /* 新增 */
+  width: max-content;
 }
 button:hover {
   border-color: #e5ff64;
@@ -78,13 +77,12 @@ button:focus-visible {
 
 .card {
   padding: 2em;
-  background-color: #1c212f;
+  background-color: #1c212f; /* 暗色模式卡片背景 */
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(236, 233, 233, 0.1);
   margin: 1rem 0;
 }
 
-/* 新增图片样式 */
 img {
   max-width: 100%;
   height: auto;
@@ -94,43 +92,40 @@ img {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 新增图标样式 */
-.icon {
-  width: 80px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #1a1a1a;
-  border-radius: 12px;
-  color: #fff;
-  font-size: 1.2em;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.25s;
-  margin: 10px;
-}
 
 .icon:hover {
   background-color: #646cff;
 }
 
+/* 亮色模式适配 */
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: #95d3ff;
+    background: #51cbe9/* 亮色背景 */
+  }
+
+  a:hover {
+    color: #f2f2f2;
+  }
+
+  button {
+    background-color: #0b0b0c; /* 亮色模式按钮颜色 */
+    color: #ffffff;
+  }
+
+  button:hover {
     background-color: #ffffff;
   }
-  a:hover {
-    color: #747bff;
+
+}
+
+/* 暗色模式专属调整 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    background-blend-mode: multiply; /* 使背景图片适配暗色模式 */
   }
-  button {
-    background-color: #f9f9f9;
-  }
-  .icon {
-    background-color: #525252;
-    color: #213547;
-  }
-  .icon:hover {
-    background-color: #464646;
+
+  button:hover {
+    background-color: #2d2d2d;
   }
 }

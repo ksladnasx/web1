@@ -411,27 +411,42 @@ onMounted(() => {
 
 
 /* 卡片容器样式 */
-.card-header,
-.webdescription_container,
 .related-section {
-  background: rgba(40, 42, 54, 0.8);
-  border-radius: 20px;
-  padding: 2rem;
-  margin: 1.5rem 0;
-  box-shadow: 0 8px 32px rgba(238, 234, 234, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  animation: cardEntrance 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-  transition: all 0.3s ease;
+  border-top: 1px solid #2d3a4a;
+  padding-top: 3rem;
+  
 }
 
-/* 卡片悬停效果 */
-.card-header:hover,
-.webdescription_container:hover,
-.recommendation-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(238, 236, 236, 0.2);
-  border-color: rgba(59, 130, 246, 0.3);
+.recommendation-card {
+  background: #212c38;
+  border: 1px solid #2d3a4a;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 2rem;
 }
+
+.recommendation-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.site-logo {
+  width: 72px;
+  height: 72px;
+  border: 1px solid #364456;
+  border-radius: 16px;
+}
+
+.site-name {
+  color: #c8d6e5;
+  font-weight: 500;
+}
+
+.site-description {
+  color: #9ab8d9;
+  font-size: 0.9rem;
+}
+
 
 
 /* 卡片入场动画 */
