@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
 import WebsiteexpressCard from '../components/WebsiteexpressCard.vue'
@@ -10,7 +10,7 @@ const query = computed(() => route.query.q as string)
 
 const searchResults = computed(() => {
   if (!query.value) return []
-  
+
   const searchTerms = query.value.toLowerCase().split(' ')
   return store.websites.filter(website => {
     const searchableText = [
@@ -19,7 +19,7 @@ const searchResults = computed(() => {
       ...website.tags,
       website.category
     ].join(' ').toLowerCase()
-    
+
     return searchTerms.every(term => searchableText.includes(term))
   })
 })
@@ -34,21 +34,17 @@ const searchResults = computed(() => {
           关键词 "{{ query }}" 的搜索结果 ({{ searchResults.length }} 个)
         </p>
         <div>
-      -----------------------------------------------------------------------------------------------------------------------
-    </div>
+         
+        </div>
       </div>
 
-      <div v-if="searchResults.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <WebsiteexpressCard
-          v-for="website in searchResults"
-          :key="website.id"
-          :website="website"
-        />
+      <div v-if="searchResults.length > 0" class="grid">
+        <WebsiteexpressCard v-for="website in searchResults" :key="website.id" :website="website" style="margin-bottom: 20px;"/>
       </div>
-      
+
       <div v-else class="text-center py-16">
-        <div class="text-6xl mb-4">🔍</div>
-        <h3 class="text-xl font-medium text-gray-900 mb-2">未找到相关结果</h3>
+        
+        <h3 class="text-xl font-medium text-gray-900 mb-2">🔍未找到相关结果</h3>
         <p class="text-gray-600">
           试试其他关键词，或者
           <router-link to="/submit" class="text-blue-600 hover:text-blue-800">
@@ -60,33 +56,103 @@ const searchResults = computed(() => {
   </div>
 </template>
 
+
+
 <style scoped>
+/* 深度适配评论区色彩体系 */
 .min-h-screen {
+  background: #1a2330;
+  width: 100%;
+  padding-left: 0;
+}
+
+/* 容器优化 */
+.max-w-7xl {
+  padding: 2rem 1rem;
+}
+
+/* 标题系统 */
+.mb-8 h1 {
+  color: #c8d6e5;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.mb-8 p {
+  color: #9ab8d9;
+  font-size: 0.95rem;
+}
+
+/* 分隔线优化 */
+.mb-8 div {
+  border-top: 1px solid #2d3a4a;
+  margin: 1.5rem 0;
+  opacity: 0.6;
+}
+
+/* 卡片栅格布局 */
+.grid {
   width: 80%;
-  padding-left: 10%;
-  min-height: 100vh;
+  /* gap: 1.5rem; */
+  padding: 5rem;
   display: flex;
-  text-align: center;
   flex-direction: column;
+  justify-content: center;
+  justify-self: center;
+  align-self:stretch;
 }
 
-.bg-gray-50 {
-  background-color: #1c212f;
+/* 未找到结果样式 */
+.text-center {
+  background: #212c38;
+  border-radius: 12px;
+  padding: 3rem;
+  margin: 2rem 0;
+  border: 1px solid #2d3a4a;
 }
 
-.text-gray-900 {
-  color: aliceblue;
+.text-center h3 {
+  color: #c8d6e5;
+  margin: 1rem 0;
 }
 
-.text-gray-600 {
-  color: #999;
+.text-center p {
+  color: #9ab8d9;
 }
 
+/* 链接样式 */
 .text-blue-600 {
-  color: #60a5fa;
+  background: linear-gradient(135deg, #4a90e2 0%, #3b7fc1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 500;
+  position: relative;
 }
 
-.text-blue-600:hover {
-  color: #93c5fd;
+.text-blue-600::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(135deg, #4a90e2 0%, #3b7fc1 100%);
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .max-w-7xl {
+    padding: 1.5rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .text-center {
+    padding: 2rem 1rem;
+  }
 }
 </style>

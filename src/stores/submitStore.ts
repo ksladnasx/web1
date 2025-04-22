@@ -13,8 +13,6 @@ export const usesubmitstore = defineStore('submits', () => {
     // 直接利用传来的封装好的对象发送请求添加自定义网站
     const addsubmits = async (sub: Mysub) => {
         try {
-
-
             console.log('Submitting data:', sub);
 
             // 发送请求

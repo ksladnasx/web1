@@ -85,7 +85,7 @@ const handleSubmits = async () => {
       alert("错误：" + res.data.message)
       return
     }
-    localStorage.setItem("user",JSON.stringify({
+    localStorage.setItem("user", JSON.stringify({
       userid: userid.value,
       username: form.value.username,
       avatar: avatarPreview.value
@@ -134,36 +134,36 @@ const changeavatar = async () => {
   }
 }
 const num = ref(1)
-const setDefualt = async (n:number) => {
-      avatarPreview.value = avatar[num.value]
-      if(n == 0) {
-        num.value = (num.value + 1) % avatar.length
-      }
-      if(n==1){
-        num.value = (num.value - 1 + avatar.length) % avatar.length
-      }
+const setDefualt = async (n: number) => {
+  avatarPreview.value = avatar[num.value]
+  if (n == 0) {
+    num.value = (num.value + 1) % avatar.length
+  }
+  if (n == 1) {
+    num.value = (num.value - 1 + avatar.length) % avatar.length
+  }
 }
 
-const saveavatar =  async()=>{
-    try{
-      const res = await axios.post("https://jy8b5cnnmg.hzh.sealos.run/updateuseravatar",{
+const saveavatar = async () => {
+  try {
+    const res = await axios.post("https://jy8b5cnnmg.hzh.sealos.run/updateuseravatar", {
       userid: userid.value,
       avatar: avatarPreview.value
     })
     if (res.data.code == 200) {
       alert("头像修改成功")
-      localStorage.setItem("user",JSON.stringify({
-      userid: userid.value,
-      username: form.value.username,
-      avatar: avatarPreview.value
-    }))
-    }else{
+      localStorage.setItem("user", JSON.stringify({
+        userid: userid.value,
+        username: form.value.username,
+        avatar: avatarPreview.value
+      }))
+    } else {
       alert("头像修改失败:" + res.data.message)
     }
-    }catch(e){
-      console.error(e)
-      alert('头像修改失败:'+e)
-    }
+  } catch (e) {
+    console.error(e)
+    alert('头像修改失败:' + e)
+  }
 }
 </script>
 
@@ -171,11 +171,9 @@ const saveavatar =  async()=>{
   <div class="proflie-container">
     <div class="bg-white">
 
-
-
       <!-- 头部 -->
       <div class=" border-gray-200">
-        <nav class="-mb-px flex">
+        <nav >
           <button v-for="tab in [
             { id: 'settings', name: '基础设置' },
             { id: 'favorites', name: '收藏夹' },
@@ -185,7 +183,7 @@ const saveavatar =  async()=>{
               ? 'border-blue-500 text-blue-600'
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
             'w-1/3 py-4 px-1 text-center border-b-2 font-medium text-sm'
-          ]">
+          ]" >
             {{ tab.name }}
           </button>
         </nav>
@@ -193,28 +191,26 @@ const saveavatar =  async()=>{
 
 
       <!-- 基础设置功能实现 -->
-
-      <!-- 基础设置功能实现 -->
       <div v-if="activeTab === 'settings'">
         <div class="submission-card">
 
-            <div class="avatar-container">
-              <div class="shrink-0">
-                <!-- 使用 label 包裹图片，并关联到 input -->
-                <label for="avatar-upload" class="cursor-pointer">
-                  <img :src="avatarPreview" class="avatar-preview" alt="头像">
-                </label>
-                <!-- 隐藏 input -->
-                <input id="avatar-upload" type="file" accept="image/*" @change="handleAvatarUpload" class="hidden" />
-              </div>
-              <div class="avatar-btn">
-                <button  @click="setDefualt(0)">下一个</button>
-                <button @click="saveavatar">就这个</button>
-                <button @click="setDefualt(1)">上一个</button>
-              </div>
-              <button @click="changeavatar" style="font-size: 10PX;">随机一个网络头像</button>
+          <div class="avatar-container">
+            <div class="shrink-0">
+              <!-- 使用 label 包裹图片，并关联到 input -->
+              <label for="avatar-upload" class="cursor-pointer">
+                <img :src="avatarPreview" class="avatar-preview" alt="头像">
+              </label>
+              <!-- 隐藏 input -->
+              <input id="avatar-upload" type="file" accept="image/*" @change="handleAvatarUpload" class="hidden" />
             </div>
-          
+            <div class="avatar-btn">
+              <button @click="setDefualt(0)">下一个</button>
+              <button @click="saveavatar">就这个</button>
+              <button @click="setDefualt(1)">上一个</button>
+            </div>
+            <button @click="changeavatar" style="font-size: 10PX;">随机一个网络头像</button>
+          </div>
+
           <form class="space-y-6">
             <!-- 头像上传 -->
 
@@ -263,66 +259,70 @@ const saveavatar =  async()=>{
       </div>
 
       <!-- 收藏夹功能实现 -->
+      <div v-if="activeTab === 'favorites'" class="favoritecard">
 
-      <div v-if="activeTab === 'favorites'">
-        <div v-if="favoritesStore.favorites.length == 0">
-          <div>🤍</div>
-          <h3 class=" text-gray-900 ">暂无收藏的网站</h3>
-          <p class="text-gray-600">
-            浏览网站时点击心形图标即可收藏喜欢的网站
-          </p>
-        </div>
-        <div v-else>
-          <div>
-            <profliewebCard v-for="website in favoritesStore.favorites" :key="website.id" :website="website"
-              @remove="favoritesStore.removeFavorite(website.id)" />
-
+        <div class="submission-card">
+          <div v-if="favoritesStore.favorites.length == 0">
+            <div>🤍</div>
+            <h3 class=" text-gray-900 ">暂无收藏的网站</h3>
+            <p class="text-gray-600">
+              浏览网站时点击心形图标即可收藏喜欢的网站
+            </p>
           </div>
-        </div>
-        <div style="padding-top: 5vh;">
-          <button @click="handlefavorites">保存</button>
+          <div v-else>
+            <div>
+              <profliewebCard v-for="website in favoritesStore.favorites" :key="website.id" :website="website"
+                @remove="favoritesStore.removeFavorite(website.id)" />
+
+            </div>
+          </div>
+          <div style="padding-top: 5vh;">
+            <button @click="handlefavorites">保存</button>
+          </div>
         </div>
 
       </div>
 
 
       <!-- 自定义网站功能实现 -->
-      <div v-if="activeTab === 'submissions'">
-        <!-- 暂无自定义网站 -->
-        <div v-if="submitStore.submissions.length === 0">
-          <div>📝</div>
-          <h3 class=" text-gray-900">暂无自定义网站</h3>
-          <p class="text-gray-600">
-            还没有提交过网站？
-            <router-link to="/submit" class="text-blue-600 ">
-              去提交
-            </router-link>
-          </p>
-        </div>
-        <!-- 显示自定义网站 -->
-        <div v-else>
-          <div v-for="submission in submitStore.submissions" :key="submission.name" class="submission-cards">
-            <div class="icon-content">
-              <span class="icon icon-wrapper">
-                <img :src="submission.logo" class="icons " alt="网页logo">
-              </span>
+      <div v-if="activeTab === 'submissions'" class="mysubcard">
+        <div class="submission-card">
+          <!-- 暂无自定义网站 -->
+          <div v-if="submitStore.submissions.length === 0">
+            <div>📝</div>
+            <h3 class=" text-gray-900">暂无自定义网站</h3>
+            <p class="text-gray-600">
+              还没有提交过网站？
+              <router-link to="/submit" class="text-blue-600 ">
+                去提交
+              </router-link>
+            </p>
+          </div>
+          <!-- 显示自定义网站 -->
+          <div v-else>
+            <div v-for="submission in submitStore.submissions" :key="submission.name" class="submission-cards">
+              <div class="icon-content">
+                <span class="icon icon-wrapper">
+                  <img :src="submission.logo" class="icons " alt="网页logo">
+                </span>
 
-              <span class="title-content">
-                <h4 class="submission-title">{{ submission.name }}</h4>
-              </span>
-            </div>
-            <div class="content" style="">
-              <p class="submission-category ">分类: {{ submission.category }}</p>
-              <p class="submission-description ">描述：{{ submission.description }}</p>
-              <p class="submission-reason ">推荐理由: {{ submission.reason }}</p>
-              <p class="action-link">
-                <a :href="submission.url" target="_blank" class="submission-link">
-                  访问网站
-                </a>
-              </p>
-            </div>
-            <div class="del">
-              <button class="del-btn" @click="handleDel(submission.url)">删除</button>
+                <span class="title-content">
+                  <h4 class="submission-title">{{ submission.name }}</h4>
+                </span>
+              </div>
+              <div class="content" style="">
+                <p class="submission-category ">分类: {{ submission.category }}</p>
+                <p class="submission-description ">描述：{{ submission.description }}</p>
+                <p class="submission-reason ">推荐理由: {{ submission.reason }}</p>
+                <p class="action-link">
+                  <a :href="submission.url" target="_blank" class="submission-link">
+                    访问网站
+                  </a>
+                </p>
+              </div>
+              <div class="del">
+                <button class="del-btn" @click="handleDel(submission.url)">删除</button>
+              </div>
             </div>
           </div>
         </div>
@@ -370,7 +370,7 @@ const saveavatar =  async()=>{
   display: flex;
   flex-direction: row;
   gap: 12px;
-  box-shadow: 0 12px 24px rgba(225, 222, 222, 0.2);
+  box-shadow: 0 12px 24px rgba(246, 246, 246, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -450,6 +450,7 @@ img:hover {
   transform: translateY(-10px);
   box-shadow: 0 12px 24px rgba(225, 222, 222, 0.2);
 }
+
 
 /* 标题样式 */
 .submission-title {
@@ -579,13 +580,15 @@ input:focus {
   align-items: center;
   margin-bottom: 1.5rem;
 }
-.avatar-btn{
+
+.avatar-btn {
   width: 600px;
   margin-bottom: 1vh;
   font-size: 12px;
   display: flex;
   justify-content: space-evenly;
 }
+
 .hidden {
   display: none;
 }

@@ -21,7 +21,7 @@ import { useAuthStore } from '../stores/authStore';
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'homepage',
     component: Homepage
   },
   {
@@ -90,9 +90,9 @@ const routes = [
     component: () => import('../views/test.vue')
   },
   {
-    path: '/homepage',
-    name: 'homepage',
-    component: Home 
+    path: '/home',
+    name: 'home',
+    component: Home
   }
 
   
@@ -102,14 +102,7 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
-  //实现路由变化平滑跳转
-  scrollBehavior(_to, _from, _savedPosition) {
-    //带平滑滚动效果（现代浏览器）
-    return {
-      top: 0,
-      behavior: 'smooth' // 可选平滑滚动
-    }
-  }
+  
 })
 
 router.beforeEach((to, _from, next) => {

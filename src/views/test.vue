@@ -88,10 +88,14 @@ const addComment = () => {
 const updateComment = async () => {
 
   // 后台添加评论的 API
-  const res = axios.post("https://jy8b5cnnmg.hzh.sealos.run/addWebComment", {
-    webid: webid.value,
-    comments: comments.value
-  })
+  try {
+    const res = axios.post("https://jy8b5cnnmg.hzh.sealos.run/addWebComment", {
+      webid: webid.value,
+      comments: comments.value
+    })
+  } catch (error) {
+    console.error('Error updateComment:', error)
+  }
 }
 
 const toggleLike = (commentId) => {
@@ -109,7 +113,7 @@ const addReply = (commentId) => {
     const comment = comments.value.find(c => c.id === commentId);
     comment.replies.push({
       id: Date.now(),
-      username:user.username,
+      username: user.username,
       userid: user.userid,
       avatar: user.avatar,
       content: newReply.value.trim(),
@@ -138,237 +142,364 @@ watch(comments, (newVal, oldVal) => {
 
 
 <template>
-
-  <div class="comment-section">
-    <!-- 评论输入框 -->
-    <div class="comment-input">
-      <textarea v-model="newComment" placeholder="写下你的评论..." rows="3"></textarea>
-      <div class="comment-action">
-        <button @click="addComment" :disabled="!newComment.trim()">发布评论</button>
-      <button @click="handleclick">查看评论</button>
-      </div>
+  <div class="comment-container">
+    <!-- 头部操作 -->
+    <div class="comment-operations">
+      <button 
+        @click="handleclick" 
+        class="toggle-btn gradient-bg"
+      >
+        {{ shouldShow ? "▲ 收起评论" : "▼ 查看评论" }} ({{ comments.length }})
+      </button>
     </div>
 
-    <!-- 评论列表 -->
-    <div class="comment-list" v-if="shouldShow">
-      <div v-for="comment in comments" :key="comment.id" class="comment-item">
-        <div class="comment-header">
-          <div class="comment-user-info">
-            <span><img :src="comment.avatar" class="avatar" alt="用户头像" /></span>
-            <span class="comment-username">{{ comment.username }}</span>
+    <!-- 评论区主体 -->
+    <transition name="comment-slide">
+      <div v-if="shouldShow" class="comment-main dark-bg">
+        <!-- 输入区域 -->
+        <div class="comment-creator">
+          <textarea
+            v-model="newComment"
+            placeholder="写下你的评论..."
+            class="neo-input"
+            rows="3"
+          ></textarea>
+          <div class="action-buttons">
+            <button 
+              @click="addComment" 
+              :disabled="!newComment.trim()"
+              class="gradient-btn"
+            >
+              发布评论
+            </button>
           </div>
-
-          <span class="time">{{ formatTime(comment.time) }}</span>
-        </div>
-        <div class="comment-content">
-          {{ comment.content }}
         </div>
 
-        <!-- 操作按钮 -->
-        <div class="comment-actions">
-          <button @click="toggleLike(comment.id)" class="like-btn">
-            👍 {{ comment.likes }} {{ comment.isLiked ? '已赞' : '' }}
-          </button>
-          <div>
-            <button @click="toggleReply(comment.id)">回复</button>
-            <button @click="deleteComment(comment.id)" v-if="comment.userid == user.userid" class="del-btn">删除</button>
-          </div>
-
-        </div>
-
-        <!-- 回复输入框 -->
-        <div v-if="activeReplyId === comment.id" class="reply-input">
-          <textarea v-model="newReply" placeholder="写下你的回复..." rows="3" class="reply-textarea"></textarea>
-          <button @click="addReply(comment.id)" class="reply-btn">提交回复</button>
-        </div>
-
-        <!-- 回复列表 -->
-        <div v-if="comment.replies.length" class="reply-list">
-          <div v-for="reply in comment.replies" :key="reply.id" class="reply-item">
-            <div class="comment-header">
-              <div class="comment-user-info">
-                <img :src="reply.avatar" class="avatar-small" alt="用户头像" />
-                <span class="comment-username reply-username">{{ reply.username }}</span>
-              </div>
-              <span class="time">{{ formatTime(reply.time) }}</span>
+        <!-- 评论列表 -->
+        <div v-if="comments.length > 0" class="comment-list">
+          <div 
+            v-for="comment in comments" 
+            :key="comment.id" 
+            class="comment-item"
+          >
+            <!-- 用户信息 -->
+            <div class="user-profile">
+              <img :src="comment.avatar" class="user-avatar" />
+              <span class="username">{{ comment.username }}</span>
             </div>
-            <div class="comment-content">{{ reply.content }}</div>
+
+            <!-- 评论内容 -->
+            <div class="comment-content">
+              <div class="comment-header">
+                <time class="comment-time">{{ formatTime(comment.time) }}</time>
+                <div class="comment-actions">
+                  <button 
+                    @click="toggleLike(comment.id)"
+                    :class="['icon-btn', { 'liked': comment.isLiked }]"
+                  >
+                    ❤️ {{ comment.likes || 0 }}
+                  </button>
+                  <button 
+                    @click="toggleReply(comment.id)"
+                    class="icon-btn"
+                  >
+                    💬
+                  </button>
+                  <button 
+                    v-if="comment.userid === user?.userid"
+                    @click="deleteComment(comment.id)"
+                    class="icon-btn danger"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </div>
+
+              <p class="comment-text">{{ comment.content }}</p>
+
+              <!-- 回复输入 -->
+              <div v-if="activeReplyId === comment.id" class="reply-creator">
+                <textarea
+                  v-model="newReply"
+                  placeholder="写下你的回复..."
+                  class="neo-input"
+                  rows="2"
+                ></textarea>
+                <div class="reply-actions">
+                  <button 
+                    @click="activeReplyId = null"
+                    class="cancel-btn"
+                  >
+                    取消
+                  </button>
+                  <button 
+                    @click="addReply(comment.id)"
+                    class="gradient-btn"
+                  >
+                    提交
+                  </button>
+                </div>
+              </div>
+
+              <!-- 回复列表 -->
+              <div v-if="comment.replies?.length" class="reply-list">
+                <div 
+                  v-for="reply in comment.replies" 
+                  :key="reply.id" 
+                  class="reply-item"
+                >
+                  <div class="user-profile">
+                    <img :src="reply.avatar" class="user-avatar small" />
+                    <span class="username">{{ reply.username }}</span>
+                  </div>
+                  <div class="reply-content">
+                    <time class="reply-time">{{ formatTime(reply.time) }}</time>
+                    <p class="reply-text">{{ reply.content }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- 没有评论时的提示信息 -->
-    <div v-if="shouldShow && comments.length === 0" class="no-comments">
-      <p>暂无评论，快来抢沙发吧！</p>
-    </div>
+        <!-- 空状态 -->
+        <div v-else class="empty-state">
+          <div class="empty-icon">💬</div>
+          <p>成为第一个评论者</p>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
+
 <style scoped>
-.no-comments {
-  text-align: center;
-  color: #999;
-  font-size: 16px;
-  margin-top: 5vh;
-  font-weight: bold;
+/* 基础容器 */
+.comment-container {
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', system-ui;
 }
 
-.comment-section {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
+/* 深蓝主题 */
+.dark-bg {
+  background: #1a2330;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  padding: 24px;
 }
-button{
-  width: auto;
-  height: 30px;
-  font-size: 10px;
-}
-.comment-input textarea {
-  width: 90%;
-  padding: 20px;
-  margin-bottom: 10px;
-}
-textarea{
-  height: 20px; 
-}
-.comment-action{
-  display: flex;
-  justify-content: space-between;
-}
-button {
-  background: #007bff;
+
+/* 操作按钮 */
+.toggle-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #2d87d0 0%, #1f6ab0 100%);
   color: white;
   border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.comment-item {
-  border: 1px solid #eee;
-  padding: 15px;
-  margin: 10px 0;
   border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
+.toggle-btn:hover {
+  transform: translateY(-1px);
 }
 
-.comment-user-info {
+/* 输入区域 */
+.comment-creator {
+  margin-bottom: 32px;
+}
+
+.neo-input {
+  width: 90%;
+  padding: 14px;
+  background: #2d3a4a;
+  border: 1px solid #364456;
+  border-radius: 8px;
+  color: #c8d6e5;
+  resize: none;
+  transition: border-color 0.3s;
+}
+
+.neo-input:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+.reply-actions{
+  display: flex;
+  width: 30%;
+  justify-self: end;
+  justify-content: space-evenly;
+}
+
+
+/* 用户信息 */
+.user-profile {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-}
-.reply-username{
-  font-size: 10px;
-}
-.comment-username {
-  font-weight: bold;
-  color: #9cd1ec;
-  margin-left: -8px;
-  margin-top: -10px;
+  width: 80px;
+  margin-right: 20px;
 }
 
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #4a90e2;
+  margin-bottom: 8px;
+}
+
+.user-avatar.small {
+  width: 36px;
+  height: 36px;
+}
+
+.username {
+  color: #9ab8d9;
+  font-size: 0.9em;
+  text-align: center;
+  word-break: break-word;
+  max-width: 80px;
+}
+
+/* 评论内容 */
+.comment-item {
+  display: flex;
+  padding: 20px;
+  margin: 16px 0;
+  background: #212c38;
+  border-radius: 10px;
+  border: 1px solid #2d3a4a;
+}
+.comment-content{
+  width: 100%;
+}
 .comment-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 10px;
-}
-
-.comment-content {
-  display: flex;
-  justify-content: space-evenly;
   align-items: center;
-  position: relative;
-  bottom: 40px;
-  color: rgb(255, 255, 255);
+  margin-bottom: 12px;
 }
 
-.del-btn {
-  background: transparent;
-  color: #666;
-  border: 1px solid #ddd;
-
+.comment-time {
+  color: #6d8498;
+  font-size: 0.85em;
 }
-
-.del-btn:hover {
-  background: #7d9fc0;
-  color: red;
-}
-.reply-input{
+.comment-actions{
   display: flex;
+  justify-self: end;
+}
+.comment-text {
+  color: #c8d6e5;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 互动按钮 */
+.icon-btn {
+  background: none;
+  border: none;
+  color: #6d8498;
+  padding: 6px;
+  margin: 0 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.icon-btn:hover {
+  color: #4a90e2;
+  transform: scale(1.1);
+}
+
+.icon-btn.liked {
+  color: #ff5a5f;
+}
+
+/* 回复列表 */
+.reply-list {
+  margin-top: 20px;
+  padding-left: 24px;
+  border-left: 2px solid #2d3a4a;
+}
+
+.reply-item {
+  display: flex;
+  margin: 12px 0;
+  padding: 12px;
+  background: #1a2330;
+  border-radius: 8px;
+}
+
+.reply-content {
+  flex: 1;
+}
+
+.reply-time {
+  color: #6d8498;
+  font-size: 0.8em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* 按钮特效 */
+.action-buttons{
+  display: flex;
+  width: 20%;
+  justify-self:flex-end;
   justify-content: space-evenly;
-  padding-top: 20px;
 }
-.reply-textarea{
-  width: 50%;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-.reply-btn{
-  background: #4e6e78;
+
+.gradient-btn {
+  background: linear-gradient(135deg, #4a90e2 0%, #3b7fc1 100%);
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 10px;
-  height: 40px;
+  padding: 8px 20px;
+  border-radius: 6px;
   cursor: pointer;
-}
-.reply-btn:hover{
-  background: #45798c;  
-}
-.reply-list {
-  margin-left: 50px;
-  border-left: 2px solid #376967;
-  padding-left: 20px;
-}
-.reply-header{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 10px;
-}
-.reply-item {
-  margin: 10px 0;
-  padding: 10px;
-  background-color: #4a6b8c;
-  border-radius: 5px;
+  transition: opacity 0.3s;
 }
 
-.avatar-small {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin-right: 8px;
+.gradient-btn:hover {
+  opacity: 0.9;
+}
+.cancel-btn{
+  background: linear-gradient(135deg, #e2614a 0%, #c15a3b 100%);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+.cancel-btn:hover{
+  opacity: 0.9;
+  color: #000;
+}
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 40px 0;
+  color: #6d8498;
 }
 
-.like-btn {
-  background: transparent;
-  color: #666;
-  border: 1px solid #ddd;
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
 }
 
-.like-btn:hover {
-  background: #7d9fc0;
+/* 动效 */
+.comment-slide-enter-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.comment-actions {
-  /* margin-top: 10px;
-  margin-left: 50px; */
-  display: flex;
-  justify-content: space-between;
+.comment-slide-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 1, 1);
+}
+
+.comment-slide-enter-from,
+.comment-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 </style>

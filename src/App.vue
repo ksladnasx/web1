@@ -47,125 +47,145 @@ onUnmounted(() => {
     }
 });
 
-// 判断当前路由是否需要显示侧边栏
+// 根据路由名称判断是否展示侧边栏
 const shouldShowSidebar = () => {
-  const publicRoutes = ['home' ];
-  return !publicRoutes.includes(router.currentRoute.value.name as string);
-};
+  const currentRouteName = router.currentRoute.value.name
+  const publicRoutes = ['homepage'] // 这里为实际的路由的组件名称（“name:”部分）
+  
+  // 如果当前路由名称存在且在公共路由列表中，则不显示侧边栏
+  return !(currentRouteName && publicRoutes.includes(currentRouteName as string))
+}
+
 
 </script>
 
 <template>
-  <div v-if="!shouldShowSidebar()">
-    <Homepage />
-  </div>
-  <div class="menu" v-if="shouldShowSidebar()">
-    <nav class="bg-white ">
-      <div class="max-w-7xl mx-auto px-4 ">
-        <div class="flex justify-between h-16 items-center">
-          <div class="flex items-center">
-            <router-link to="/homepage" class="flex items-center">
-              <button>🏠 主页</button>
+  <div class="app-container">
+    <nav class="app-nav" v-if="shouldShowSidebar()">
+      <div class="nav-container">
+        <div class="nav-content">
+          <div class="nav-start">
+            <router-link to="/home">
+              <button class="nav-btn">🏠 主页</button>
             </router-link>
-            <router-link to="/" class="flex items-center">
-              <button>🔍 搜索</button>
+            <router-link to="/">
+              <button class="nav-btn">🔍 搜索</button>
             </router-link>
           </div>
-          <div class="flex items-center space-x-4">
-            <router-link to="/music" class="text-gray-600 "><button>🎵 音乐</button></router-link>
-            <router-link to="/star-map" class="text-gray-600"><button>⭐ 学习星图</button></router-link>
-            <router-link to="/submit" class="text-gray-600 "><button>🙋‍♂️ 自定义网站</button></router-link>
-            <router-link to="/profile" class="text-gray-600 "><button>👤 个人中心</button></router-link>
-            <router-link to="/about" ><button>🎈 关于</button></router-link>
-            <div><button style="" @click="handleclick" class="transition-colors duration-300 hover:bg-red-500 hover:text-white">{{ title }}</button></div>
+          <div class="nav-end">
+            <router-link to="/music"><button class="nav-btn">🎵 音乐</button></router-link>
+            <router-link to="/star-map"><button class="nav-btn">⭐ 学习星图</button></router-link>
+            <router-link to="/submit"><button class="nav-btn">🙋‍♂️ 提交网站</button></router-link>
+            <router-link to="/profile"><button class="nav-btn">👤 个人中心</button></router-link>
+            <router-link to="/about"><button class="nav-btn">🎈 关于</button></router-link>
+            <button 
+              @click="handleclick" 
+              class="auth-btn"
+              :class="{ 'logout-btn': store.$state.isAuthenticated }"
+            >
+              {{ title }}
+            </button>
           </div>
         </div>
       </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 bgc" >
+    <main class="app-main">
       <router-view v-if="$route.meta.keepAlive" keep-alive></router-view>
       <router-view v-else></router-view>
     </main>
   </div>
 </template>
 
-
 <style scoped>
-* {
-  font-family: 'Courier New', Courier, monospace;
-  color: aliceblue;
-  transition: all 0.3s ease; /* 添加全局过渡效果 */
+/* 全局字体 */
+.app-container {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
-a.router-link:hover {
-  transform: scale(1.05); /* 鼠标悬停时稍微放大 */
-  color: #c3ff00; /* 鼠标悬停时文本颜色变化 */
+/* 导航栏样式 */
+.app-nav {
+  background: linear-gradient(135deg, #1a2330 0%, #121820 100%);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid #2d3a4a;
 }
 
-button {
-  background-color: transparent; 
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
-button:hover {
-  transform: scale(1.05); /* 鼠标悬停时稍微放大 */
-  background-color: #14b6f1; /* 鼠标悬停时背景颜色变化 */
-  color: rgb(255, 204, 0); /* 鼠标悬停时文本颜色变化 */
-}
-
-.min-h-screen {
-  min-height: 100vh;
-  /* 使元素最小高度为视口高度 */
-}
-
-main {
-  min-height: 100vh;
-}
-
-.bgc {
-  background-color: #1c212f;
-}
-
-.max-w-7xl {
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.h-16 {
-  height: 4rem;
-}
-
-.flex {
+.nav-content {
+  height: 4.5rem;
   display: flex;
-}
-
-.justify-between {
   justify-content: space-between;
-}
-
-.items-center {
-  /* 蓝黑渐变背景 */
- 
   align-items: center;
 }
 
-.space-x-4 > :not([hidden]) ~ :not([hidden]) {
-  margin-left: 1rem;
+/* 导航按钮样式 */
+.nav-btn {
+  color: #9ab8d9;
+  padding: 0.6rem 1.2rem;
+  margin: 0 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.text-gray-600 {
-  color: #6b7280;
+.nav-btn:hover {
+  background: rgba(74, 144, 226, 0.15);
+  transform: translateY(-1px);
+  color: #c8d6e5;
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
 }
 
-.bg-white {
-  background: linear-gradient(to bottom, rgb(28, 33, 47), #000000);
-  background: linear-gradient(50deg, rgb(28, 33, 47), #000000);
+/* 认证按钮 */
+.auth-btn {
+  background: linear-gradient(135deg, #4a90e2 0%, #3b7fc1 100%);
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 25px;
+  margin-left: 1.5rem;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #ff5a5f 0%, #e0494e 100%);
+}
+
+/* 主内容区 */
+.app-main {
+  background: #1a2330;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 1024px) {
+  .nav-content {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 1rem 0;
+  }
+  
+  .nav-end {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .nav-btn {
+    margin: 0.3rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 1rem;
+  }
+  
+  .app-main {
+    padding: 1.5rem;
+  }
 }
 </style>

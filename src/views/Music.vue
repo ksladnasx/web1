@@ -128,6 +128,7 @@ styleSheets.forEach((styleSheet) => {
   align-items: center;
   display: flex;
   flex-direction: column;
+  padding-top: 5vh;
 }
 
 /* 当前选中榜单的按钮样式 */

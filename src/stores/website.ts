@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 import { Website } from '../types/types';
 
@@ -62,24 +62,38 @@ export const useWebsiteStore = defineStore('website', () => {
   const apiUrl = 'https://jy8b5cnnmg.hzh.sealos.run/getWebList';
 
   // 使用 axios 从 API 获取数据
-  const fetchWebsites = async () => {
+  // 在组件中定义 AbortController
+  const abortController = new AbortController();
+
+  const getWebsites = async () => {
     try {
-      const response = await axios.get(apiUrl);
-      const apiResponse = response.data; // 获取 API 返回的数据
-      
-      // 检查返回的结构是否正确
+      const response = await axios.get(apiUrl, {
+        signal: abortController.signal // 绑定取消信号
+      });
+      const apiResponse = response.data;
+
       if (apiResponse.code === 200 && Array.isArray(apiResponse.data)) {
-        websites.value = apiResponse.data; // 将返回的网站数据存储到 websites 中
+        websites.value = apiResponse.data;
       } else {
         console.warn('Invalid API response:', apiResponse);
+        websites.value = []; // 确保回退默认值
       }
     } catch (error) {
-      console.error('Error fetching websites:', error);
+      if (axios.isCancel(error)) {
+        console.log('Request canceled:', error.message);
+      } else {
+        console.error('Error fetching websites:', error);
+        websites.value = []; // 错误时重置数据
+      }
     }
   };
-
-  // 在组件挂载时获取数据
-  onMounted(fetchWebsites);
+onMounted(()=>{
+  getWebsites()
+})
+  // 在组件卸载时取消请求
+  onBeforeUnmount(() => {
+    abortController.abort();
+  });
 
   const getWebsitesByCategory = (categoryId: string) => {
     return websites.value.filter(site => site.category === categoryId);

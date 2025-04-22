@@ -58,7 +58,7 @@ const categoryName = computed(() => {
 })
 
 onMounted(() => {
-  
+  console.log('Website ID:', route.params.id)
 })
 </script>
 
@@ -131,12 +131,6 @@ onMounted(() => {
       <button class="visit-btn" @click="goToWebsite(website.url)">
         访问网站🔗
       </button>
-      <!-- <button class="report-btn">
-        这啥按钮
-      </button> -->
-      <!-- <button>
-          更多详细信息，问问AI?
-        </button> -->
     </div>
 
     <div class="comment_container">
@@ -350,7 +344,8 @@ onMounted(() => {
 
 .action-menu {
 
-  margin-top: 10vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 /* 卡片动画 */
