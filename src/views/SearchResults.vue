@@ -3,7 +3,9 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useWebsiteStore } from '../stores/website'
 import WebsiteexpressCard from '../components/WebsiteexpressCard.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const route = useRoute()
 const store = useWebsiteStore()
 const query = computed(() => route.query.q as string)
@@ -23,15 +25,21 @@ const searchResults = computed(() => {
     return searchTerms.every(term => searchableText.includes(term))
   })
 })
+
+// 返回上一次的路由
+const goBack = () => {
+  router.back() // 显式调用路由返回
+}
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      
       <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900 mb-2">搜索结果</h1>
         <p class="text-gray-600">
-          关键词 "{{ query }}" 的搜索结果 ({{ searchResults.length }} 个)
+          关键词 "{{ query }}" 的搜索结果 ({{ searchResults.length }} 个)<span @click="goBack"><a href="#" style="font-size: 14px;padding-left: 20px;">返回?</a></span>
         </p>
         <div>
          

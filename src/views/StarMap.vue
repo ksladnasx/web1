@@ -383,186 +383,210 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="app-container">
-        <h1>Learning Resources Star Map</h1>
-    <div>
-      ------------------------------------------------------------------------------------------------------------------------------
-    </div>
-  <div class="star-map">
-    <!-- 类别标题 -->
-    <div
-      v-for="category in categories"
-      :key="category.name"
-      class="category-title"
-      :style="{ left: category.x + '%', top: category.y + '%' }"
-    >
-      {{ category.title }}
-    </div>
+  <div class="app-container">
+    <h1>Learning Resources Star Map</h1>
+    <div class="star-map">
+      <!-- 类别标题 -->
+      <div
+        v-for="category in categories"
+        :key="category.name"
+        class="category-title"
+        :style="{ left: category.x + '%', top: category.y + '%' }"
+      >
+        {{ category.title }}
+      </div>
 
-    <!-- 连接线 -->
-    <svg class="connections" width="100%" height="100%">
-      <line
-        v-for="(connection, index) in connections"
-        :key="index"
-        :x1="connection.from.x + '%'"
-        :y1="connection.from.y + '%'"
-        :x2="connection.to.x + '%'"
-        :y2="connection.to.y + '%'"
-        :class="{ active: activeStarId === connection.from.id || activeStarId === connection.to.id }"
-      />
-    </svg>
-    
-    <!-- 星星 -->
-    <div
-      v-for="star in stars"
-      :key="star.id"
-      class="star"
-      :style="{ left: star.x + '%', top: star.y + '%' }"
-      @mouseenter="setActiveStar(star.id)"
-      @mouseleave="setActiveStar(null)"
-    >
-      <div class="star-content">
-        <div class="star-icon" :class="{ active: activeStarId === star.id }">⚪</div>
-        <div 
-          class="star-info" 
-          :class="{ active: activeStarId === star.id }"
-          @mouseenter="onInfoCardMouseEnter"
-          @mouseleave="onInfoCardMouseLeave"
-        >
-          <h3>{{ star.name }}</h3>
-          <p>{{ star.description }}</p>
-          <a :href="star.url" target="_blank">访问网站</a>
+      <!-- 连接线 -->
+      <svg class="connections" width="100%" height="100%">
+        <defs>
+          <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#4a90e2" />
+            <stop offset="50%" stop-color="#3b7fc1" />
+            <stop offset="100%" stop-color="#2a6eb0" />
+          </linearGradient>
+          <filter id="glow-effect">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <line
+          v-for="(connection, index) in connections"
+          :key="index"
+          :x1="connection.from.x + '%'"
+          :y1="connection.from.y + '%'"
+          :x2="connection.to.x + '%'"
+          :y2="connection.to.y + '%'"
+          :class="{ active: activeStarId === connection.from.id || activeStarId === connection.to.id }"
+          filter="url(#glow-effect)"
+        />
+      </svg>
+
+      <!-- 星星节点 -->
+      <div
+        v-for="star in stars"
+        :key="star.id"
+        class="star"
+        :style="{ left: star.x + '%', top: star.y + '%' }"
+        @mouseenter="setActiveStar(star.id)"
+        @mouseleave="setActiveStar(null)"
+      >
+        <div class="star-content">
+          <div class="star-node" :class="{ active: activeStarId === star.id }"></div>
+          <div 
+            class="star-tooltip" 
+            :class="{ active: activeStarId === star.id }"
+            @mouseenter="onInfoCardMouseEnter"
+            @mouseleave="onInfoCardMouseLeave"
+          >
+            <h3>{{ star.name }}</h3>
+            <p>{{ star.description }}</p>
+            <a :href="star.url" target="_blank">访问网站</a>
+          </div>
         </div>
       </div>
     </div>
-  </div> 
   </div>
- 
 </template>
+
 
 <style scoped>
 .app-container {
-  width:100%;                    
-  max-width:1280px;
-  height: 200%;
-  margin: 0 auto;
-  /* padding: 2rem; */
-  text-align: center;
+  background: #1a2330;
+  min-height: 100vh;
+  padding: 2rem;
+  color: #c8d6e5;
 }
 
 h1 {
-  color: #f0ebb9;
+  font-size: 2.2rem;
+  text-align: center;
   margin-bottom: 2rem;
+  color: #4a90e2;
+  text-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
 }
 
-
 .star-map {
-  width: 100%;
-  height: 100vh;
   position: relative;
-  background: transparent;
-  overflow: hidden;
-  border-radius: 12px;
+  width: 100%;
+  height: 90vh;
+  background: linear-gradient(135deg, #161c28 0%, #1a2330 100%);
+  border: 1px solid #2d3a4a;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  margin-bottom: 60vh;
+  /* overflow: hidden; */
 }
 
 .category-title {
   position: absolute;
   transform: translate(-50%, -50%);
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 1.2em;
+  font-size: 1.1rem;
   font-weight: 500;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-  pointer-events: none;
-}
-
-.connections {
-  position: absolute;
-  top: 0;
-  left: 0;
+  color: #9ab8d9;
+  text-shadow: 0 0 12px rgba(74, 144, 226, 0.3);
   pointer-events: none;
 }
 
 .connections line {
-  stroke: rgba(255, 255, 255, 0.1);
-  stroke-width: 1;
-  transition: stroke 0.3s ease;
+  stroke: rgba(74, 144, 226, 0.1);
+  stroke-width: 1.5;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .connections line.active {
-  stroke: rgba(255, 255, 255, 0.4);
+  stroke: url(#line-gradient);
+  stroke-width: 2.5;
+  stroke-opacity: 0.8;
 }
 
 .star {
   position: absolute;
   transform: translate(-50%, -50%);
-}
-
-.star-content {
-  position: relative;
-}
-
-.star-icon {
-  font-size: 0.5em;
-  color: #8e8383;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s ease;
 }
 
-.star-icon.active {
-  color: #ffd700;
-
-  transform: scale(1.2);
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+.star-node {
+  width: 16px;
+  height: 16px;
+  background: #4a90e2;
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgba(74, 144, 226, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.star-info {
+.star-node.active {
+  background: #ffd700;
+  transform: scale(1.5);
+  box-shadow: 0 0 24px rgba(255, 215, 0, 0.4);
+}
+
+.star-tooltip {
   position: absolute;
-  top: 100%;
+  top: 120%;
   left: 50%;
-  transform: translateX(-50%) scale(0.9);
-  background: rgba(255, 255, 255, 0.95);
-  padding: 1em;
-  border-radius: 8px;
-  width: 200px;
+  transform: translateX(-50%) scale(0.95);
+  width: 240px;
+  background: #212c38;
+  border: 1px solid #2d3a4a;
+  border-radius: 12px;
+  padding: 1.5rem;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
-  pointer-events: auto;
-  z-index: 10;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
-.star-info.active {
+.star-tooltip.active {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) scale(1);
 }
 
-.star-info h3 {
-  margin: 0 0 0.5em;
-  color: #1a1a2e;
-  font-size: 1.2em;
+.star-tooltip h3 {
+  color: #4a90e2;
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
 }
 
-.star-info p {
-  margin: 0 0 0.8em;
-  color: #666;
-  font-size: 0.9em;
+.star-tooltip p {
+  color: #9ab8d9;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
 }
 
-.star-info a {
+.star-tooltip a {
   display: inline-block;
-  padding: 0.4em 1em;
-  background: #1a1a2e;
+  padding: 0.6rem 1.5rem;
+  background: linear-gradient(135deg, #4a90e2 0%, #3b7fc1 100%);
   color: white;
+  border-radius: 24px;
+  font-weight: 500;
   text-decoration: none;
-  border-radius: 4px;
-  font-size: 0.9em;
-  transition: background 0.3s ease;
+  transition: transform 0.2s ease;
 }
 
-.star-info a:hover {
-  background: #2a2a4e;
+.star-tooltip a:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  .category-title {
+    font-size: 0.95rem;
+  }
+  
+  .star-tooltip {
+    width: 200px;
+    padding: 1rem;
+  }
 }
 </style>

@@ -83,7 +83,7 @@ export const useWebsiteStore = defineStore('website', () => {
         console.log('Request canceled:', error.message);
       } else {
         console.error('Error fetching websites:', error);
-        websites.value = []; // 错误时重置数据
+        // websites.value = []; // 错误时重置数据
       }
     }
   };
