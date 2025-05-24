@@ -70,8 +70,12 @@ const handlefavorites = async () => {
 const handleSubmits = async () => {
   console.log("submits", AuthStore.user)
   if (!AuthStore.user) {
-    alert('请先登录')
-    return
+    const isConfirmed = confirm("请先登录，确认跳转到登录页面？");
+    if (isConfirmed) {
+      window.location.href = '/login'; // 原生跳转
+      // 或前端路由：this.$router.push('/login');
+    }
+    return;
   }
 
   try {
@@ -173,7 +177,7 @@ const saveavatar = async () => {
 
       <!-- 头部 -->
       <div class=" border-gray-200">
-        <nav >
+        <nav>
           <button v-for="tab in [
             { id: 'settings', name: '基础设置' },
             { id: 'favorites', name: '收藏夹' },
@@ -183,7 +187,7 @@ const saveavatar = async () => {
               ? 'border-blue-500 text-blue-600'
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
             'w-1/3 py-4 px-1 text-center border-b-2 font-medium text-sm'
-          ]" >
+          ]">
             {{ tab.name }}
           </button>
         </nav>
@@ -432,7 +436,7 @@ img:hover {
   position: relative;
   left: 10%;
   font-size: larger;
-  
+
 }
 
 /* 基础样式 */

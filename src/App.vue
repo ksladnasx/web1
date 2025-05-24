@@ -28,24 +28,24 @@ const handleclick = async () => {
 
 };
 
-let snowScript: HTMLScriptElement | null = null;
-onMounted(() => {
-    // 动态加载雪花脚本
-    snowScript = document.createElement('script');
-    snowScript.type = 'text/javascript';
-    snowScript.src = 'https://api.vvhan.com/api/script/snow';
-    snowScript.defer = true;
+// let snowScript: HTMLScriptElement | null = null;
+// onMounted(() => {
+//     // 动态加载雪花脚本
+//     snowScript = document.createElement('script');
+//     snowScript.type = 'text/javascript';
+//     snowScript.src = 'https://api.vvhan.com/api/script/snow';
+//     snowScript.defer = true;
 
-    // 将脚本插入到页面
-    document.head.appendChild(snowScript);
-});
+//     // 将脚本插入到页面
+//     document.head.appendChild(snowScript);
+// });
 
-onUnmounted(() => {
-    // 卸载组件时移除脚本
-    if (snowScript) {
-        document.head.removeChild(snowScript);
-    }
-});
+// onUnmounted(() => {
+//     // 卸载组件时移除脚本
+//     if (snowScript) {
+//         document.head.removeChild(snowScript);
+//     }
+// });
 
 // 根据路由名称判断是否展示侧边栏
 const shouldShowSidebar = () => {
@@ -78,6 +78,7 @@ const shouldShowSidebar = () => {
             <router-link to="/submit"><button class="nav-btn">🙋‍♂️ 提交网站</button></router-link>
             <router-link to="/profile"><button class="nav-btn">👤 个人中心</button></router-link>
             <router-link to="/about"><button class="nav-btn">🎈 关于</button></router-link>
+            <router-link to="/test"><button class="nav-btn">🎈 测试</button></router-link>
             <button 
               @click="handleclick" 
               class="auth-btn"
@@ -91,8 +92,7 @@ const shouldShowSidebar = () => {
     </nav>
 
     <main class="app-main">
-      <router-view v-if="$route.meta.keepAlive" keep-alive></router-view>
-      <router-view v-else></router-view>
+      <router-view />
     </main>
   </div>
 </template>

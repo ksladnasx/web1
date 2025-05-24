@@ -4,6 +4,8 @@ import { defineComponent } from 'vue'
 import axios from 'axios';
 import { toRef } from 'vue';
 import { useAuthStore } from '../stores/authStore';
+import { ElMessage } from 'element-plus';
+
 
 
 // 获取 父组件传的WebID
@@ -68,6 +70,14 @@ const newReply = ref('');
 const activeReplyId = ref(null);
 const user = JSON.parse(localStorage.getItem('user'))
 const addComment = () => {
+  if (!user) {
+    const isConfirmed = confirm("请先登录，确认跳转到登录页面？");
+    if (isConfirmed) {
+      window.location.href = '/login'; // 原生跳转
+      // 或前端路由：this.$router.push('/login');
+    }
+    return;
+  }
   if (newComment.value.trim()) {
     comments.value.unshift({  //插入符合数据格式的数据
       id: Date.now(),
@@ -134,6 +144,35 @@ const formatTime = (date) => {
   return new Date(date).toLocaleString();
 };
 
+// const form = reactive({
+//   name: '',
+//   email: ''
+// });
+// const handlelogin = async () => {
+//   if (!form.name || !form.email) {
+//     alert("用户名和邮箱不能为空")
+//     return
+//   }
+//   // 发送登录请求
+//   try {
+//     const response = await axios.post("http://localhost:3000/users", {
+//       name: form.name,
+//       email: form.email
+//     });
+//     if (response.data.code == 200) {
+//       // localStorage.setItem('user', JSON.stringify(response.data.data.user))
+//       console.log("登录成功")
+//     } else {
+//       alert(response.data.msg)
+//       console.error('登录失败:', response.data.msg)
+//     }
+//   } catch (error) {
+//     alert("dsf")
+
+//     console.error('Error login:', error);
+//   }
+// }
+
 //  comments 是 ref 对象（如通过 ref([]) 创建）
 watch(comments, (newVal, oldVal) => {
   updateComment();
@@ -142,13 +181,26 @@ watch(comments, (newVal, oldVal) => {
 
 
 <template>
+
+
   <div class="comment-container">
+    <!-- 登录表单-->
+    <!-- <div class="login-form">
+      <el-form>
+        <el-form-item label="用户名">
+          <el-input placeholder="请输入用户名" v-model="form.name" />
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input type="password" placeholder="请输入邮箱" v-model="form.email" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click.prevent="handlelogin">登录</el-button>
+        </el-form-item>
+      </el-form>
+    </div> -->
     <!-- 头部操作 -->
     <div class="comment-operations">
-      <button 
-        @click="handleclick" 
-        class="toggle-btn gradient-bg"
-      >
+      <button @click="handleclick" class="toggle-btn gradient-bg">
         {{ shouldShow ? "▲ 收起评论" : "▼ 查看评论" }} ({{ comments.length }})
       </button>
     </div>
@@ -158,18 +210,9 @@ watch(comments, (newVal, oldVal) => {
       <div v-if="shouldShow" class="comment-main dark-bg">
         <!-- 输入区域 -->
         <div class="comment-creator">
-          <textarea
-            v-model="newComment"
-            placeholder="写下你的评论..."
-            class="neo-input"
-            rows="3"
-          ></textarea>
+          <textarea v-model="newComment" placeholder="写下你的评论..." class="neo-input" rows="3"></textarea>
           <div class="action-buttons">
-            <button 
-              @click="addComment" 
-              :disabled="!newComment.trim()"
-              class="gradient-btn"
-            >
+            <button @click="addComment" :disabled="!newComment.trim()" class="gradient-btn">
               发布评论
             </button>
           </div>
@@ -177,11 +220,7 @@ watch(comments, (newVal, oldVal) => {
 
         <!-- 评论列表 -->
         <div v-if="comments.length > 0" class="comment-list">
-          <div 
-            v-for="comment in comments" 
-            :key="comment.id" 
-            class="comment-item"
-          >
+          <div v-for="comment in comments" :key="comment.id" class="comment-item">
             <!-- 用户信息 -->
             <div class="user-profile">
               <img :src="comment.avatar" class="user-avatar" />
@@ -193,23 +232,14 @@ watch(comments, (newVal, oldVal) => {
               <div class="comment-header">
                 <time class="comment-time">{{ formatTime(comment.time) }}</time>
                 <div class="comment-actions">
-                  <button 
-                    @click="toggleLike(comment.id)"
-                    :class="['icon-btn', { 'liked': comment.isLiked }]"
-                  >
+                  <button @click="toggleLike(comment.id)" :class="['icon-btn', { 'liked': comment.isLiked }]">
                     ❤️ {{ comment.likes || 0 }}
                   </button>
-                  <button 
-                    @click="toggleReply(comment.id)"
-                    class="icon-btn"
-                  >
+                  <button @click="toggleReply(comment.id)" class="icon-btn">
                     💬
                   </button>
-                  <button 
-                    v-if="comment.userid === user?.userid"
-                    @click="deleteComment(comment.id)"
-                    class="icon-btn danger"
-                  >
+                  <button v-if="comment.userid === user?.userid" @click="deleteComment(comment.id)"
+                    class="icon-btn danger">
                     🗑️
                   </button>
                 </div>
@@ -219,23 +249,12 @@ watch(comments, (newVal, oldVal) => {
 
               <!-- 回复输入 -->
               <div v-if="activeReplyId === comment.id" class="reply-creator">
-                <textarea
-                  v-model="newReply"
-                  placeholder="写下你的回复..."
-                  class="neo-input"
-                  rows="2"
-                ></textarea>
+                <textarea v-model="newReply" placeholder="写下你的回复..." class="neo-input" rows="2"></textarea>
                 <div class="reply-actions">
-                  <button 
-                    @click="activeReplyId = null"
-                    class="cancel-btn"
-                  >
+                  <button @click="activeReplyId = null" class="cancel-btn">
                     取消
                   </button>
-                  <button 
-                    @click="addReply(comment.id)"
-                    class="gradient-btn"
-                  >
+                  <button @click="addReply(comment.id)" class="gradient-btn">
                     提交
                   </button>
                 </div>
@@ -243,11 +262,7 @@ watch(comments, (newVal, oldVal) => {
 
               <!-- 回复列表 -->
               <div v-if="comment.replies?.length" class="reply-list">
-                <div 
-                  v-for="reply in comment.replies" 
-                  :key="reply.id" 
-                  class="reply-item"
-                >
+                <div v-for="reply in comment.replies" :key="reply.id" class="reply-item">
                   <div class="user-profile">
                     <img :src="reply.avatar" class="user-avatar small" />
                     <span class="username">{{ reply.username }}</span>
@@ -273,6 +288,16 @@ watch(comments, (newVal, oldVal) => {
 </template>
 
 <style scoped>
+.login-form {
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+
 /* 基础容器 */
 .comment-container {
   max-width: 800px;
@@ -325,7 +350,7 @@ watch(comments, (newVal, oldVal) => {
   outline: none;
 }
 
-.reply-actions{
+.reply-actions {
   display: flex;
   width: 30%;
   justify-self: end;
@@ -372,9 +397,11 @@ watch(comments, (newVal, oldVal) => {
   border-radius: 10px;
   border: 1px solid #2d3a4a;
 }
-.comment-content{
+
+.comment-content {
   width: 100%;
 }
+
 .comment-header {
   display: flex;
   justify-content: space-between;
@@ -386,10 +413,12 @@ watch(comments, (newVal, oldVal) => {
   color: #6d8498;
   font-size: 0.85em;
 }
-.comment-actions{
+
+.comment-actions {
   display: flex;
   justify-self: end;
 }
+
 .comment-text {
   color: #c8d6e5;
   line-height: 1.6;
@@ -443,10 +472,10 @@ watch(comments, (newVal, oldVal) => {
 }
 
 /* 按钮特效 */
-.action-buttons{
+.action-buttons {
   display: flex;
   width: 20%;
-  justify-self:flex-end;
+  justify-self: flex-end;
   justify-content: space-evenly;
 }
 
@@ -463,7 +492,8 @@ watch(comments, (newVal, oldVal) => {
 .gradient-btn:hover {
   opacity: 0.9;
 }
-.cancel-btn{
+
+.cancel-btn {
   background: linear-gradient(135deg, #e2614a 0%, #c15a3b 100%);
   color: white;
   border: none;
@@ -472,10 +502,12 @@ watch(comments, (newVal, oldVal) => {
   cursor: pointer;
   transition: opacity 0.3s;
 }
-.cancel-btn:hover{
+
+.cancel-btn:hover {
   opacity: 0.9;
   color: #000;
 }
+
 /* 空状态 */
 .empty-state {
   text-align: center;

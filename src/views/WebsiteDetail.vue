@@ -24,9 +24,12 @@ const isFavorite = computed(() => {
 const toggleFavorite = () => {
   if (authstore.isAuthenticated == false) {
     // 没登陆要先登录
-    alert('请先登录')
-    router.push('/');
-    return
+     const isConfirmed = confirm("请先登录，确认跳转到登录页面？");
+    if (isConfirmed) {
+      window.location.href = '/login'; // 原生跳转
+      // 或前端路由：this.$router.push('/login');
+    }
+    return;
   } else {
     if (!website.value) return
     if (isFavorite.value) {

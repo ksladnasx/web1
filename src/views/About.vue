@@ -7,8 +7,12 @@ const form = ref()
 const Authstore = useAuthStore()
 const handleComplain = () => {
   if (!Authstore.$state.isAuthenticated) {
-    alert("请先登录");
-    router.push('/');
+    const isConfirmed = confirm("请先登录，确认跳转到登录页面？");
+    if (isConfirmed) {
+      window.location.href = '/login'; // 原生跳转
+      // 或前端路由：this.$router.push('/login');
+    }
+    return;
   } else {
     // 获取表单数据
     const formData = form.value; // 获取绑定的表单数据
@@ -67,7 +71,7 @@ const handleComplain = () => {
 </template>
 
 <style scoped>
-.mainpage{
+.mainpage {
   text-align: center;
   height: 100%;
 }

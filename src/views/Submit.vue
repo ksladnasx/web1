@@ -24,8 +24,12 @@ const form = ref({
 const submitWebsite = () => {
   // 检查用户是否登录
   if (!Authstore.$state.isAuthenticated) {
-    alert("请先登录");
-    router.push('/');
+    const isConfirmed = confirm("请先登录，确认跳转到登录页面？");
+    if (isConfirmed) {
+      window.location.href = '/login'; // 原生跳转
+      // 或前端路由：this.$router.push('/login');
+    }
+    return;
   } else {
     if (form.value.logo == "") {
       alert("请点击获取网站头像logo");
