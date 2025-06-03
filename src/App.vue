@@ -78,7 +78,7 @@ const shouldShowSidebar = () => {
             <router-link to="/submit"><button class="nav-btn">🙋‍♂️ 提交网站</button></router-link>
             <router-link to="/profile"><button class="nav-btn">👤 个人中心</button></router-link>
             <router-link to="/about"><button class="nav-btn">🎈 关于</button></router-link>
-            <router-link to="/test"><button class="nav-btn">🎈 测试</button></router-link>
+            <!-- <router-link to="/test"><button class="nav-btn">🎈 测试</button></router-link> -->
             <button 
               @click="handleclick" 
               class="auth-btn"

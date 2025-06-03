@@ -30,7 +30,7 @@ export const useAuthStore = defineStore('auth', {
         username: name
       }))
     },
-    async login(credentials: Credentials) {
+    async login(credentials: Credentials) { 
       console.log(credentials)
       //测试账户
       if (credentials.username == 'doctor@126.com' && credentials.password == 'password') {
