@@ -92,22 +92,22 @@ const querySearch = async (query: string, cb: Function) => {
 const customShortcuts = ref([
   {
     name: '主页',
-    url: 'http://localhost:5173/home',
+    url: '/home',
     icon: 'https://img.ixintu.com/download/jpg/201911/e25b904bc42a74d7d77aed81e66d772c.jpg!con',
     iconType: 'url',
     color: '#34a853'
   },
   {
     name: 'Maps',
-    url: 'http://localhost:5173/star-map',
-    icon: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.BVwA0oMrj2WXE2qlVn-EJQHaHa?w=163&h=180&c=7&r=0&o=5&dpr=1.7&pid=1.7',
+    url: '/star-map',
+    icon: 'https://img.ixintu.com/download/jpg/201911/e25b904bc42a74d7d77aed81e66d772c.jpg!con',
     iconType: 'url',
     size: 72
   },
   {
     name: 'Music',
-    url: 'http://localhost:5173/music',
-    icon: 'https://tse2-mm.cn.bing.net/th/id/OIP-C.CFF5Arip7HzRXTSkZAIg0gHaHH?rs=1&pid=ImgDetMain',
+    url: '/music',
+    icon: 'https://img.ixintu.com/download/jpg/201911/e25b904bc42a74d7d77aed81e66d772c.jpg!con',
     iconType: 'url',
 
   }

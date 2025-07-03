@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from 'vue-router'
 import { useAuthStore } from './stores/authStore';
-import { computed, onMounted, onUnmounted } from 'vue';
-import Homepage from './views/Homepage.vue';
+import { computed } from 'vue';
 const router = useRouter();
 const store = useAuthStore();                               
 

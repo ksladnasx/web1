@@ -37,29 +37,25 @@
   color?: string
 }
 
-const props = defineProps({
+defineProps({
   shortcuts: {
     type: Array as () => ShortcutConfig[],
     default: () => [
       {
         name: 'Google',
-        url: 'https://google.com',
+        url: '',
         iconType: 'url' // 使用网站图标
       },
       {
         name: 'Gmail',
-        url: 'https://mail.google.com',
+        url: '',
         iconType: 'url'
       }
     ]
   }
 })
 
-// 使用Google Favicon API获取图标
-const getFaviconUrl = (url: string) => {
-  const domain = new URL(url).hostname
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`
-}
+
   
   const resolveIconType = (type: string) => {
     const components = {
