@@ -336,6 +336,7 @@ const saveavatar = async () => {
 
     </div>
   </div>
+ 
 </template>
 
 <style scoped>

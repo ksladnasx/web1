@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import axiosInstance from '../untils/req'
 import { Mysub, MySub2 } from '../types/types'
 import { ref } from 'vue'
 // import {lovedata} from '../types/types'
@@ -8,7 +8,7 @@ export const usesubmitstore = defineStore('submits', () => {
     // submissions 存后端传的自定义网站
     let submissions = ref<MySub2[]>([])
 
-    const API_URL = 'https://jy8b5cnnmg.hzh.sealos.run/addsubmit';
+    
 
     // 直接利用传来的封装好的对象发送请求添加自定义网站
     const addsubmits = async (sub: Mysub) => {
@@ -16,7 +16,7 @@ export const usesubmitstore = defineStore('submits', () => {
             console.log('Submitting data:', sub);
 
             // 发送请求
-            const response = await axios.post(API_URL, sub, {
+            const response = await axiosInstance.post('/addsubmit', sub, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -31,7 +31,7 @@ export const usesubmitstore = defineStore('submits', () => {
     // 获取用户自定义网站
     const fetchSubmissions = async (username: any) => {
         try {
-            const response = await axios.post('https://jy8b5cnnmg.hzh.sealos.run/getsubmit', { username });
+            const response = await axiosInstance.post('/getsubmit', { username });
             console.log('Response from server:', response.data);
             if (response.data.code == 200) {
 

@@ -1,7 +1,7 @@
-import axios from "axios";
+import axiosInstance from "../untils/req";
 async function getWebsite() {
-    const res = await axios({
-      url: "https://jy8b5cnnmg.hzh.sealos.run/test1",
+    const res = await axiosInstance({
+      url: "/test1",
       method: "get"
     })
     console.log(res.data)

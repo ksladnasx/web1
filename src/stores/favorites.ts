@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { Website } from '../types/types'
-import axios from 'axios'
+import axiosInstance from '../untils/req'
 import {lovedata} from '../types/types'
 
 export const useFavoritesStore = defineStore('favorites', () => {
@@ -35,7 +35,7 @@ const removeFavorite = (id: string) => {
 
     try {
       // 发送 POST 请求
-      const response = await axios.post('https://jy8b5cnnmg.hzh.sealos.run/addlove', data, {
+      const response = await axiosInstance.post('/addlove', data, {
         headers: {
           'Content-Type': 'application/json'
         }       
@@ -67,8 +67,8 @@ const removeFavorite = (id: string) => {
   
   const fetchFavorites = async (username:any) =>{
   try {
-    const response = await axios.post<any>(
-      'https://jy8b5cnnmg.hzh.sealos.run/getlove', // 替换为你的 API 地址
+    const response = await axiosInstance.post<any>(
+      '/getlove', // 替换为你的 API 地址
       { username }
     );
     // console.log(response.data)

@@ -1,6 +1,6 @@
 // src/stores/authStore.ts
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import axiosInstance from '../untils/req';
 import { Credentials } from '../types/types';
 import { useFavoritesStore } from './favorites';
 import { usesubmitstore } from './submitStore';
@@ -47,7 +47,7 @@ export const useAuthStore = defineStore('auth', {
 
       try {
         // 发送登录请求到后端
-        const response = await axios.post('https://jy8b5cnnmg.hzh.sealos.run/login', credentials);
+        const response = await axiosInstance.post('/login', credentials);
         console.log(credentials)
         // console.log(response)
         // 返回的用户名是存在data.user.username中的
@@ -71,7 +71,7 @@ export const useAuthStore = defineStore('auth', {
     //添加一个 register action，用于处理注册逻辑。
     async register(credentials: Credentials) {
       try {
-        const response = await axios.post('https://jy8b5cnnmg.hzh.sealos.run/adduser', credentials);
+        const response = await axiosInstance.post('/adduser', credentials);
         // console.log(response)
         if (response.data.code == 401 || response.data.code == 400) {
           throw new Error('注册失败');
@@ -110,11 +110,8 @@ export const useAuthStore = defineStore('auth', {
       // 登出逻辑
       this.isAuthenticated = false;
       this.user = "";
-      // 可选：清除用户信息
-      localStorage.removeItem('user');
       //清除缓存
       localStorage.clear();
-
     }
   }
 });

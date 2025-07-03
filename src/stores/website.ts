@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import axiosInstance from '../untils/req';
 import axios from 'axios';
 import { Website } from '../types/types';
 
@@ -59,7 +60,7 @@ export const useWebsiteStore = defineStore('website', () => {
     { id: 'productivity', name: '效率工具', icon: '⚡' }
   ]);
 
-  const apiUrl = 'https://jy8b5cnnmg.hzh.sealos.run/getWebList';
+  const apiUrl = '/getWebList';
 
   // 使用 axios 从 API 获取数据
   // 在组件中定义 AbortController
@@ -67,7 +68,7 @@ export const useWebsiteStore = defineStore('website', () => {
 
   const getWebsites = async () => {
     try {
-      const response = await axios.get(apiUrl, {
+      const response = await axiosInstance.get(apiUrl, {
         signal: abortController.signal // 绑定取消信号
       });
       const apiResponse = response.data;

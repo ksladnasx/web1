@@ -19,12 +19,18 @@ export default defineConfig({
     
     // allowedHosts: ["'https://jy8b5cnnmg.hzh.sealos.run'"],
     proxy: {
-      '/api': {
-        target: 'http://192.168.1.107:1234',
+      // '/api': {
+      //   target: 'https://jy8b5cnnmg.hzh.sealos.run',
+      //   changeOrigin: true,
+      //   secure: false,       // 关闭 SSL 验证
+      //   // rewrite: (path) => path.replace(/^\/api/, '') // 去掉路径前缀/api（可选）
+      // },
+      '/dev':{
+        target: "https://jy8b5cnnmg.hzh.sealos.run",
         changeOrigin: true,
         secure: false,       // 关闭 SSL 验证
-        // rewrite: (path) => path.replace(/^\/api/, '') // 去掉路径前缀/api（可选）
-      },
+        rewrite: (path) => path.replace('\dev', '') // 去掉路径前缀/api（可选）
+      }
       
     }
   }

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue';
 import { defineComponent } from 'vue'
-import axios from 'axios';
+
 import { toRef } from 'vue';
 import { useAuthStore } from '../stores/authStore';
 import { ElMessage } from 'element-plus';
