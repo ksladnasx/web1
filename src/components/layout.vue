@@ -31,10 +31,10 @@
 </template>
 
 <script setup lang="ts">
-import { RouterView, useRouter } from 'vue-router'
+import {  useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/authStore';
 import { computed } from 'vue';
-import { FloatingBubble } from 'vant';
+
 const router = useRouter();
 const store = useAuthStore();                               
 
